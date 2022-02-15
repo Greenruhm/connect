@@ -5,5 +5,5 @@ const addMedia = require('./addMedia');
 module.exports = {
   getDrop,
   createDrop,
-  addMedia,
+  addMedia
 };

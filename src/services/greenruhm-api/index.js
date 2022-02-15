@@ -2,13 +2,13 @@ const fetch = require('isomorphic-fetch');
 
 const GREENRUHM_URL = process.env.GREENRUHM_URL || 'http://localhost:3000';
 
-const fetchDropsHandler = (type) => async (id) => {
+const fetchDropsHandler = type => async id => {
   const response = await fetch(`${GREENRUHM_URL}/api/drops/${type}/${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
+      Accept: 'application/json'
+    }
   });
   if (!response.ok) {
     const { message } = await response.json();
@@ -18,22 +18,21 @@ const fetchDropsHandler = (type) => async (id) => {
 };
 
 const fetchDrop = fetchDropsHandler('drop');
-const getDrop = async (id) => {
+const getDrop = async id => {
   try {
     const drop = await fetchDrop(id);
     return drop;
   } catch (error) {
-    console.warn('Could not fetch drop', error);
     return null;
   }
 };
 
-const createDrop = async (dropData) => {
+const createDrop = async dropData => {
   const response = await fetch(`${GREENRUHM_URL}/api/drops/drop`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
+      Accept: 'application/json'
     },
     body: JSON.stringify(dropData)
   });
@@ -42,15 +41,15 @@ const createDrop = async (dropData) => {
     throw new Error(message);
   }
   return await response.json();
-}
+};
 
 export const getCloudinarySignature = async ({
   name: public_id,
-  dropId: folder,
+  dropId: folder
 } = {}) => {
   const res = await fetch(`/api/upload/get-cloudinary-signature`, {
     method: 'POST',
-    body: JSON.stringify({ public_id, folder }),
+    body: JSON.stringify({ public_id, folder })
   });
   const response = await res.json();
   if (response.error) {
@@ -62,17 +61,17 @@ export const getCloudinarySignature = async ({
 export const updateDropMedia = async (dropId, media) => {
   const res = await fetch(`/api/drops/drop/${dropId}/update`, {
     method: 'PATCH',
-    body: JSON.stringify(media),
+    body: JSON.stringify(media)
   });
   const response = await res.json();
   if (response.error) {
     throw new Error(response.error);
   }
   return response;
-}
+};
 module.exports = {
   getDrop,
   createDrop,
   getCloudinarySignature,
-  updateDropMedia,
+  updateDropMedia
 };

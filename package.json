@@ -2,10 +2,21 @@
   "name": "connect",
   "version": "1.0.0",
   "description": "Greenruhm Connect is your white label, custom-branded connection to the music metaverse. It allows you to provide music NFT services inside your app with your branding.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "npm run test"
+    "lint": "eslint src && echo '-- linting finished --'",
+    "prettier": "prettier --write 'src/**/*.js'",
+    "prepare": "npm run build",
+    "build": "babel src -d dist",
+    "test": "npm run test-unit",
+    "test-unit": "tape -r babel-register -r babel-polyfill test/unit.js",
+    "pretty-quick": "pretty-quick --staged"
   },
+  "pre-commit": [
+    "lint",
+    "pretty-quick",
+    "test-unit"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Greenruhm/connect.git"
@@ -15,5 +26,22 @@
   "bugs": {
     "url": "https://github.com/Greenruhm/connect/issues"
   },
-  "homepage": "https://github.com/Greenruhm/connect#readme"
+  "homepage": "https://github.com/Greenruhm/connect#readme",
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-eslint": "10.1.0",
+    "babel-polyfill": "6.26.0",
+    "babel-preset-env": "1.7.0",
+    "babel-preset-stage-2": "6.24.1",
+    "babel-register": "6.26.0",
+    "eslint": "5.16.0",
+    "eslint-config-prettier": "4.3.0",
+    "pre-commit": "1.2.2",
+    "prettier": "1.19.1",
+    "pretty-quick": "3.1.3",
+    "riteway": "6.3.1"
+  },
+  "dependencies": {
+    "isomorphic-fetch": "3.0.0"
+  }
 }

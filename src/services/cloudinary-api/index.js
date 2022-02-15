@@ -7,7 +7,7 @@ const uploadToCloudinary = async ({
   signature,
   timestamp,
   apiKey,
-  cloudName,
+  cloudName
 }) => {
   const formData = new FormData();
   formData.append('file', file);
@@ -20,7 +20,7 @@ const uploadToCloudinary = async ({
     `https://api.cloudinary.com/v1_1/${cloudName}/upload`,
     {
       method: 'POST',
-      body: formData,
+      body: formData
     }
   );
   const response = await res.json();
@@ -32,5 +32,4 @@ const uploadToCloudinary = async ({
 
 module.exports = {
   uploadToCloudinary
-}
-
+};
