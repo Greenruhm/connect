@@ -1,8 +1,33 @@
 import {
   getCloudinarySignature,
   updateDropMedia
-} from '../../services/greenruhm-api';
-import { uploadToCloudinary } from '../../services/cloudinary-api';
+} from '../../services/greenruhm-api/index.js';
+import { uploadToCloudinary } from '../../services/cloudinary-api/index.js';
+
+export const getUploadParams = (dropId, params = {}) => {
+  if (!dropId) return [];
+  const keys = ['posterImage', 'embedImage', 'video'];
+  return keys
+    .map(name => {
+      const { file } = params[name] || {};
+      if (!file) return;
+      return { name, file, dropId };
+    })
+    .filter(x => x);
+};
+
+export const mapUploadedMedia = (responses = []) =>
+  responses.reduce((media, file) => {
+    return {
+      ...media,
+      [file.name]: {
+        cloudinaryUrl: file.url,
+        cloudinaryPublicId: file.public_id,
+        cloudinaryResourceType: file.resource_type,
+        cloudinaryType: file.type
+      }
+    };
+  }, {});
 
 const uploadImage = async ({ name, dropId, file }) => {
   const {
@@ -28,28 +53,10 @@ const uploadImage = async ({ name, dropId, file }) => {
 };
 
 const addMedia = async (dropId, params) => {
-  const keys = ['posterImage', 'embedImage', 'video'];
-  const responses = await Promise.all(
-    keys.map(name => {
-      const { file } = params[name] || {};
-      if (!file) return;
-      return uploadImage({ name, file, dropId });
-    })
+  const uploadedMedia = await Promise.all(
+    getUploadParams(dropId, params).map(uploadImage)
   );
-  const media = responses
-    .filter(x => x)
-    .reduce((media, file) => {
-      return {
-        ...media,
-        [file.name]: {
-          cloudinaryUrl: file.url,
-          cloudinaryPublicId: file.public_id,
-          cloudinaryResourceType: file.resource_type,
-          cloudinaryType: file.type
-        }
-      };
-    }, {});
-  return updateDropMedia(dropId, media);
+  return updateDropMedia(dropId, mapUploadedMedia(uploadedMedia));
 };
 
 export default addMedia;

@@ -1,4 +1,4 @@
-import { createDrop as createDropApi } from '../../services/greenruhm-api';
+import { createDrop as createDropApi } from '../../services/greenruhm-api/index.js';
 
 const createDrop = async ({
   username,

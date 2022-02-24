@@ -1,6 +1,6 @@
-import fetch from 'fetch';
+import fetch from 'isomorphic-fetch';
 
-const uploadToCloudinary = async ({
+export const uploadToCloudinary = async ({
   file,
   name,
   dropId,

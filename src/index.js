@@ -1,7 +1,7 @@
-import drop from './features/drop';
+import { getDrop, addMedia, createDrop } from './features/drop';
 
 export default {
-  getDrop: drop.get,
-  addMedia: drop.addMedia,
-  createDrop: drop.createDrop
+  getDrop,
+  addMedia,
+  createDrop
 };
