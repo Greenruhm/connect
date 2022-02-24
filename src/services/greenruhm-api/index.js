@@ -1,5 +1,4 @@
-const fetch = require('isomorphic-fetch');
-
+import fetch from 'isomorphic-fetch';
 const GREENRUHM_URL = process.env.GREENRUHM_URL || 'http://localhost:3000';
 
 const fetchDropsHandler = type => async id => {
@@ -69,7 +68,7 @@ export const updateDropMedia = async (dropId, media) => {
   }
   return response;
 };
-module.exports = {
+export default {
   getDrop,
   createDrop,
   getCloudinarySignature,

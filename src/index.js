@@ -1,6 +1,6 @@
-const drop = require('./features/drop');
+import drop from './features/drop';
 
-module.exports = {
+export default {
   getDrop: drop.get,
   addMedia: drop.addMedia,
   createDrop: drop.createDrop

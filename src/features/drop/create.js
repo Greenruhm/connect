@@ -1,4 +1,4 @@
-const { createDrop: createDropApi } = require('../../services/greenruhm-api');
+import { createDrop as createDropApi } from '../../services/greenruhm-api';
 
 const createDrop = async ({
   username,
@@ -16,4 +16,4 @@ const createDrop = async ({
   return drop;
 };
 
-module.exports = createDrop;
+export default createDrop;

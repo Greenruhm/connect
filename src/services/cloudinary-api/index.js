@@ -1,4 +1,4 @@
-const fetch = require('isomorphic-fetch');
+import fetch from 'fetch';
 
 const uploadToCloudinary = async ({
   file,
@@ -30,6 +30,6 @@ const uploadToCloudinary = async ({
   return response;
 };
 
-module.exports = {
+export default {
   uploadToCloudinary
 };

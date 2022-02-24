@@ -1,8 +1,8 @@
-const getDrop = require('./get');
-const createDrop = require('./create');
-const addMedia = require('./addMedia');
+import getDrop from './get';
+import createDrop from './create';
+import addMedia from './addMedia';
 
-module.exports = {
+export default {
   getDrop,
   createDrop,
   addMedia

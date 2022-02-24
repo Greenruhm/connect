@@ -1,8 +1,8 @@
-const {
+import {
   getCloudinarySignature,
   updateDropMedia
-} = require('../../services/greenruhm-api');
-const { uploadToCloudinary } = require('../../services/cloudinary-api');
+} from '../../services/greenruhm-api';
+import { uploadToCloudinary } from '../../services/cloudinary-api';
 
 const uploadImage = async ({ name, dropId, file }) => {
   const {
@@ -53,4 +53,4 @@ const addMedia = async (dropId, params) => {
   return updatedDrop;
 };
 
-module.exports = addMedia;
+export default addMedia;
