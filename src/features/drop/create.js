@@ -5,15 +5,12 @@ const createDrop = async ({
   title,
   description,
   editionLimit = 0
-} = {}) => {
-  const dropData = {
+} = {}) =>
+  createDropApi({
     username,
     title,
     description,
     editionLimit
-  };
-  const drop = await createDropApi(dropData);
-  return drop;
-};
+  });
 
 export default createDrop;

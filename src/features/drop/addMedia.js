@@ -49,8 +49,7 @@ const addMedia = async (dropId, params) => {
         }
       };
     }, {});
-  const updatedDrop = await updateDropMedia(dropId, media);
-  return updatedDrop;
+  return updateDropMedia(dropId, media);
 };
 
 export default addMedia;
