@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch';
-const GREENRUHM_URL = process.env.GREENRUHM_URL || 'http://localhost:3000';
+const GREENRUHM_URL =
+  process.env.NEXT_PUBLIC_GREENRUHM_URL || 'https://greenruhm.com';
 
 const fetchDropsHandler = type => async id => {
   const response = await fetch(`${GREENRUHM_URL}/api/drops/${type}/${id}`, {
