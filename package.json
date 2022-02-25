@@ -4,6 +4,10 @@
   "description": "Greenruhm Connect is your white label, custom-branded connection to the music metaverse. It allows you to provide music NFT services inside your app with your branding.",
   "main": "src/index.js",
   "type": "module",
+  "engines": {
+    "npm": ">=6.0.0",
+    "node": ">=14.0.0"
+  },
   "scripts": {
     "lint": "eslint src && echo '-- linting finished --'",
     "prettier": "prettier --write 'src/**/*.js'",
