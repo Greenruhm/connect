@@ -28,7 +28,7 @@ describe('getUploadParams()', async assert => {
     given: 'dropId with posterImage in params',
     should: 'return an array with the file',
     actual: getUploadParams('testDropId', {
-      posterImage: { file: 'testFile' }
+      posterImage: 'testFile'
     }),
     expected: [{ name: 'posterImage', file: 'testFile', dropId: 'testDropId' }]
   });
@@ -37,7 +37,7 @@ describe('getUploadParams()', async assert => {
     given: 'dropId with embedImage in params',
     should: 'return an array with the file',
     actual: getUploadParams('testDropId', {
-      embedImage: { file: 'testFile' }
+      embedImage: 'testFile'
     }),
     expected: [{ name: 'embedImage', file: 'testFile', dropId: 'testDropId' }]
   });
@@ -46,7 +46,7 @@ describe('getUploadParams()', async assert => {
     given: 'dropId with video in params',
     should: 'return an array with the file',
     actual: getUploadParams('testDropId', {
-      video: { file: 'testFile' }
+      video: 'testFile'
     }),
     expected: [{ name: 'video', file: 'testFile', dropId: 'testDropId' }]
   });
@@ -55,9 +55,9 @@ describe('getUploadParams()', async assert => {
     given: 'dropId with embedImage, posterImage, video in params',
     should: 'return array with the files',
     actual: getUploadParams('testDropId', {
-      video: { file: 'testVideoFile' },
-      posterImage: { file: 'testPosterFile' },
-      embedImage: { file: 'testEmbedFile' }
+      video: 'testVideoFile',
+      posterImage: 'testPosterFile',
+      embedImage: 'testEmbedFile'
     }),
     expected: [
       { name: 'posterImage', file: 'testPosterFile', dropId: 'testDropId' },
@@ -70,10 +70,10 @@ describe('getUploadParams()', async assert => {
     given: 'dropId with embedImage, posterImage, video and badMedia in params',
     should: 'return an array with only good params',
     actual: getUploadParams('testDropId', {
-      video: { file: 'testVideoFile' },
-      posterImage: { file: 'testPosterFile' },
-      embedImage: { file: 'testEmbedFile' },
-      badMedia: { file: 'testBadMedia' }
+      video: 'testVideoFile',
+      posterImage: 'testPosterFile',
+      embedImage: 'testEmbedFile',
+      badMedia: 'testBadMedia'
     }),
     expected: [
       { name: 'posterImage', file: 'testPosterFile', dropId: 'testDropId' },

@@ -9,7 +9,7 @@ export const getUploadParams = (dropId, params = {}) => {
   const keys = ['posterImage', 'embedImage', 'video'];
   return keys
     .map(name => {
-      const { file } = params[name] || {};
+      const file = params[name] || null;
       if (!file) return;
       return { name, file, dropId };
     })
