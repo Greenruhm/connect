@@ -1,11 +1,16 @@
-import { apiStatuses } from '../reducer/index';
+import {
+  getApiStatus,
+  getApiKey,
+  apiStatuses,
+  updateApiStatus
+} from './reducer';
 
 // TODO: VALIDATE API KEY IN DATABASE;
 const isValidApiKey = async apiKey => !!apiKey;
 
 const checkApiKey = async params => {
-  const { getApiStatus, getApiKey, updateApiStatus } = params;
-  const apiStatus = getApiStatus();
+  const { store } = params;
+  const apiStatus = getApiStatus(store.getState());
   const invalidError = 'Invalid API Key for Greenruhm Connect';
 
   // We already know it's invalid.
@@ -15,13 +20,13 @@ const checkApiKey = async params => {
   if (apiStatus === apiStatuses.Valid) return params;
 
   // Check
-  if (!(await isValidApiKey(getApiKey()))) {
-    updateApiStatus(apiStatuses.Invalid);
+  if (!(await isValidApiKey(getApiKey(store.getState())))) {
+    store.dispatch(updateApiStatus(apiStatuses.Invalid));
     throw new Error(invalidError);
   }
 
   // Check passed, set valid status!
-  updateApiStatus(apiStatuses.Valid);
+  store.dispatch(updateApiStatus(apiStatuses.Valid));
 
   return params;
 };

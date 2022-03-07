@@ -1,29 +1,14 @@
 import { getDrop, addMedia, createDrop } from './features/drop';
 import { signInUser, requiresUserAuth } from './features/user';
 import { checkApiKey } from './features/apiKey';
-import { asyncPipe } from './utils';
-import {
-  getUser,
-  getApiStatus,
-  getApiKey,
-  updateApiKey,
-  updateApiStatus,
-  updateUser,
-  wrapDispatch,
-  dispatch
-} from './reducer';
+import { asyncPipe, withStore } from './utils';
+import { updateApiKey } from './features/apiKey/reducer';
+
+import store from './redux/store';
 
 export const connect = ({ apiKey }) => {
-  dispatch(updateApiKey(apiKey));
-  const context = {
-    getApiKey,
-    getApiStatus,
-    getUser,
-    updateApiStatus: wrapDispatch(updateApiStatus),
-    updateApiKey: wrapDispatch(updateApiKey),
-    updateUser: wrapDispatch(updateUser)
-  };
-
+  store.dispatch(updateApiKey(apiKey));
+  const withMiddleware = asyncPipe(withStore(store), checkApiKey);
   return {
     createDrop: ({
       username = '',
@@ -32,24 +17,22 @@ export const connect = ({ apiKey }) => {
       editionLimit = 0
     } = {}) =>
       asyncPipe(
-        checkApiKey,
+        withMiddleware,
         requiresUserAuth,
         createDrop
-      )({ username, title, description, editionLimit, ...context }),
+      )({ username, title, description, editionLimit }),
     getDrop: (id = '') =>
-      asyncPipe(checkApiKey, requiresUserAuth, getDrop)({ id, ...context }),
+      asyncPipe(withMiddleware, requiresUserAuth, getDrop)({ id }),
     addMedia: (
       dropId,
       { embedImage = null, posterImage = null, video = null } = {}
     ) =>
       asyncPipe(
-        checkApiKey,
+        withMiddleware,
         requiresUserAuth,
         addMedia
-      )(dropId, { embedImage, posterImage, video, ...context }),
-    signInUser: (email = '') =>
-      asyncPipe(checkApiKey, signInUser)({ email, ...context })
+      )(dropId, { embedImage, posterImage, video }),
+    signInUser: (email = '') => asyncPipe(withMiddleware, signInUser)({ email })
   };
 };
-
 export default connect;

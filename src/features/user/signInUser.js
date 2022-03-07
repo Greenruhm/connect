@@ -1,4 +1,6 @@
-const signInUser = ({ email, updateUser }) => {
+import { setUser } from './reducer';
+
+const signInUser = ({ email, store }) => {
   if (!email) {
     throw new Error('Email Required to Sign In User');
   }
@@ -10,7 +12,7 @@ const signInUser = ({ email, updateUser }) => {
     displayName: 'Fake User',
     isSignedIn: true
   };
-  updateUser(user);
+  store.dispatch(setUser(user));
   return user;
 };
 
