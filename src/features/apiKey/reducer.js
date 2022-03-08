@@ -1,19 +1,19 @@
-export const apiStatuses = {
+export const apiStates = {
   Invalid: 'Invalid',
   Valid: 'Valid',
   Unknown: 'Unknown'
 };
 const initialState = {
   apiKey: null,
-  status: apiStatuses.Unknown
+  status: apiStates.Unknown
 };
 export const slice = 'apiKey';
 export const reducer = (state = initialState, { type, payload } = {}) => {
   switch (type) {
-    case updateApiKey.type:
+    case updateApiKeyAction.type:
       state.apiKey = payload;
       return state;
-    case updateApiStatus.type:
+    case addApiStateToActionCreator.type:
       state.status = payload;
       return state;
     default:
@@ -21,18 +21,30 @@ export const reducer = (state = initialState, { type, payload } = {}) => {
   }
 };
 
+const addApiStateToActionCreator = (type = apiStates.Unknown) => () => ({
+  payload: type,
+  type: addApiStateToActionCreator.type
+});
+addApiStateToActionCreator.type = `${slice}/updateApiStatus`;
+
 //action creators
-export const updateApiStatus = (status = apiStatuses.Unknown) => ({
-  payload: status,
-  type: updateApiStatus.type
-});
-updateApiStatus.type = `${slice}/updateApiStatus`;
-export const updateApiKey = apiKey => ({
+export const updateApiStatusUnkownAction = addApiStateToActionCreator(
+  apiStates.Unknown
+);
+export const updateApiStatusValidAction = addApiStateToActionCreator(
+  apiStates.Valid
+);
+export const updateApiStatusInvalidAction = addApiStateToActionCreator(
+  apiStates.Invalid
+);
+export const updateApiKeyAction = apiKey => ({
   payload: apiKey,
-  type: updateApiKey.type
+  type: updateApiKeyAction.type
 });
-updateApiKey.type = `${slice}/updateApiKey`;
+updateApiKeyAction.type = `${slice}/updateApiKey`;
 
 // Selectors
 export const getApiKey = state => state[slice].apiKey;
-export const getApiStatus = state => state[slice].apiStatus;
+export const getApiStatus = state => state[slice].status;
+export const getIsReady = state => state[slice].status !== apiStates.Unknown;
+export const getIsValid = state => state[slice].status === apiStates.Valid;

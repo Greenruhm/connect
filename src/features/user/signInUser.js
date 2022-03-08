@@ -1,9 +1,10 @@
-import { setUser } from './reducer';
+import { setUserAction } from './reducer';
 
-const signInUser = ({ email, store }) => {
+const signInUser = ({ email, dispatch }) => {
   if (!email) {
     throw new Error('Email Required to Sign In User');
   }
+
   // TODO: GET REAL USER FROM DATABASE
   const user = {
     email,
@@ -12,7 +13,7 @@ const signInUser = ({ email, store }) => {
     displayName: 'Fake User',
     isSignedIn: true
   };
-  store.dispatch(setUser(user));
+  dispatch(setUserAction(user));
   return user;
 };
 

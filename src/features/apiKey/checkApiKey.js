@@ -1,32 +1,35 @@
 import {
-  getApiStatus,
+  getIsReady,
+  getIsValid,
   getApiKey,
-  apiStatuses,
-  updateApiStatus
+  updateApiStatusInvalidAction,
+  updateApiStatusValidAction
 } from './reducer';
 
 // TODO: VALIDATE API KEY IN DATABASE;
 const isValidApiKey = async apiKey => !!apiKey;
 
 const checkApiKey = async params => {
-  const { store } = params;
-  const apiStatus = getApiStatus(store.getState());
+  const { getState, dispatch } = params;
+  const state = getState();
+  const isReady = getIsReady(state);
+  const isValid = getIsValid(state);
   const invalidError = 'Invalid API Key for Greenruhm Connect';
 
   // We already know it's invalid.
-  if (apiStatus === apiStatuses.Invalid) throw new Error(invalidError);
+  if (isReady && !isValid) throw new Error(invalidError);
 
   // We already know it's valid.
-  if (apiStatus === apiStatuses.Valid) return params;
+  if (isReady && isValid) return params;
 
   // Check
-  if (!(await isValidApiKey(getApiKey(store.getState())))) {
-    store.dispatch(updateApiStatus(apiStatuses.Invalid));
+  if (!(await isValidApiKey(getApiKey(state)))) {
+    dispatch(updateApiStatusInvalidAction());
     throw new Error(invalidError);
   }
 
   // Check passed, set valid status!
-  store.dispatch(updateApiStatus(apiStatuses.Valid));
+  dispatch(updateApiStatusValidAction());
 
   return params;
 };

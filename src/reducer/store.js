@@ -9,20 +9,22 @@ import {
 
 const createStore = reducer => {
   let state;
-  let listeners = [];
 
   const getState = () => state;
 
   const dispatch = action => {
     state = reducer(state, action);
-    listeners.forEach(listener => listener());
   };
+
+  const addDispatch = params => actionCreator =>
+    dispatch(actionCreator(params));
 
   dispatch({});
 
   return {
     getState,
-    dispatch
+    dispatch,
+    addDispatch
   };
 };
 

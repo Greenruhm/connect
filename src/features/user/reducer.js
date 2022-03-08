@@ -1,8 +1,10 @@
-const initialState = {};
+const initialState = {
+  isSignedIn: false
+};
 export const slice = 'user';
 export const reducer = (state = initialState, { type, payload } = {}) => {
   switch (type) {
-    case setUser.type:
+    case setUserAction.type:
       state = payload;
       return state;
     default:
@@ -11,11 +13,11 @@ export const reducer = (state = initialState, { type, payload } = {}) => {
 };
 
 // Action Creators
-export const setUser = user => ({
+export const setUserAction = user => ({
   payload: user,
-  type: setUser.type
+  type: setUserAction.type
 });
-setUser.type = `${slice}/setUser`;
+setUserAction.type = `${slice}/setUser`;
 
 // Selectors
-export const getUser = state => state[slice];
+export const getUserIsSignedIn = state => state[slice].isSignedIn;
