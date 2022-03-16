@@ -6,8 +6,8 @@ import { uploadToCloudinary } from '../../services/cloudinary-api/index.js';
 
 export const getUploadParams = (dropId, params = {}) => {
   if (!dropId) return [];
-  const keys = ['posterImage', 'embedImage', 'video'];
-  return keys
+  const fileTypes = ['posterImage', 'embedImage', 'video'];
+  return fileTypes
     .map(name => {
       const file = params[name] || null;
       if (!file) return;

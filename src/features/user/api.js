@@ -1,7 +1,7 @@
 import signInUser from './signInUser';
-import requiresUserAuth from './requiresUserAuth';
+import requiresAuth from './requiresAuth';
 
 export default {
   signInUser,
-  requiresUserAuth
+  requiresAuth
 };
