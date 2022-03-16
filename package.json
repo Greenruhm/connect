@@ -44,6 +44,7 @@
     "tape": "5.5.2"
   },
   "dependencies": {
-    "isomorphic-fetch": "3.0.0"
+    "isomorphic-fetch": "3.0.0",
+    "magic-sdk": "8.1.0"
   }
 }
