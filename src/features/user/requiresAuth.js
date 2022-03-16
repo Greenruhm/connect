@@ -1,5 +1,5 @@
 const requiresAuth = ({ errorMsg, predicate }) => params => {
-  if (!predicate) throw new Error(errorMsg);
+  if (!predicate(params)) throw new Error(errorMsg);
   return params;
 };
 

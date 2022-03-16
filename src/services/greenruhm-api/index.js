@@ -18,7 +18,7 @@ const fetchDropsHandler = type => async id => {
 };
 
 const fetchDrop = fetchDropsHandler('drop');
-const getDrop = async id => {
+export const getDrop = async id => {
   try {
     const drop = await fetchDrop(id);
     return drop;
@@ -27,7 +27,7 @@ const getDrop = async id => {
   }
 };
 
-const createDrop = async dropData => {
+export const createDrop = async dropData => {
   const response = await fetch(`${GREENRUHM_URL}/api/drops/drop`, {
     method: 'POST',
     headers: {
@@ -69,6 +69,7 @@ export const updateDropMedia = async (dropId, media) => {
   }
   return response;
 };
+
 export default {
   getDrop,
   createDrop,

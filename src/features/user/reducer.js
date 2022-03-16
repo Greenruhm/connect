@@ -21,3 +21,4 @@ setUserAction.type = `${slice}/setUser`;
 
 // Selectors
 export const getUserIsSignedIn = state => state[slice].isSignedIn;
+export const getUserName = state => state[slice].username;

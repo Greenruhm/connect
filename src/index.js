@@ -1,20 +1,23 @@
-import dropApi from './features/drop/api';
-import userApi from './features/user/api';
-import { checkApiKey } from './features/apiKey/api';
+import drop from './features/drop/api';
+import user from './features/user/api';
+// import { checkApiKey } from './features/apiKey/api';
 import { asyncPipe, withStore } from './utils';
-import {
-  updateApiKeyAction,
-  getUserIsSignedIn
-} from './features/apiKey/reducer';
+import { updateApiKeyAction } from './features/apiKey/reducer';
+import { getUserIsSignedIn } from './features/user/reducer';
+import store from './reducer/store';
 
-import store from './redux/store';
+const { requiresAuth } = user;
 
-const requiresAuth = userApi.requiresAuth;
+const requiresSignIn = errorMsg =>
+  requiresAuth({
+    errorMsg,
+    predicate: params => getUserIsSignedIn(params.getState())
+  });
 
 export const connect = ({ apiKey = '' }) => {
   store.dispatch(updateApiKeyAction(apiKey));
 
-  const withMiddleware = asyncPipe(withStore(store), checkApiKey);
+  const withMiddleware = asyncPipe(withStore(store));
 
   const createDrop = ({
     username = '',
@@ -24,35 +27,26 @@ export const connect = ({ apiKey = '' }) => {
   } = {}) =>
     asyncPipe(
       withMiddleware,
-      requiresAuth({
-        errorMsg: 'You must be signed in to create a drop.',
-        predicate: getUserIsSignedIn(store.getState())
-      }),
-      dropApi.createDrop
+      requiresSignIn('You must be signed in to create a drop.'),
+      drop.createDrop
     )({ username, title, description, editionLimit });
 
   const getDrop = (dropId = '') =>
     asyncPipe(
       withMiddleware,
-      requiresAuth({
-        errorMsg: 'You must be signed in to get a drop.',
-        predicate: getUserIsSignedIn(store.getState())
-      }),
-      dropApi.getDrop
+      requiresSignIn('You must be signed in to get a drop'),
+      drop.getDrop
     )({ dropId });
 
   const addMedia = (dropId = '', { embedImage, posterImage, video } = {}) =>
     asyncPipe(
       withMiddleware,
-      requiresAuth({
-        errorMsg: 'You must be signed in to update a drop.',
-        predicate: getUserIsSignedIn(store.getState())
-      }),
-      dropApi.addMedia
+      requiresSignIn('You must be signed in to update a drop.'),
+      drop.addMedia
     )({ dropId, embedImage, posterImage, video });
 
   const signInUser = (email = '') =>
-    asyncPipe(withMiddleware, userApi.signInUser)({ email });
+    asyncPipe(withMiddleware, user.signInUser)({ email });
 
   return {
     createDrop,

@@ -1,9 +1,9 @@
 import { createDrop as createDropApi } from '../../services/greenruhm-api/index.js';
-import { getUser } from '../user/reducer';
+import { getUserName } from '../user/reducer';
 
 const createDrop = async ({
   getState,
-  username = getUser(getState()).username,
+  username = getUserName(getState()),
   title,
   description,
   editionLimit
