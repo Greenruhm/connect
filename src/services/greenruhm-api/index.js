@@ -47,10 +47,13 @@ export const getCloudinarySignature = async ({
   name: public_id,
   dropId: folder
 } = {}) => {
-  const res = await fetch(`/api/upload/get-cloudinary-signature`, {
-    method: 'POST',
-    body: JSON.stringify({ public_id, folder })
-  });
+  const res = await fetch(
+    `${GREENRUHM_URL}/api/upload/get-cloudinary-signature`,
+    {
+      method: 'POST',
+      body: JSON.stringify({ public_id, folder })
+    }
+  );
   const response = await res.json();
   if (response.error) {
     throw new Error(response.error);
@@ -59,9 +62,41 @@ export const getCloudinarySignature = async ({
 };
 
 export const updateDropMedia = async (dropId, media) => {
-  const res = await fetch(`/api/drops/drop/${dropId}/update`, {
+  const res = await fetch(`${GREENRUHM_URL}/api/drops/drop/${dropId}/update`, {
     method: 'PATCH',
     body: JSON.stringify(media)
+  });
+  const response = await res.json();
+  if (response.error) {
+    throw new Error(response.error);
+  }
+  return response;
+};
+
+export const getProfile = async walletAddress => {
+  const res = await fetch(`${GREENRUHM_URL}/api/profile/${walletAddress}`);
+  const response = await res.json();
+  if (response.error) {
+    throw new Error(response.error);
+  }
+  return response;
+};
+
+export const updateLastSignedIn = async id =>
+  fetch(`${GREENRUHM_URL}/api/sign-in`, {
+    method: 'POST',
+    body: JSON.stringify({ id })
+  });
+
+export const createUser = async ({
+  displayName,
+  username,
+  email,
+  publicAddress
+} = {}) => {
+  const res = await fetch(`${GREENRUHM_URL}/api/create-account`, {
+    method: 'POST',
+    body: JSON.stringify({ displayName, username, email, publicAddress })
   });
   const response = await res.json();
   if (response.error) {
@@ -74,5 +109,8 @@ export default {
   getDrop,
   createDrop,
   getCloudinarySignature,
-  updateDropMedia
+  updateDropMedia,
+  getProfile,
+  updateLastSignedIn,
+  createUser
 };

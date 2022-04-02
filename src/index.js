@@ -48,11 +48,15 @@ export const connect = ({ apiKey = '' }) => {
   const signInUser = (email = '') =>
     asyncPipe(withMiddleware, user.signInUser)({ email });
 
+  const signUp = ({ email = '', username = '', displayName = '' } = {}) =>
+    asyncPipe(withMiddleware, user.signUp)({ email, username, displayName });
+
   return {
+    signUp,
+    signInUser,
     createDrop,
     getDrop,
-    addMedia,
-    signInUser
+    addMedia
   };
 };
 
