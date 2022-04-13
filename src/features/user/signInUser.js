@@ -6,9 +6,6 @@ import {
 import { getUserIsSignedIn } from './reducer';
 
 const signInUser = async ({ email, dispatch, getState, magic }) => {
-  if (!magic) {
-    throw new Error('Requires Magic SDK');
-  }
   if (!email) {
     throw new Error('Email Required to Sign In User');
   }

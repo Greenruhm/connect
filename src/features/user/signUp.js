@@ -13,10 +13,6 @@ const signUp = async ({
   getState,
   magic
 }) => {
-  if (!magic) {
-    throw new Error('Requires Magic SDK');
-  }
-
   if (!email || !username || !displayName) {
     throw new Error('Missing required field');
   }
