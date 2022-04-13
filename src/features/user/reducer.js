@@ -16,8 +16,7 @@ export const slice = 'user';
 export const reducer = (state = initialState, { type, payload } = {}) => {
   switch (type) {
     case setUser.type:
-      state = payload;
-      return state;
+      return payload;
     case setAnonUser.type:
       return initialState;
     default:

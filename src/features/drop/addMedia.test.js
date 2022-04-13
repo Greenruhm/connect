@@ -1,5 +1,4 @@
-import riteway from 'riteway';
-const { describe } = riteway;
+import { describe } from 'riteway';
 import { getUploadParams, mapUploadedMedia } from './addMedia.js';
 
 describe('getUploadParams()', async assert => {

@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Greenruhm Connect is your white label, custom-branded connection to the music metaverse. It allows you to provide music NFT services inside your app with your branding.",
   "main": "src/index.js",
-  "type": "module",
   "engines": {
     "npm": ">=6.0.0",
     "node": ">=14.0.0"
@@ -12,7 +11,7 @@
     "lint": "eslint src && echo '-- linting finished --'",
     "prettier": "prettier --write 'src/**/*.js'",
     "test": "npm run test-unit",
-    "test-unit": "nyc tape src/test/unit.js | tap-nirvana",
+    "test-unit": "NODE_ENV=test node -r @babel/register -r @babel/polyfill src/test/unit.js | tap-nirvana",
     "pretty-quick": "pretty-quick --staged"
   },
   "pre-commit": [
@@ -31,6 +30,12 @@
   },
   "homepage": "https://github.com/Greenruhm/connect#readme",
   "devDependencies": {
+    "@babel/core": "7.17.9",
+    "@babel/polyfill": "7.12.1",
+    "@babel/preset-env": "7.16.11",
+    "@babel/preset-react": "7.16.7",
+    "@babel/register": "7.17.7",
+    "babel-plugin-module-resolver": "4.1.0",
     "eslint": "8.9.0",
     "eslint-config-prettier": "4.3.0",
     "esm": "3.2.25",
@@ -44,6 +49,7 @@
     "tape": "5.5.2"
   },
   "dependencies": {
-    "isomorphic-fetch": "3.0.0"
+    "isomorphic-fetch": "3.0.0",
+    "styled-jsx": "5.0.2"
   }
 }
