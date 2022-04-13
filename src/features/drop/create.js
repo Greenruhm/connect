@@ -1,5 +1,6 @@
 import { createDrop as createDropApi } from '../../services/greenruhm-api/index.js';
 import { getUserName } from '../user/reducer';
+import { addMedia } from './addMedia';
 
 const createDrop = async ({
   getState,
@@ -14,12 +15,19 @@ const createDrop = async ({
   if (description == '') {
     throw new Error('Description Required to Create Drop');
   }
-  return createDropApi({
+  const drop = createDropApi({
     username,
     title,
     description,
     editionLimit
   });
+
+  return {
+    __proto__: {
+      addMedia: addMedia(drop.id)
+    },
+    ...drop
+  };
 };
 
 export default createDrop;

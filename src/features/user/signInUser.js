@@ -1,14 +1,14 @@
 import { setUser, setAnonUser } from './reducer';
-import { Magic } from 'magic-sdk';
 import {
   getProfile,
   updateLastSignedIn
 } from '../../services/greenruhm-api/index.js';
 import { getUserIsSignedIn } from './reducer';
 
-const signInUser = async ({ email, dispatch, getState }) => {
-  const magic = new Magic('pk_live_8395118919D97400');
-
+const signInUser = async ({ email, dispatch, getState, magic }) => {
+  if (!magic) {
+    throw new Error('Requires Magic SDK');
+  }
   if (!email) {
     throw new Error('Email Required to Sign In User');
   }

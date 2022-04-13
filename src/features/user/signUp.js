@@ -1,13 +1,21 @@
 import { setUser, setAnonUser } from './reducer';
-import { Magic } from 'magic-sdk';
 import {
   getProfile,
   createUser as createGreenruhmUser
 } from '../../services/greenruhm-api/index.js';
 import { getUserIsSignedIn } from './reducer';
 
-const signUp = async ({ email, username, displayName, dispatch, getState }) => {
-  const magic = new Magic('pk_live_8395118919D97400');
+const signUp = async ({
+  email,
+  username,
+  displayName,
+  dispatch,
+  getState,
+  magic
+}) => {
+  if (!magic) {
+    throw new Error('Requires Magic SDK');
+  }
 
   if (!email || !username || !displayName) {
     throw new Error('Missing required field');
