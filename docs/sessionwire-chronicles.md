@@ -1,8 +1,8 @@
 ## Glossary
 
 * **Session** - A record of a collaboration on a single piece of creative work.
-* **Split** - 
-
+* **Split** - A record of who gets paid what when royalties are earned.
+* **Versions** - A record of a particular file and creation time, which each version of a file refers to the same logical file.
 
 ## Data Privacy
 
