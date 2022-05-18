@@ -1,11 +1,11 @@
 ## Glossary
 
-* **Work** - A single piece of creative work, e.g. song, stems, etc.
-* **Session** - A record of a collaboration on a single piece of creative work, which may consist of other pieces of creative work, e.g. stems, samples, video, images.
+* **Creative Work** - A single piece of creative work that may be associated with a drop, album, or release, e.g. song, stems, etc.
+* **Session** - A record of a collaboration on a single piece of creative work, which may consist of other pieces of creative work, e.g. stems, samples, video, images. Sessions can be associated with splits, versions of songs/tracks/stems, and records of activities and chats related to the session.
 * **Split** - A record of who gets paid what when royalties are earned in relation to a specific drop.
 * **Recording** - A musical recording - the rendered recording of a particular work, tracked with its own ISRC and UPC codes (often assigned by distributors).
 * **Drop** - A publicly released creative work issued as a non-fungible token.
-* **Composition** - A musical composition tracked with its own ISWC (typically issued by ASCAP, BMI, or SESAC in the US).
+* **Composition** - A creative composition tracked with its own ISWC (typically issued by ASCAP, BMI, or SESAC in the US).
 * **Versions** - A record of a particular file and creation time, which each version of a file refers to the same logical file.
 
 
@@ -20,5 +20,5 @@ What can we do while data is private?
 ### Fingerprint Requirements
 
 * Greenruhm Account
-* Sessionwire session ID - single creative work
+* Sessionwire session ID
 
