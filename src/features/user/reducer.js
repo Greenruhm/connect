@@ -1,23 +1,41 @@
-const initialState = {
-  isSignedIn: false
-};
+export const createUser = ({
+  email = '',
+  publicAddress = '',
+  sessionToken = '',
+  isSignedIn = false
+} = {}) => ({
+  email,
+  publicAddress,
+  sessionToken,
+  isSignedIn
+});
+
+export const initialState = createUser();
+
 export const slice = 'user';
 export const reducer = (state = initialState, { type, payload } = {}) => {
   switch (type) {
-    case setUserAction.type:
-      state = payload;
-      return state;
+    case setUser.type:
+      return payload;
+    case setAnonUser.type:
+      return initialState;
     default:
       return state;
   }
 };
 
 // Action Creators
-export const setUserAction = user => ({
+export const setUser = user => ({
   payload: user,
-  type: setUserAction.type
+  type: setUser.type
 });
-setUserAction.type = `${slice}/setUser`;
+setUser.type = `${slice}/setUser`;
+
+export const setAnonUser = user => ({
+  payload: user,
+  type: setAnonUser.type
+});
+setAnonUser.type = `${slice}/setAnonUser`;
 
 // Selectors
 export const getUserIsSignedIn = state => state[slice].isSignedIn;

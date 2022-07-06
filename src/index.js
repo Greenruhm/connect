@@ -38,21 +38,21 @@ export const connect = ({ apiKey = '' }) => {
       drop.getDrop
     )({ dropId });
 
-  const addMedia = (dropId = '', { embedImage, posterImage, video } = {}) =>
+  const signIn = (email = '') =>
+    asyncPipe(withMiddleware, user.withMagic, user.signInUser)({ email });
+
+  const signUp = ({ email = '', username = '', displayName = '' } = {}) =>
     asyncPipe(
       withMiddleware,
-      requiresSignIn('You must be signed in to update a drop.'),
-      drop.addMedia
-    )({ dropId, embedImage, posterImage, video });
-
-  const signInUser = (email = '') =>
-    asyncPipe(withMiddleware, user.signInUser)({ email });
+      user.withMagic,
+      user.signUp
+    )({ email, username, displayName });
 
   return {
+    signUp,
+    signIn,
     createDrop,
-    getDrop,
-    addMedia,
-    signInUser
+    getDrop
   };
 };
 
