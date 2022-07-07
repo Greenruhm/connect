@@ -13,7 +13,7 @@ const signUp = async ({
   getState,
   magic
 }) => {
-  if (!email || !username || !displayName) {
+  if (!email) {
     throw new Error('Missing required field');
   }
 
