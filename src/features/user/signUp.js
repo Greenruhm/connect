@@ -12,7 +12,7 @@ const signUp = async ({
   dispatch,
   getState,
   magic
-}) => {
+} = {}) => {
   if (!email) {
     throw new Error('Missing required field');
   }
@@ -21,6 +21,9 @@ const signUp = async ({
     if (!magicUser && getUserIsSignedIn(getState())) {
       // we don't have a magic user, but our state says we are logged in.
       // lets reset the user in state with the anonymous user.
+      console.log(
+        "Magic user was not found, but store state says we're logged in. Resetting user."
+      );
       setAnonUser();
       return;
     }
@@ -35,6 +38,9 @@ const signUp = async ({
     const sessionToken = magicUserData[1];
 
     // Get user from Greenruhm
+    console.log(
+      `Fetching user data from Greenruhm API by publicAddress: ${publicAddress}`
+    );
     const profileData = await getProfile(publicAddress);
 
     const { _id: id } = profileData[publicAddress];
@@ -43,11 +49,17 @@ const signUp = async ({
       // The wallet address is already registered with Greenruhm.
       // Lets clear our state and log the user out of magic.
       // We will ask the user to use the sign in method.
+      console.log(
+        'The wallet address already has a Greenruhm account. Clear state and log user out. Ask user to use the signIn() method.'
+      );
       await magicUser.logout();
       dispatch(setAnonUser());
       throw new Error('User Already Exists. Please Use Sign In Method.');
     } else {
       // The user doesn't exist in Greenruhm. Lets create them and sign them in.
+      console.log(
+        "The user doesn't exist in Greenruhm. Create and sign them in!"
+      );
       const { _id: id, ...user } = await createGreenruhmUser({
         publicAddress,
         email,
@@ -70,10 +82,12 @@ const signUp = async ({
   // We check to see if the user is
   // already signed in to the Magic API.
   if (await magic.user.isLoggedIn()) {
+    console.log('Magic user is logged in.');
     return createUser(magic.user);
   }
 
   // user isn't signed in - so lets send them a email link.
+  console.log('Magic user is not logged in. Logging in with Magic...');
   await magic.auth.loginWithMagicLink({ email });
 
   // And update the user in our state.
