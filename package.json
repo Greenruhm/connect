@@ -20,7 +20,7 @@
   "pre-commit": [
     "lint",
     "pretty-quick",
-    "test-unit"
+    "test"
   ],
   "repository": {
     "type": "git",
