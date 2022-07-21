@@ -23,13 +23,13 @@ const signInUser = async ({ email, dispatch, getState, magic }) => {
       magicUser.getIdToken()
     ]);
 
-    const { publicAddress, email } = magicUserData[0];
+    const { publicAddress: walletAddress, email } = magicUserData[0];
     const sessionToken = magicUserData[1];
 
     // Get user info from Greenruhm
-    const profileData = await getProfile(publicAddress);
+    const profileData = await getProfile(walletAddress);
 
-    const { _id: id, ...user } = profileData[publicAddress];
+    const { _id: id, ...user } = profileData[walletAddress];
 
     if (!id) throw new Error('User Does Not Exist');
 
@@ -39,7 +39,7 @@ const signInUser = async ({ email, dispatch, getState, magic }) => {
     const userData = {
       ...user,
       id,
-      publicAddress,
+      walletAddress,
       email,
       isSignedIn: true,
       sessionToken

@@ -75,7 +75,15 @@ export const updateDropMedia = async (dropId, media) => {
 
 export const getProfile = async walletAddress => {
   const res = await fetch(`${GREENRUHM_URL}/api/profile/${walletAddress}`);
+
+  // Return an empty object if the user doesn't exist.
+  if (res.status === 404) {
+    return { [walletAddress]: {} };
+  }
+
   const response = await res.json();
+
+  // Throw if we see a different kind of error. We have no idea what went wrong in this case.
   if (response.error) {
     throw new Error(response.error);
   }
@@ -92,11 +100,11 @@ export const createUser = async ({
   displayName,
   username,
   email,
-  publicAddress
+  walletAddress
 } = {}) => {
   const res = await fetch(`${GREENRUHM_URL}/api/create-account`, {
     method: 'POST',
-    body: JSON.stringify({ displayName, username, email, publicAddress })
+    body: JSON.stringify({ displayName, username, email, walletAddress })
   });
   const response = await res.json();
   if (response.error) {

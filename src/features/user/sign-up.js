@@ -8,13 +8,17 @@ import { getUserIsSignedIn } from './reducer';
 const signUp = async ({
   email,
   username,
-  displayName,
+  displayName = username,
   dispatch,
   getState,
-  magic
+  magic,
+  signUpEmail = email
 } = {}) => {
   if (!email) {
-    throw new Error('Missing required field');
+    throw new Error('Email is required.');
+  }
+  if (!username) {
+    throw new Error('Username is required.');
   }
 
   const createUser = async magicUser => {
@@ -34,16 +38,37 @@ const signUp = async ({
       magicUser.getIdToken()
     ]);
 
-    const { publicAddress, email } = magicUserData[0];
+    const { publicAddress: walletAddress, email } = magicUserData[0];
     const sessionToken = magicUserData[1];
+
+    if (signUpEmail !== email) {
+      console.log(
+        'Logged in user email mismatch, signing up with email:',
+        signUpEmail
+      );
+      await magicUser.logout();
+      dispatch(setAnonUser());
+
+      // wait a tick for the user to be logged out.
+      await Promise.resolve();
+      signUp({
+        email: signUpEmail,
+        username,
+        displayName,
+        dispatch,
+        getState,
+        magic
+      });
+      return;
+    }
 
     // Get user from Greenruhm
     console.log(
-      `Fetching user data from Greenruhm API by publicAddress: ${publicAddress}`
+      `Fetching user data from Greenruhm API by walletAddress: ${walletAddress}`
     );
-    const profileData = await getProfile(publicAddress);
+    const profileData = await getProfile(walletAddress);
 
-    const { _id: id } = profileData[publicAddress];
+    const id = profileData[walletAddress]?._id;
 
     if (id) {
       // The wallet address is already registered with Greenruhm.
@@ -61,7 +86,7 @@ const signUp = async ({
         "The user doesn't exist in Greenruhm. Create and sign them in!"
       );
       const { _id: id, ...user } = await createGreenruhmUser({
-        publicAddress,
+        walletAddress,
         email,
         displayName,
         username
@@ -69,7 +94,7 @@ const signUp = async ({
       const userData = {
         ...user,
         id,
-        publicAddress,
+        walletAddress,
         email,
         isSignedIn: true,
         sessionToken

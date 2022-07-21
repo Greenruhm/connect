@@ -1,4 +1,4 @@
-import signUp from './features/user/signUp';
+import signUp from './features/user/sign-up';
 import withMagic from './features/user/withMagic';
 import { asyncPipe, withStore } from './utils';
 import { updateApiKeyAction } from './features/apiKey/reducer';
