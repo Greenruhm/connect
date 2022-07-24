@@ -24,19 +24,28 @@ const signUp = async ({
   const createUser = async magicUser => {
     if (!magicUser && getUserIsSignedIn(getState())) {
       // we don't have a magic user, but our state says we are logged in.
-      // lets reset the user in state with the anonymous user.
+      // let's reset the user in state with the anonymous user.
       console.log(
         "Magic user was not found, but store state says we're logged in. Resetting user."
       );
-      setAnonUser();
+      dispatch(setAnonUser());
       return;
     }
 
     // Gather the user info from magic.
-    const magicUserData = await Promise.all([
+    const magicUserData = Promise.all([
       magicUser.getMetadata(),
       magicUser.getIdToken()
     ]);
+    try {
+      await magicUserData;
+    } catch (e) {
+      // If we can't get the user data, we can't create a user.
+      // This is probably because the user is not logged in.
+      // We'll reset the user in state to the anonymous user.
+      dispatch(setAnonUser());
+      return;
+    }
 
     const { publicAddress: walletAddress, email } = magicUserData[0];
     const sessionToken = magicUserData[1];
@@ -49,7 +58,7 @@ const signUp = async ({
       await magicUser.logout();
       dispatch(setAnonUser());
 
-      // wait a tick for the user to be logged out.
+      // Wait a tick for the user to be logged out.
       await Promise.resolve();
       signUp({
         email: signUpEmail,
@@ -113,7 +122,10 @@ const signUp = async ({
 
   // user isn't signed in - so lets send them a email link.
   console.log('Magic user is not logged in. Logging in with Magic...');
-  await magic.auth.loginWithMagicLink({ email });
+
+  // The magic UX handles errors for sign-in, so we can ignore them.
+  const noop = () => {};
+  await magic.auth.loginWithMagicLink({ email }).catch(noop);
 
   // And update the user in our state.
   return createUser(magic.user);
