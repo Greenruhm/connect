@@ -1,11 +1,11 @@
 export const createUser = ({
   email = '',
-  publicAddress = '',
+  walletAddress = '',
   sessionToken = '',
   isSignedIn = false
 } = {}) => ({
   email,
-  publicAddress,
+  walletAddress,
   sessionToken,
   isSignedIn
 });

@@ -18,7 +18,7 @@ describe('User reducer()', async assert => {
   {
     const user = createUser({
       email: 'test@email.com',
-      publicAddress: 'test',
+      walletAddress: 'test',
       sessionToken: 'test-token',
       isSignedIn: true
     });
@@ -33,7 +33,7 @@ describe('User reducer()', async assert => {
   {
     const user = createUser({
       email: 'test@email.com',
-      publicAddress: 'test',
+      walletAddress: 'test',
       sessionToken: 'test-token',
       isSignedIn: true
     });
