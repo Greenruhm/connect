@@ -33,19 +33,17 @@ const signUp = async ({
     }
 
     // Gather the user info from magic.
-    const magicUserData = Promise.all([
+    const magicUserData = await Promise.all([
       magicUser.getMetadata(),
       magicUser.getIdToken()
-    ]);
-    try {
-      await magicUserData;
-    } catch (e) {
+    ]).catch(() => {
       // If we can't get the user data, we can't create a user.
       // This is probably because the user is not logged in.
       // We'll reset the user in state to the anonymous user.
       dispatch(setAnonUser());
-      return;
-    }
+    });
+
+    if (!magicUserData) return;
 
     const { publicAddress: walletAddress, email } = magicUserData[0];
     const sessionToken = magicUserData[1];
@@ -99,7 +97,15 @@ const signUp = async ({
         email,
         displayName,
         username
+      }).catch(async e => {
+        if (e.message.includes('Username')) {
+          await magicUser.logout();
+          dispatch(setAnonUser());
+          throw e;
+        }
+        throw e;
       });
+
       const userData = {
         ...user,
         id,

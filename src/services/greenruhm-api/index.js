@@ -106,11 +106,18 @@ export const createUser = async ({
     method: 'POST',
     body: JSON.stringify({ displayName, username, email, walletAddress })
   });
-  const response = await res.json();
-  if (response.error) {
-    throw new Error(response.error);
+
+  // Check for errors we can handle.
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text);
   }
-  return response;
+
+  const body = await res.json();
+  if (body.error) {
+    throw new Error(body.error);
+  }
+  return body;
 };
 
 export default {
