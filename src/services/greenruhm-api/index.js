@@ -111,6 +111,7 @@ export const createUser = async ({
   if (!res.ok) {
     const text = await res.text();
     throw new Error(text);
+    // TODO: Unhandled thrown error here | Oliver | Remove
   }
 
   const body = await res.json();

@@ -100,6 +100,9 @@ const signUp = async ({
       }).catch(async e => {
         if (e.message.includes('Username')) {
           await magicUser.logout();
+          // TODO: Oliver | Remove
+          console.log({ createGreenruhmUserError: e });
+          // TODO: Oliver | Remove
           dispatch(setAnonUser());
           throw e;
         }
