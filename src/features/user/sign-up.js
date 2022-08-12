@@ -1,8 +1,5 @@
 import { setUser, setAnonUser } from './reducer';
-import {
-  getProfile,
-  createUser as createGreenruhmUser
-} from '../../services/greenruhm-api/index.js';
+import { createUser as createGreenruhmUser } from '../../services/greenruhm-api/index.js';
 import { getUserIsSignedIn } from './reducer';
 
 const signUp = async ({
@@ -58,7 +55,7 @@ const signUp = async ({
 
       // Wait a tick for the user to be logged out.
       await Promise.resolve();
-      signUp({
+      return signUp({
         email: signUpEmail,
         username,
         displayName,
@@ -66,60 +63,37 @@ const signUp = async ({
         getState,
         magic
       });
-      return;
     }
 
-    // Get user from Greenruhm
-    console.log(
-      `Fetching user data from Greenruhm API by walletAddress: ${walletAddress}`
-    );
-    const profileData = await getProfile(walletAddress);
-
-    const id = profileData[walletAddress]?._id;
-
-    if (id) {
-      // The wallet address is already registered with Greenruhm.
-      // Lets clear our state and log the user out of magic.
-      // We will ask the user to use the sign in method.
-      console.log(
-        'The wallet address already has a Greenruhm account. Clear state and log user out. Ask user to use the signIn() method.'
-      );
-      await magicUser.logout();
-      dispatch(setAnonUser());
-      throw new Error('User Already Exists. Please Use Sign In Method.');
-    } else {
-      // The user doesn't exist in Greenruhm. Lets create them and sign them in.
-      console.log(
-        "The user doesn't exist in Greenruhm. Create and sign them in!"
-      );
-      const { _id: id, ...user } = await createGreenruhmUser({
-        walletAddress,
-        email,
-        displayName,
-        username
-      }).catch(async e => {
-        if (e.message.includes('Username')) {
-          await magicUser.logout();
-          // TODO: Oliver | Remove
-          console.log({ createGreenruhmUserError: e });
-          // TODO: Oliver | Remove
-          dispatch(setAnonUser());
-          throw e;
-        }
+    /*
+    Try to call createGreenruhmUser - it will throw if:
+     - username already exists
+     - email already exists
+     - weird, unexpected error
+    */
+    return createGreenruhmUser({
+      walletAddress,
+      email,
+      displayName,
+      username
+    })
+      .then(({ _id: id, ...user }) => {
+        const userData = {
+          ...user,
+          id,
+          walletAddress,
+          email,
+          isSignedIn: true,
+          sessionToken
+        };
+        dispatch(setUser(userData));
+        return userData;
+      })
+      .catch(async e => {
+        await magicUser.logout();
+        dispatch(setAnonUser());
         throw e;
       });
-
-      const userData = {
-        ...user,
-        id,
-        walletAddress,
-        email,
-        isSignedIn: true,
-        sessionToken
-      };
-      dispatch(setUser(userData));
-      return userData;
-    }
   };
 
   // We check to see if the user is
@@ -129,7 +103,7 @@ const signUp = async ({
     return createUser(magic.user);
   }
 
-  // user isn't signed in - so lets send them a email link.
+  // User isn't signed in - so lets send them a email link.
   console.log('Magic user is not logged in. Logging in with Magic...');
 
   // The magic UX handles errors for sign-in, so we can ignore them.
