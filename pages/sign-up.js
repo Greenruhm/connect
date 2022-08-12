@@ -28,9 +28,6 @@ export default () => {
     try {
       await signUp({ email: state.email, username: state.username });
     } catch (e) {
-      // TODO: Oliver | Remove
-      console.log({ signUpError: e });
-      // TODO: Oliver | Remove
       setState(state => ({
         ...state,
         errors: [...state.errors, e.message]
