@@ -1,3 +1,4 @@
+import signIn from './features/user/sign-in';
 import signUp from './features/user/sign-up';
 import withMagic from './features/user/withMagic';
 import { asyncPipe, withStore } from './utils';
@@ -14,6 +15,8 @@ export const connect = ({ apiKey = '' } = {}) => {
   const withMiddleware = asyncPipe(withStore(store));
 
   return {
+    signIn: ({ email = '' } = {}) =>
+      asyncPipe(withMiddleware, withMagic, signIn)({ email, ...withMagic({}) }),
     signUp: ({ email = '', username = '', displayName = '' } = {}) =>
       asyncPipe(
         withMiddleware,
