@@ -5,7 +5,7 @@ import {
 } from '../../services/greenruhm-api/index.js';
 import { getUserIsSignedIn } from './reducer';
 
-const signInUser = async ({ email, dispatch, getState, magic }) => {
+const signInUser = async ({ email, dispatch, getState, magic } = {}) => {
   if (!email) {
     throw new Error('Email Required to Sign In User');
   }
