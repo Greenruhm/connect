@@ -17,7 +17,7 @@ export const connect = ({ apiKey = '' } = {}) => {
   return {
     signIn: ({ email = '' } = {}) =>
       asyncPipe(withMiddleware, withMagic, signIn)({ email, ...withMagic({}) }),
-    signUp: ({ email = '', username = '', displayName = '' } = {}) =>
+    signUp: ({ email = '', username = '', displayName = username } = {}) =>
       asyncPipe(
         withMiddleware,
         withMagic,
