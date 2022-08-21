@@ -31,7 +31,7 @@ const signInUser = async ({ email, dispatch, getState, magic } = {}) => {
 
     const { _id: id, ...user } = profileData[walletAddress];
 
-    if (!id) throw new Error('User Does Not Exist');
+    if (!id) throw new Error('Account not found.');
 
     // Update users last signed in date in Greenruhm.
     updateLastSignedIn(id);
