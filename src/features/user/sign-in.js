@@ -5,7 +5,7 @@ import {
 } from '../../services/greenruhm-api/index.js';
 import { getUserIsSignedIn } from './reducer';
 
-const signInUser = async ({ email, dispatch, getState, magic }) => {
+const signInUser = async ({ email, dispatch, getState, magic } = {}) => {
   if (!email) {
     throw new Error('Email Required to Sign In User');
   }
@@ -31,7 +31,7 @@ const signInUser = async ({ email, dispatch, getState, magic }) => {
 
     const { _id: id, ...user } = profileData[walletAddress];
 
-    if (!id) throw new Error('User Does Not Exist');
+    if (!id) throw new Error('Account not found.');
 
     // Update users last signed in date in Greenruhm.
     updateLastSignedIn(id);
