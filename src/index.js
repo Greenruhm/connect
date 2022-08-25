@@ -16,13 +16,13 @@ export const connect = ({ apiKey = '' } = {}) => {
 
   return {
     signIn: ({ email = '' } = {}) =>
-      asyncPipe(withMiddleware, withMagic, signIn)({ email, ...withMagic({}) }),
+      asyncPipe(withMiddleware, withMagic, signIn)({ email }),
     signUp: ({ email = '', username = '', displayName = username } = {}) =>
       asyncPipe(
         withMiddleware,
         withMagic,
         signUp
-      )({ email, username, displayName, ...withMagic({}) })
+      )({ email, username, displayName })
   };
 };
 
