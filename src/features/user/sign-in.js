@@ -30,6 +30,12 @@ const signInUser = async ({ email, dispatch, getState, magic } = {}) => {
     const profileData = await getProfile(walletAddress);
 
     const { _id: id, ...user } = profileData[walletAddress];
+    const filteredUser = Object.keys(user)
+      .filter(key => key !== 'avatarImg')
+      .reduce((obj, key) => {
+        obj[key] = user[key];
+        return obj;
+      }, {});
 
     if (!id) throw new Error('Account not found.');
 
@@ -37,7 +43,7 @@ const signInUser = async ({ email, dispatch, getState, magic } = {}) => {
     updateLastSignedIn(id);
 
     const userData = {
-      ...user,
+      ...filteredUser,
       id,
       walletAddress,
       email,
