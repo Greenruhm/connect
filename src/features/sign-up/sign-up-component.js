@@ -63,7 +63,7 @@ const SignUpPage = () => {
             onChange={handleUsername}
             type="text"
           />
-          <SubmitButton label="Sign Up" name="sign-up" onClick={handleSignUp} />
+          <SignUpButton label="Sign Up" name="sign-up" onClick={handleSignUp} />
           <SignInLink href="/sign-in" label="Or Sign In" />
           {errors.length ? (
             <>
@@ -159,7 +159,7 @@ const InputWithLabel = ({
   );
 };
 
-const SubmitButton = ({
+const SignUpButton = ({
   disabled = false,
   label,
   loading = false,
