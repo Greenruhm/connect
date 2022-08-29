@@ -29,13 +29,13 @@ const signInUser = async ({ email, dispatch, getState, magic } = {}) => {
     // Get user info from Greenruhm
     const profileData = await getProfile(walletAddress);
 
-    const { _id: id, ...user } = profileData[walletAddress];
-    const filteredUser = Object.keys(user)
-      .filter(key => key !== 'avatarImg')
-      .reduce((obj, key) => {
-        obj[key] = user[key];
-        return obj;
-      }, {});
+    const {
+      _id: id,
+      // filter out avatarImg
+      // eslint-disable-next-line no-unused-vars
+      avatarImg,
+      ...user
+    } = profileData[walletAddress];
 
     if (!id) throw new Error('Account not found.');
 
@@ -43,7 +43,7 @@ const signInUser = async ({ email, dispatch, getState, magic } = {}) => {
     updateLastSignedIn(id);
 
     const userData = {
-      ...filteredUser,
+      ...user,
       id,
       walletAddress,
       email,
