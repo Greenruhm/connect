@@ -50,6 +50,10 @@ const SignUpPage = () => {
         ...state,
         errors: [...state.errors, e.message],
       }));
+      setState(state => ({
+        ...state,
+        authStatus: 'Signed Out',
+      }));
     }
   };
 
