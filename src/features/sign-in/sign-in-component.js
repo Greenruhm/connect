@@ -6,12 +6,14 @@ const color = {
   primary: '#0A0C1F',
   secondary: '#5AE6C1',
   button: '#49ECBD',
+  buttonDisabled: '#164A48',
 };
 
 const { signIn } = connect({ apiKey: 'test_success' });
 
 const SignInPage = () => {
   const [state, setState] = useState({
+    authStatus: 'Signed Out',
     email: '',
     errors: [],
   });
@@ -26,11 +28,23 @@ const SignInPage = () => {
 
   const handleSignIn = async () => {
     try {
+      setState(state => ({
+        ...state,
+        authStatus: 'Signing In',
+      }));
       await signIn({ email: state.email, username: state.username });
+      setState(state => ({
+        ...state,
+        authStatus: 'Signed In',
+      }));
     } catch (e) {
       setState(state => ({
         ...state,
         errors: [...state.errors, e.message],
+      }));
+      setState(state => ({
+        ...state,
+        authStatus: 'Signed Out',
       }));
     }
   };
@@ -48,7 +62,12 @@ const SignInPage = () => {
             onChange={handleEmail}
             type="email"
           />
-          <SignInButton label="Sign In" name="sign-in" onClick={handleSignIn} />
+          <SignInButton
+            label="Sign In"
+            loading={state.authStatus === 'Signing In'}
+            name="sign-in"
+            onClick={handleSignIn}
+          />
           <SignUpLink href="/sign-up" label="Or Sign Up" />
           {errors.length ? (
             <>
@@ -166,6 +185,9 @@ const SignInButton = ({
           height: 48px;
           position: relative;
           width: 100%;
+        }
+        button[disabled] {
+          background-color: ${color.buttonDisabled};
         }
         .button-label {
           font-size: 18px;
