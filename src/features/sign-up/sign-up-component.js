@@ -1,12 +1,19 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import connect from '../../index';
+import InputWithLabel from '../../example-components/input-with-label-component';
 
 const color = {
   primary: '#0A0C1F',
   secondary: '#5AE6C1',
   button: '#49ECBD',
   buttonDisabled: '#164A48',
+};
+
+const styles = {
+  username: {
+    marginTop: '2rem',
+  },
 };
 
 const { signUp } = connect({ apiKey: '<your-api-key>' });
@@ -76,6 +83,7 @@ const SignUpPage = () => {
             label="Username"
             name="username"
             onChange={handleUsername}
+            style={styles.username}
             type="text"
           />
           <SignUpButton
@@ -118,62 +126,6 @@ const SignUpPage = () => {
           max-width: 650px;
           margin: 0 auto;
         }
-      `}</style>
-    </>
-  );
-};
-
-const InputWithLabel = ({
-  className,
-  inputPlaceholder,
-  label,
-  name,
-  onChange,
-  type,
-} = {}) => {
-  return (
-    <>
-      <div className={`input-with-label-wrapper ${className}`}>
-        <label htmlFor={name}>{label}</label>
-        <div className="field-wrapper">
-          <input
-            name={name}
-            onChange={onChange}
-            placeholder={inputPlaceholder}
-            required={true}
-            type={type}
-          />
-        </div>
-      </div>
-      <style jsx>{`
-        label {
-          display: block;
-          font-size: 18px;
-        }
-        input {
-          background-color: ${color.primary};
-          border-radius: 4px;
-          border: 1px solid #FFF;
-          color: #FFF;
-          display: block,
-          font-size: 16px;
-          height: 56px;
-          margin: 12px 0;
-          outline: none;
-          padding: 16px;
-          transition: all 0.2s ease-out;
-          width: 100%;
-        }
-        input:focus {
-              border-color: ${color.secondary} !important;
-            }
-        .field-wrapper {
-          width: 100%;
-          transition: all 0.2s ease-out;
-        }
-        .username {
-            margin-top: 2rem;
-          }
       `}</style>
     </>
   );
