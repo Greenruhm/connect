@@ -41,8 +41,8 @@ const SignUpPage = () => {
   const [state, setState] = useState({
     authStatus: 'Signed Out',
     email: '',
-    username: '',
     errors: [],
+    username: '',
   });
   const { errors } = state;
 
