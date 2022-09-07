@@ -4,6 +4,34 @@ import connect from '../../index';
 import InputWithLabel from '../../example-components/input-with-label-component';
 import SignInButton from '../../example-components/submit-button-component';
 
+const styles = {
+  a: {
+    textDecoration: 'underline',
+  },
+  h2: {
+    fontSize: '32px',
+    fontWeight: 'normal',
+    lineHeight: '35.2px',
+  },
+  page: {
+    color: '#fff',
+    fontFamily: 'Work Sans, sans-serif',
+    margin: '24px auto 0',
+    maxWidth: '800px',
+    padding: '10px 40px 64px',
+    position: 'relative',
+  },
+  signUp: {
+    marginTop: '2rem',
+    opacity: '0.8',
+  },
+  wrapper: {
+    margin: '0 auto',
+    maxWidth: '650px',
+    position: 'relative',
+  },
+};
+
 const { signIn } = connect({ apiKey: '<your-api-key>' });
 
 const SignInPage = () => {
@@ -45,79 +73,46 @@ const SignInPage = () => {
   };
 
   return (
-    <>
-      <div className="box-format font-format">
-        <div className="sign-in-wrapper">
-          <h2>Sign In</h2>
-          <InputWithLabel
-            className="email"
-            inputPlaceholder="youremail@example.com"
-            label="Your Email"
-            name="email"
-            onChange={handleEmail}
-            type="email"
-          />
-          <SignInButton
-            label="Sign In"
-            loading={state.authStatus === 'Signing In'}
-            name="sign-in"
-            onClick={handleSignIn}
-          />
-          <SignUpLink href="/sign-up" label="Or Sign Up" />
-          {errors.length ? (
-            <>
-              <p>{'Error(s):'}</p>
-              <ul className="errors">
-                {errors.map(error => (
-                  <li key={error}>{error}</li>
-                ))}
-              </ul>
-            </>
-          ) : null}
-        </div>
+    <div className="box-format font-format" style={styles.page}>
+      <div className="sign-in-wrapper" style={styles.wrapper}>
+        <h2 style={styles.h2}>Sign In</h2>
+        <InputWithLabel
+          className="email"
+          inputPlaceholder="youremail@example.com"
+          label="Your Email"
+          name="email"
+          onChange={handleEmail}
+          type="email"
+        />
+        <SignInButton
+          label="Sign In"
+          loading={state.authStatus === 'Signing In'}
+          name="sign-in"
+          onClick={handleSignIn}
+        />
+        <SignUpLink href="/sign-up" label="Or Sign Up" />
+        {errors.length ? (
+          <>
+            <p>{'Error(s):'}</p>
+            <ul className="errors">
+              {errors.map(error => (
+                <li key={error}>{error}</li>
+              ))}
+            </ul>
+          </>
+        ) : null}
       </div>
-      <style jsx>{`
-        h2 {
-          font-size: 32px;
-          line-height: 35.2px;
-          font-weight: normal;
-        }
-        .box-format {
-          position: relative;
-          max-width: 800px;
-          padding: 10px 40px 64px;
-          margin: 24px auto 0;
-        }
-        .font-format {
-          color: #fff;
-          font-family: 'Work Sans', sans-serif;
-        }
-        .sign-in-wrapper {
-          position: relative;
-          max-width: 650px;
-          margin: 0 auto;
-        }
-      `}</style>
-    </>
+    </div>
   );
 };
 
 const SignUpLink = ({ href, label }) => {
   return (
-    <>
-      <div className="sign-up">
-        <a href={href}>{label}</a>
-      </div>
-      <style jsx>{`
-        a {
-          text-decoration: underline;
-        }
-        .sign-up {
-          margin-top: 2rem;
-          opacity: 0.8;
-        }
-      `}</style>
-    </>
+    <div className="sign-up" style={styles.signUp}>
+      <a href={href} style={styles.a}>
+        {label}
+      </a>
+    </div>
   );
 };
 
