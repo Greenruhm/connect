@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import connect from '../../index';
 import InputWithLabel from '../../example-components/input-with-label-component';
+import SignInButton from '../../example-components/submit-button-component';
 
 const color = {
   primary: '#0A0C1F',
@@ -102,43 +103,6 @@ const SignInPage = () => {
           position: relative;
           max-width: 650px;
           margin: 0 auto;
-        }
-      `}</style>
-    </>
-  );
-};
-
-const SignInButton = ({
-  disabled = false,
-  label,
-  loading = false,
-  name,
-  onClick,
-} = {}) => {
-  return (
-    <>
-      <button
-        disabled={disabled || loading}
-        name={name}
-        onClick={onClick}
-        type="submit"
-      >
-        <span className="button-label">{label}</span>
-      </button>
-      <style jsx>{`
-        button {
-          background-color: ${color.button};
-          border-radius: 4px;
-          border: 0;
-          height: 48px;
-          position: relative;
-          width: 100%;
-        }
-        button[disabled] {
-          background-color: ${color.buttonDisabled};
-        }
-        .button-label {
-          font-size: 18px;
         }
       `}</style>
     </>
