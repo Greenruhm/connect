@@ -9,7 +9,7 @@ const color = {
   buttonDisabled: '#164A48',
 };
 
-const { signIn } = connect({ apiKey: 'test_success' });
+const { signIn } = connect({ apiKey: '<your-api-key>' });
 
 const SignInPage = () => {
   const [state, setState] = useState({
