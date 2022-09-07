@@ -11,6 +11,31 @@ const color = {
 };
 
 const styles = {
+  a: {
+    textDecoration: 'underline',
+  },
+  h2: {
+    fontSize: '32px',
+    fontWeight: 'normal',
+    lineHeight: '35.2px',
+  },
+  page: {
+    color: '#fff',
+    fontFamily: 'Work Sans, sans-serif',
+    margin: '24px auto 0',
+    maxWidth: '800px',
+    padding: '10px 40px 64px',
+    position: 'relative',
+  },
+  signIn: {
+    marginTop: '2rem',
+    opacity: '0.8',
+  },
+  wrapper: {
+    margin: '0 auto',
+    maxWidth: '650px',
+    position: 'relative',
+  },
   username: {
     marginTop: '2rem',
   },
@@ -65,69 +90,45 @@ const SignUpPage = () => {
   };
 
   return (
-    <>
-      <div className="box-format font-format">
-        <div className="sign-up-wrapper">
-          <h2>Sign Up</h2>
-          <InputWithLabel
-            className="email"
-            inputPlaceholder="youremail@example.com"
-            label="Your Email"
-            name="email"
-            onChange={handleEmail}
-            type="email"
-          />
-          <InputWithLabel
-            className="username"
-            inputPlaceholder="kendrick-lamar-fan-2001"
-            label="Username"
-            name="username"
-            onChange={handleUsername}
-            style={styles.username}
-            type="text"
-          />
-          <SignUpButton
-            label="Sign Up"
-            loading={state.authStatus === 'Signing Up'}
-            name="sign-up"
-            onClick={handleSignUp}
-          />
-          <SignInLink href="/sign-in" label="Or Sign In" />
-          {errors.length ? (
-            <>
-              <p>{'Error(s):'}</p>
-              <ul className="errors">
-                {errors.map(error => (
-                  <li key={error}>{error}</li>
-                ))}
-              </ul>
-            </>
-          ) : null}
-        </div>
+    <div className="box-format font-format" style={styles.page}>
+      <div className="sign-up-wrapper" style={styles.wrapper}>
+        <h2 style={styles.h2}>Sign Up</h2>
+        <InputWithLabel
+          className="email"
+          inputPlaceholder="youremail@example.com"
+          label="Your Email"
+          name="email"
+          onChange={handleEmail}
+          type="email"
+        />
+        <InputWithLabel
+          className="username"
+          inputPlaceholder="kendrick-lamar-fan-2001"
+          label="Username"
+          name="username"
+          onChange={handleUsername}
+          style={styles.username}
+          type="text"
+        />
+        <SignUpButton
+          label="Sign Up"
+          loading={state.authStatus === 'Signing Up'}
+          name="sign-up"
+          onClick={handleSignUp}
+        />
+        <SignInLink href="/sign-in" label="Or Sign In" />
+        {errors.length ? (
+          <>
+            <p>{'Error(s):'}</p>
+            <ul className="errors">
+              {errors.map(error => (
+                <li key={error}>{error}</li>
+              ))}
+            </ul>
+          </>
+        ) : null}
       </div>
-      <style jsx>{`
-        h2 {
-          font-size: 32px;
-          line-height: 35.2px;
-          font-weight: normal;
-        }
-        .box-format {
-          position: relative;
-          max-width: 800px;
-          padding: 10px 40px 64px;
-          margin: 24px auto 0;
-        }
-        .font-format {
-          color: #fff;
-          font-family: 'Work Sans', sans-serif;
-        }
-        .sign-up-wrapper {
-          position: relative;
-          max-width: 650px;
-          margin: 0 auto;
-        }
-      `}</style>
-    </>
+    </div>
   );
 };
 
@@ -170,20 +171,11 @@ const SignUpButton = ({
 
 const SignInLink = ({ href, label }) => {
   return (
-    <>
-      <div className="sign-in">
-        <a href={href}>{label}</a>
-      </div>
-      <style jsx>{`
-        a {
-          text-decoration: underline;
-        }
-        .sign-in {
-          margin-top: 2rem;
-          opacity: 0.8;
-        }
-      `}</style>
-    </>
+    <div className="sign-in" style={styles.signIn}>
+      <a href={href} style={styles.a}>
+        {label}
+      </a>
+    </div>
   );
 };
 
