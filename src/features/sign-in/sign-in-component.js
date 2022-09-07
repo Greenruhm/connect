@@ -4,13 +4,6 @@ import connect from '../../index';
 import InputWithLabel from '../../example-components/input-with-label-component';
 import SignInButton from '../../example-components/submit-button-component';
 
-const color = {
-  primary: '#0A0C1F',
-  secondary: '#5AE6C1',
-  button: '#49ECBD',
-  buttonDisabled: '#164A48',
-};
-
 const { signIn } = connect({ apiKey: '<your-api-key>' });
 
 const SignInPage = () => {
