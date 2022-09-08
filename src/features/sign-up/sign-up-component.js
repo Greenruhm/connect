@@ -25,13 +25,13 @@ const styles = {
     marginTop: '2rem',
     opacity: '0.8',
   },
+  username: {
+    marginTop: '2rem',
+  },
   wrapper: {
     margin: '0 auto',
     maxWidth: '650px',
     position: 'relative',
-  },
-  username: {
-    marginTop: '2rem',
   },
 };
 
