@@ -2,22 +2,20 @@
 import React, { useState } from 'react';
 import Theme from './theme';
 
+const button = {
+  backgroundColor: `${Theme.button}`,
+  border: '0',
+  borderRadius: '4px',
+  height: '48px',
+  position: 'relative',
+  width: '100%',
+};
+
 const styles = {
-  button: {
-    backgroundColor: `${Theme.button}`,
-    border: '0',
-    borderRadius: '4px',
-    height: '48px',
-    position: 'relative',
-    width: '100%',
-  },
+  button,
   buttonDisabled: {
+    ...button,
     backgroundColor: `${Theme.buttonDisabled}`,
-    border: '0',
-    borderRadius: '4px',
-    height: '48px',
-    position: 'relative',
-    width: '100%',
   },
   buttonLabel: {
     fontSize: '18px',

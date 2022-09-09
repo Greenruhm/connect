@@ -2,38 +2,30 @@
 import React, { useState } from 'react';
 import Theme from './theme';
 
+const input = {
+  backgroundColor: `${Theme.primary}`,
+  borderRadius: '4px',
+  border: '1px solid #FFF',
+  color: '#FFF',
+  display: 'block',
+  fontSize: '16px',
+  height: '56px',
+  margin: '12px 0',
+  outline: 'none',
+  padding: '16px',
+  transition: 'all 0.2s ease-out',
+  width: '100%',
+};
+
 const styles = {
   label: {
     display: 'block',
     fontSize: '18px',
   },
-  input: {
-    backgroundColor: `${Theme.primary}`,
-    borderRadius: '4px',
-    border: '1px solid #FFF',
-    color: '#FFF',
-    display: 'block',
-    fontSize: '16px',
-    height: '56px',
-    margin: '12px 0',
-    outline: 'none',
-    padding: '16px',
-    transition: 'all 0.2s ease-out',
-    width: '100%',
-  },
+  input,
   inputFocus: {
-    backgroundColor: `${Theme.primary}`,
-    borderRadius: '4px',
+    ...input,
     border: `1px solid ${Theme.secondary}`,
-    color: '#FFF',
-    display: 'block',
-    fontSize: '16px',
-    height: '56px',
-    margin: '12px 0',
-    outline: 'none',
-    padding: '16px',
-    transition: 'all 0.2s ease-out',
-    width: '100%',
   },
   fieldWrapper: {
     width: '100%',
