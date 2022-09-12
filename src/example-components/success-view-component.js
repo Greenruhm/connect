@@ -49,7 +49,7 @@ const SuccessView = ({
   username = '',
 } = {}) => {
   return (
-    <>
+    <div className="success-view">
       <h2 style={styles.h2}>Success</h2>
       <div className="title-divider" style={styles.divider}></div>
       <div style={styles.successMessage}>{successMessage}</div>
@@ -63,7 +63,7 @@ const SuccessView = ({
         // TOOD: Oliver | Update to include connect.signOut()
         onClick={() => {}}
       />
-    </>
+    </div>
   );
 };
 
