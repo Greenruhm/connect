@@ -60,7 +60,7 @@ const SuccessView = ({
       <SignOutButton
         label="Sign Out"
         name="sign-out"
-        // TOOD: Oliver | Update to include connect.signOut()
+        // TODO: Oliver | Update to include connect.signOut()
         onClick={() => {}}
       />
     </div>

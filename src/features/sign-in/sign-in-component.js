@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import connect from '../../index';
 import InputWithLabel from '../../example-components/input-with-label-component';
 import SignInButton from '../../example-components/submit-button-component';
+import SuccessView from '../../example-components/success-view-component';
 
 const styles = {
   a: {
@@ -32,15 +33,85 @@ const styles = {
   },
 };
 
+const renderErrorView = ({ errors } = {}) => {
+  return (
+    <>
+      {errors.length ? (
+        <>
+          <p>{'Error(s):'}</p>
+          <ul className="errors">
+            {errors.map(error => (
+              <li key={error}>{error}</li>
+            ))}
+          </ul>
+        </>
+      ) : null}
+    </>
+  );
+};
+
+const SignUpLink = ({ href, label }) => {
+  return (
+    <div className="sign-up" style={styles.signUp}>
+      <a href={href} style={styles.a}>
+        {label}
+      </a>
+    </div>
+  );
+};
+
+const SignInView = ({ authStatus, handleEmail, handleSignIn } = {}) => {
+  return (
+    <>
+      <h2 style={styles.h2}>Sign In</h2>
+      <InputWithLabel
+        className="email"
+        inputPlaceholder="youremail@example.com"
+        label="Your Email"
+        name="email"
+        onChange={handleEmail}
+        type="email"
+      />
+      <SignInButton
+        label="Sign In"
+        loading={authStatus === 'Signing In'}
+        name="sign-in"
+        onClick={handleSignIn}
+      />
+      <SignUpLink href="/sign-up" label="Or Sign Up" />
+    </>
+  );
+};
+
+const renderView = ({
+  authStatus,
+  email,
+  handleEmail,
+  handleSignIn,
+  username,
+} = {}) =>
+  authStatus === 'Signed Out' || authStatus === 'Signing In'
+    ? SignInView({
+        authStatus,
+        handleEmail,
+        handleSignIn,
+      })
+    : SuccessView({
+        email,
+        successMessage: `Welcome ${username}. You are signed in! 🎉`,
+        username,
+      });
+
 const { signIn } = connect({ apiKey: '<your-api-key>' });
 
-const SignInPage = () => {
+const SignInPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
   const [state, setState] = useState({
-    authStatus: 'Signed Out',
+    authStatus: initialAuthStatus,
     email: '',
     errors: [],
+    username: '',
   });
-  const { errors } = state;
+  const { authStatus, email, errors, username } = state;
 
   const handleEmail = e => {
     setState(state => ({
@@ -55,10 +126,12 @@ const SignInPage = () => {
         ...state,
         authStatus: 'Signing In',
       }));
-      await signIn({ email: state.email, username: state.username });
+      const userData = await signIn({ email, username });
       setState(state => ({
         ...state,
         authStatus: 'Signed In',
+        email: userData.email,
+        username: userData.username,
       }));
     } catch (e) {
       setState(state => ({
@@ -75,43 +148,16 @@ const SignInPage = () => {
   return (
     <div className="box-format font-format" style={styles.page}>
       <div className="sign-in-wrapper" style={styles.wrapper}>
-        <h2 style={styles.h2}>Sign In</h2>
-        <InputWithLabel
-          className="email"
-          inputPlaceholder="youremail@example.com"
-          label="Your Email"
-          name="email"
-          onChange={handleEmail}
-          type="email"
-        />
-        <SignInButton
-          label="Sign In"
-          loading={state.authStatus === 'Signing In'}
-          name="sign-in"
-          onClick={handleSignIn}
-        />
-        <SignUpLink href="/sign-up" label="Or Sign Up" />
-        {errors.length ? (
-          <>
-            <p>{'Error(s):'}</p>
-            <ul className="errors">
-              {errors.map(error => (
-                <li key={error}>{error}</li>
-              ))}
-            </ul>
-          </>
-        ) : null}
+        {errors.length
+          ? renderErrorView({ errors })
+          : renderView({
+              authStatus,
+              email,
+              handleEmail,
+              handleSignIn,
+              username,
+            })}
       </div>
-    </div>
-  );
-};
-
-const SignUpLink = ({ href, label }) => {
-  return (
-    <div className="sign-up" style={styles.signUp}>
-      <a href={href} style={styles.a}>
-        {label}
-      </a>
     </div>
   );
 };
