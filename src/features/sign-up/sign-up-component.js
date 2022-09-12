@@ -123,7 +123,7 @@ const renderView = ({
 
 const { signUp } = connect({ apiKey: '<your-api-key>' });
 
-const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' }) => {
+const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
   const [state, setState] = useState({
     authStatus: initialAuthStatus,
     email: '',
@@ -152,10 +152,12 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' }) => {
         ...state,
         authStatus: 'Signing Up',
       }));
-      await signUp({ email, username });
+      const userData = await signUp({ email, username });
       setState(state => ({
         ...state,
         authStatus: 'Signed Up',
+        email: userData.email,
+        username: userData.username,
       }));
     } catch (e) {
       setState(state => ({
