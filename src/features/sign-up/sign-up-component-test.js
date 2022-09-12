@@ -64,12 +64,14 @@ describe('Sign Up Page', async assert => {
         expected: userNamePlaceholder,
       });
     }
-    assert({
-      given: 'sign up page',
-      should: 'render "Sign Up" button',
-      actual: $('[name="sign-up"]').length,
-      expected: 1,
-    });
+    {
+      assert({
+        given: 'sign up page',
+        should: 'render "Sign Up" button',
+        actual: $('[name="sign-up"]').length,
+        expected: 1,
+      });
+    }
     {
       const orSignInLinkText = 'Or Sign In';
       assert({
@@ -89,11 +91,22 @@ describe('Sign Up Page', async assert => {
   {
     const props = { authStatus: 'Signed Up' };
     const $ = renderSignUpPage(props);
+    const contains = match($.html());
     assert({
       given: 'sign up page w "authStatus = Signed Up"',
       should: 'render success view component',
       actual: $('.success-view').length,
       expected: 1,
     });
+    {
+      const signUpSuccessMessage =
+        'Your Greenruhm account has been created! 🎉';
+      assert({
+        given: 'sign up page w "authStatus = Signed Up"',
+        should: 'render sign up success message',
+        actual: contains(signUpSuccessMessage),
+        expected: signUpSuccessMessage,
+      });
+    }
   }
 });
