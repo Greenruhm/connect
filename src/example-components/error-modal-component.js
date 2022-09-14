@@ -5,8 +5,8 @@ import SignOutButton from './submit-button-component';
 
 const styles = {};
 
-const ErrorsView = ({ errors } = {}) => {
+const ErrorModal = ({ errors } = {}) => {
   return <>{errors}</>;
 };
 
-export default ErrorsView;
+export default ErrorModal;

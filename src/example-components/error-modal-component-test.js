@@ -3,6 +3,8 @@ import React from 'react';
 import { describe } from 'riteway';
 import render from 'riteway/render-component';
 import match from 'riteway/match';
-import ErrorsView from './errors-view-component';
+import ErrorModal from './error-modal-component';
 
-describe('Errors View Component', async assert => {});
+describe('Errors View Component', async assert => {
+  const renderErrorModal = props => render(<ErrorModal {...props} />);
+});
