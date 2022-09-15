@@ -88,7 +88,6 @@ const styles = {
 const noop = () => {};
 
 const ErrorModal = ({
-  errors,
   errorMessage = 'An error has occurred.',
   title = 'Error!',
   onClose = noop,
