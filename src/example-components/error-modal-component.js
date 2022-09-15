@@ -34,6 +34,7 @@ const styles = {
     border: `solid 3px ${Theme.button}`,
     backgroundColor: `${Theme.primary}`,
     width: '90%',
+    maxWidth: '800px',
   },
   divider: {
     borderBottom: `2px solid ${Theme.secondary}`,
