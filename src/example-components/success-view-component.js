@@ -34,8 +34,6 @@ const styles = {
   },
 };
 
-const noop = () => {};
-
 const Field = ({ className = '', label = '', value = '' } = {}) => {
   return (
     <div className={className}>
@@ -47,7 +45,6 @@ const Field = ({ className = '', label = '', value = '' } = {}) => {
 
 const SuccessView = ({
   email = '',
-  handleSignOut = noop,
   successMessage = '',
   username = '',
 } = {}) => {
@@ -60,7 +57,12 @@ const SuccessView = ({
         <Field className="email" label="Email" value={email} />
         <Field className="username" label="Username" value={username} />
       </div>
-      <SignOutButton label="Sign Out" name="sign-out" onClick={handleSignOut} />
+      <SignOutButton
+        label="Sign Out"
+        name="sign-out"
+        // TODO: Oliver | Update to include connect.signOut()
+        onClick={() => {}}
+      />
     </div>
   );
 };
