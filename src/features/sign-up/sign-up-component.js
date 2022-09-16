@@ -89,6 +89,7 @@ const renderView = ({
   email,
   handleEmail,
   handleSignUp,
+  handleSignOut,
   handleUsername,
   username,
 } = {}) =>
@@ -101,11 +102,12 @@ const renderView = ({
       })
     : SuccessView({
         email,
+        handleSignOut,
         successMessage: 'Your Greenruhm account has been created! 🎉',
         username,
       });
 
-const { signUp } = connect({ apiKey: '<your-api-key>' });
+const { signUp, signOut } = connect({ apiKey: '<your-api-key>' });
 
 const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
   const [state, setState] = useState({
@@ -162,6 +164,21 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut({ email });
+    } catch (e) {
+      setState(state => ({
+        ...state,
+        errors: [...state.errors, e.message],
+      }));
+    }
+    setState(state => ({
+      ...state,
+      authStatus: 'Signed Out',
+    }));
+  };
+
   return (
     <div className="box-format font-format" style={styles.page}>
       <div className="sign-up-wrapper" style={styles.wrapper}>
@@ -170,6 +187,7 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
           email,
           handleEmail,
           handleSignUp,
+          handleSignOut,
           handleUsername,
           username,
         })}

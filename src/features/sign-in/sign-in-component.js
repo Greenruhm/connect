@@ -72,6 +72,7 @@ const renderView = ({
   email,
   handleEmail,
   handleSignIn,
+  handleSignOut,
   username,
 } = {}) =>
   authStatus === 'Signed Out' || authStatus === 'Signing In'
@@ -82,11 +83,12 @@ const renderView = ({
       })
     : SuccessView({
         email,
+        handleSignOut,
         successMessage: `Welcome ${username}. You are signed in! 🎉`,
         username,
       });
 
-const { signIn } = connect({ apiKey: '<your-api-key>' });
+const { signIn, signOut } = connect({ apiKey: '<your-api-key>' });
 
 const SignInPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
   const [state, setState] = useState({
@@ -136,6 +138,21 @@ const SignInPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut({ email });
+    } catch (e) {
+      setState(state => ({
+        ...state,
+        errors: [...state.errors, e.message],
+      }));
+    }
+    setState(state => ({
+      ...state,
+      authStatus: 'Signed Out',
+    }));
+  };
+
   return (
     <div className="box-format font-format" style={styles.page}>
       <div className="sign-in-wrapper" style={styles.wrapper}>
@@ -144,6 +161,7 @@ const SignInPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
           email,
           handleEmail,
           handleSignIn,
+          handleSignOut,
           username,
         })}
         {errors.length ? (
