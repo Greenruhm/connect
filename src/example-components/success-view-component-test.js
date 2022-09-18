@@ -13,16 +13,10 @@ describe('Success view Component', async assert => {
     const contains = match($.html());
     const successTitle = 'Success';
     assert({
-      given: 'success view',
-      should: 'render "Success" title',
+      given: 'no arguments',
+      should: 'render the "Success" title',
       actual: contains(successTitle),
       expected: successTitle,
-    });
-    assert({
-      given: 'success view',
-      should: 'render title divider',
-      actual: $('.title-divider').length,
-      expected: 1,
     });
   }
   {
@@ -31,8 +25,8 @@ describe('Success view Component', async assert => {
     const $ = renderSuccessView(props);
     const contains = match($.html());
     assert({
-      given: 'success view w/ "successMessage" prop',
-      should: 'render "successMessage"',
+      given: 'a message to render',
+      should: 'render the success message',
       actual: contains(successMessage),
       expected: successMessage,
     });
@@ -44,20 +38,14 @@ describe('Success view Component', async assert => {
     const $ = renderSuccessView(props);
     const contains = match($.html());
     assert({
-      given: 'success view w/ "email" prop',
-      should: 'render "Email" field',
-      actual: $('.email').length,
-      expected: 1,
-    });
-    assert({
-      given: 'success view w/ "email" prop',
-      should: 'render "Email" label',
+      given: 'an email',
+      should: 'render the email label',
       actual: contains(emailLabel),
       expected: emailLabel,
     });
     assert({
-      given: 'success view w/ "email" prop',
-      should: 'render "email" value',
+      given: 'an email',
+      should: 'render the email value',
       actual: contains(email),
       expected: email,
     });
@@ -69,20 +57,14 @@ describe('Success view Component', async assert => {
     const $ = renderSuccessView(props);
     const contains = match($.html());
     assert({
-      given: 'success view w/ "username" prop',
-      should: 'render "Email" field',
-      actual: $('.username').length,
-      expected: 1,
-    });
-    assert({
-      given: 'success view w/ "username" prop',
-      should: 'render "Username" label',
+      given: 'an username',
+      should: 'render the username label',
       actual: contains(usernameLabel),
       expected: usernameLabel,
     });
     assert({
-      given: 'success view w/ "username" prop',
-      should: 'render "username" value',
+      given: 'an username',
+      should: 'render the username value',
       actual: contains(username),
       expected: username,
     });
@@ -92,14 +74,8 @@ describe('Success view Component', async assert => {
     const contains = match($.html());
     const signOutLabel = 'Sign Out';
     assert({
-      given: 'success view',
+      given: 'no arguments',
       should: 'render "Sign Out" button',
-      actual: $('[name="sign-out"]').length,
-      expected: 1,
-    });
-    assert({
-      given: 'success view',
-      should: 'render "Sign Out" button label',
       actual: contains(signOutLabel),
       expected: signOutLabel,
     });
