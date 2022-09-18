@@ -1,12 +1,12 @@
 import { setAnonUser } from './reducer';
 
-const signOutUser = async ({ magic } = {}) => {
+const signOutUser = async ({ dispatch, magic } = {}) => {
   const isLoggedIn = await magic.user.isLoggedIn();
 
   if (isLoggedIn) {
     await magic.user.logout();
   }
-  setAnonUser();
+  dispatch(setAnonUser());
 
   return;
 };
