@@ -8,13 +8,14 @@ import SignUp from './sign-up-component';
 describe('Sign Up Page', async assert => {
   const renderSignUpPage = props => render(<SignUp {...props} />);
   {
+    const given = 'a signed out user';
     const props = { authStatus: 'Signed Out' };
     const $ = renderSignUpPage(props);
     const contains = match($.html());
     {
       const signUpTitle = 'Sign Up';
       assert({
-        given: 'sign up page',
+        given,
         should: 'render "Sign Up" title',
         actual: contains(signUpTitle),
         expected: signUpTitle,
@@ -24,19 +25,19 @@ describe('Sign Up Page', async assert => {
       const emailLabelText = 'Your Email';
       const emailInputPlaceholder = 'youremail@example.com';
       assert({
-        given: 'sign up page',
+        given,
         should: 'render email input',
         actual: $('.email').length,
         expected: 1,
       });
       assert({
-        given: 'sign up page',
+        given,
         should: 'render "Your email" label text',
         actual: contains(emailLabelText),
         expected: emailLabelText,
       });
       assert({
-        given: 'sign up page',
+        given,
         should: 'render email input placeholder text',
         actual: contains(emailInputPlaceholder),
         expected: emailInputPlaceholder,
@@ -46,19 +47,19 @@ describe('Sign Up Page', async assert => {
       const userNameLabelText = 'Username';
       const userNamePlaceholder = 'kendrick-lamar-fan-2001';
       assert({
-        given: 'sign up page',
+        given,
         should: 'render username input',
         actual: $('.username').length,
         expected: 1,
       });
       assert({
-        given: 'sign up page',
+        given,
         should: 'render "Username" label text',
         actual: contains(userNameLabelText),
         expected: userNameLabelText,
       });
       assert({
-        given: 'sign up page',
+        given,
         should: 'render username input placeholder text',
         actual: contains(userNamePlaceholder),
         expected: userNamePlaceholder,
@@ -66,7 +67,7 @@ describe('Sign Up Page', async assert => {
     }
     {
       assert({
-        given: 'sign up page',
+        given,
         should: 'render "Sign Up" button',
         actual: $('[name="sign-up"]').length,
         expected: 1,
@@ -75,38 +76,22 @@ describe('Sign Up Page', async assert => {
     {
       const orSignInLinkText = 'Or Sign In';
       assert({
-        given: 'sign up page',
-        should: 'render "Or Sign In" page link',
-        actual: $('.sign-in').length,
-        expected: 1,
-      });
-      assert({
-        given: 'sign up page',
-        should: 'render "Or Sign In" link label',
+        given,
+        should: 'render "Or Sign In" link',
         actual: contains(orSignInLinkText),
         expected: orSignInLinkText,
       });
     }
   }
   {
+    const given = 'a signed up user';
     const props = { authStatus: 'Signed Up' };
     const $ = renderSignUpPage(props);
-    const contains = match($.html());
     assert({
-      given: 'sign up page w "authStatus = Signed Up"',
+      given,
       should: 'render success view component',
       actual: $('.success-view').length,
       expected: 1,
     });
-    {
-      const signUpSuccessMessage =
-        'Your Greenruhm account has been created! 🎉';
-      assert({
-        given: 'sign up page w "authStatus = Signed Up"',
-        should: 'render sign up success message',
-        actual: contains(signUpSuccessMessage),
-        expected: signUpSuccessMessage,
-      });
-    }
   }
 });
