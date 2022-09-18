@@ -7,8 +7,8 @@ const fetchDropsHandler = type => async id => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Accept: 'application/json'
-    }
+      Accept: 'application/json',
+    },
   });
   if (!response.ok) {
     const { message } = await response.json();
@@ -32,9 +32,9 @@ export const createDrop = async dropData => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Accept: 'application/json'
+      Accept: 'application/json',
     },
-    body: JSON.stringify(dropData)
+    body: JSON.stringify(dropData),
   });
   if (!response.ok) {
     const { message } = await response.json();
@@ -45,13 +45,13 @@ export const createDrop = async dropData => {
 
 export const getCloudinarySignature = async ({
   name: public_id,
-  dropId: folder
+  dropId: folder,
 } = {}) => {
   const res = await fetch(
     `${GREENRUHM_URL}/api/upload/get-cloudinary-signature`,
     {
       method: 'POST',
-      body: JSON.stringify({ public_id, folder })
+      body: JSON.stringify({ public_id, folder }),
     }
   );
   const response = await res.json();
@@ -64,7 +64,7 @@ export const getCloudinarySignature = async ({
 export const updateDropMedia = async (dropId, media) => {
   const res = await fetch(`${GREENRUHM_URL}/api/drops/drop/${dropId}/update`, {
     method: 'PATCH',
-    body: JSON.stringify(media)
+    body: JSON.stringify(media),
   });
   const response = await res.json();
   if (response.error) {
@@ -93,29 +93,23 @@ export const getProfile = async walletAddress => {
 export const updateLastSignedIn = async id =>
   fetch(`${GREENRUHM_URL}/api/sign-in`, {
     method: 'POST',
-    body: JSON.stringify({ id })
+    body: JSON.stringify({ id }),
   });
 
 export const createUser = async ({
   displayName,
   username,
   email,
-  walletAddress
+  walletAddress,
 } = {}) => {
   const res = await fetch(`${GREENRUHM_URL}/api/create-account`, {
     method: 'POST',
-    body: JSON.stringify({ displayName, username, email, walletAddress })
+    body: JSON.stringify({ displayName, username, email, walletAddress }),
   });
-
-  // Check for errors we can handle.
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text);
-  }
 
   const body = await res.json();
   if (body.error) {
-    throw new Error(body.error);
+    throw new Error(body.error.message);
   }
   return body;
 };
@@ -127,5 +121,5 @@ export default {
   updateDropMedia,
   getProfile,
   updateLastSignedIn,
-  createUser
+  createUser,
 };

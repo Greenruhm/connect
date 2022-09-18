@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import connect from '../../index';
 import InputWithLabel from '../../example-components/input-with-label-component';
 import SignUpButton from '../../example-components/submit-button-component';
+import SuccessView from '../../example-components/success-view-component';
+import ErrorModal from '../../example-components/error-modal-component';
 
 const styles = {
   a: {
@@ -35,16 +37,93 @@ const styles = {
   },
 };
 
-const { signUp } = connect({ apiKey: '<your-api-key>' });
+const SignInLink = ({ href, label } = {}) => {
+  return (
+    <div className="sign-in" style={styles.signIn}>
+      <a href={href} style={styles.a}>
+        {label}
+      </a>
+    </div>
+  );
+};
 
-const SignUpPage = () => {
+const SignUpView = ({
+  authStatus,
+  handleEmail,
+  handleSignUp,
+  handleUsername,
+} = {}) => {
+  return (
+    <>
+      <h2 style={styles.h2}>Sign Up</h2>
+      <InputWithLabel
+        className="email"
+        inputPlaceholder="youremail@example.com"
+        label="Your Email"
+        name="email"
+        onChange={handleEmail}
+        type="email"
+      />
+      <InputWithLabel
+        className="username"
+        inputPlaceholder="kendrick-lamar-fan-2001"
+        label="Username"
+        name="username"
+        onChange={handleUsername}
+        style={styles.username}
+        type="text"
+      />
+      <SignUpButton
+        label="Sign Up"
+        loading={authStatus === 'Signing Up'}
+        name="sign-up"
+        onClick={handleSignUp}
+      />
+      <SignInLink href="/sign-in" label="Or Sign In" />
+    </>
+  );
+};
+
+const renderView = ({
+  authStatus,
+  email,
+  handleEmail,
+  handleSignUp,
+  handleSignOut,
+  handleUsername,
+  username,
+} = {}) =>
+  authStatus === 'Signed Out' || authStatus === 'Signing Up'
+    ? SignUpView({
+        authStatus,
+        handleEmail,
+        handleSignUp,
+        handleUsername,
+      })
+    : SuccessView({
+        email,
+        handleSignOut,
+        successMessage: 'Your Greenruhm account has been created! 🎉',
+        username,
+      });
+
+const { signUp, signOut } = connect({ apiKey: '<your-api-key>' });
+
+const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
   const [state, setState] = useState({
-    authStatus: 'Signed Out',
+    authStatus: initialAuthStatus,
     email: '',
     errors: [],
     username: '',
   });
-  const { errors } = state;
+  const { authStatus, email, errors, username } = state;
+
+  const clearErrors = e => {
+    setState(state => ({
+      ...state,
+      errors: [],
+    }));
+  };
 
   const handleEmail = e => {
     setState(state => ({
@@ -66,10 +145,12 @@ const SignUpPage = () => {
         ...state,
         authStatus: 'Signing Up',
       }));
-      await signUp({ email: state.email, username: state.username });
+      const userData = await signUp({ email, username });
       setState(state => ({
         ...state,
         authStatus: 'Signed Up',
+        email: userData?.email,
+        username: userData?.username,
       }));
     } catch (e) {
       setState(state => ({
@@ -83,55 +164,37 @@ const SignUpPage = () => {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut({ email });
+    } catch (e) {
+      setState(state => ({
+        ...state,
+        errors: [...state.errors, e.message],
+      }));
+    }
+    setState(state => ({
+      ...state,
+      authStatus: 'Signed Out',
+    }));
+  };
+
   return (
     <div className="box-format font-format" style={styles.page}>
       <div className="sign-up-wrapper" style={styles.wrapper}>
-        <h2 style={styles.h2}>Sign Up</h2>
-        <InputWithLabel
-          className="email"
-          inputPlaceholder="youremail@example.com"
-          label="Your Email"
-          name="email"
-          onChange={handleEmail}
-          type="email"
-        />
-        <InputWithLabel
-          className="username"
-          inputPlaceholder="kendrick-lamar-fan-2001"
-          label="Username"
-          name="username"
-          onChange={handleUsername}
-          style={styles.username}
-          type="text"
-        />
-        <SignUpButton
-          label="Sign Up"
-          loading={state.authStatus === 'Signing Up'}
-          name="sign-up"
-          onClick={handleSignUp}
-        />
-        <SignInLink href="/sign-in" label="Or Sign In" />
+        {renderView({
+          authStatus,
+          email,
+          handleEmail,
+          handleSignUp,
+          handleSignOut,
+          handleUsername,
+          username,
+        })}
         {errors.length ? (
-          <>
-            <p>{'Error(s):'}</p>
-            <ul className="errors">
-              {errors.map(error => (
-                <li key={error}>{error}</li>
-              ))}
-            </ul>
-          </>
+          <ErrorModal errorMessage={errors[0]} onClose={clearErrors} />
         ) : null}
       </div>
-    </div>
-  );
-};
-
-const SignInLink = ({ href, label }) => {
-  return (
-    <div className="sign-in" style={styles.signIn}>
-      <a href={href} style={styles.a}>
-        {label}
-      </a>
     </div>
   );
 };

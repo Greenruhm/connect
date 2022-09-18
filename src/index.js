@@ -1,5 +1,6 @@
 import signIn from './features/user/sign-in';
 import signUp from './features/user/sign-up';
+import signOut from './features/user/sign-out';
 import withMagic from './features/user/withMagic';
 import { asyncPipe, withStore } from './utils';
 import { updateApiKeyAction } from './features/apiKey/reducer';
@@ -22,7 +23,8 @@ export const connect = ({ apiKey = '' } = {}) => {
         withMiddleware,
         withMagic,
         signUp
-      )({ email, username, displayName })
+      )({ email, username, displayName }),
+    signOut: () => asyncPipe(withMiddleware, withMagic, signOut)(),
   };
 };
 
