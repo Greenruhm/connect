@@ -4,6 +4,7 @@ import connect from '../../index';
 import InputWithLabel from '../../example-components/input-with-label-component';
 import SignUpButton from '../../example-components/submit-button-component';
 import SuccessView from '../../example-components/success-view-component';
+import ErrorModal from '../../example-components/error-modal-component';
 
 const styles = {
   a: {
@@ -34,23 +35,6 @@ const styles = {
     maxWidth: '650px',
     position: 'relative',
   },
-};
-
-const renderErrorView = ({ errors } = {}) => {
-  return (
-    <>
-      {errors.length ? (
-        <>
-          <p>{'Error(s):'}</p>
-          <ul className="errors">
-            {errors.map(error => (
-              <li key={error}>{error}</li>
-            ))}
-          </ul>
-        </>
-      ) : null}
-    </>
-  );
 };
 
 const SignInLink = ({ href, label } = {}) => {
@@ -105,6 +89,7 @@ const renderView = ({
   email,
   handleEmail,
   handleSignUp,
+  handleSignOut,
   handleUsername,
   username,
 } = {}) =>
@@ -117,11 +102,12 @@ const renderView = ({
       })
     : SuccessView({
         email,
+        handleSignOut,
         successMessage: 'Your Greenruhm account has been created! 🎉',
         username,
       });
 
-const { signUp } = connect({ apiKey: '<your-api-key>' });
+const { signUp, signOut } = connect({ apiKey: '<your-api-key>' });
 
 const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
   const [state, setState] = useState({
@@ -131,6 +117,13 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
     username: '',
   });
   const { authStatus, email, errors, username } = state;
+
+  const clearErrors = e => {
+    setState(state => ({
+      ...state,
+      errors: [],
+    }));
+  };
 
   const handleEmail = e => {
     setState(state => ({
@@ -156,8 +149,8 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
       setState(state => ({
         ...state,
         authStatus: 'Signed Up',
-        email: userData.email,
-        username: userData.username,
+        email: userData?.email,
+        username: userData?.username,
       }));
     } catch (e) {
       setState(state => ({
@@ -171,19 +164,36 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut({ email });
+    } catch (e) {
+      setState(state => ({
+        ...state,
+        errors: [...state.errors, e.message],
+      }));
+    }
+    setState(state => ({
+      ...state,
+      authStatus: 'Signed Out',
+    }));
+  };
+
   return (
     <div className="box-format font-format" style={styles.page}>
       <div className="sign-up-wrapper" style={styles.wrapper}>
-        {errors.length
-          ? renderErrorView({ errors })
-          : renderView({
-              authStatus,
-              email,
-              handleEmail,
-              handleSignUp,
-              handleUsername,
-              username,
-            })}
+        {renderView({
+          authStatus,
+          email,
+          handleEmail,
+          handleSignUp,
+          handleSignOut,
+          handleUsername,
+          username,
+        })}
+        {errors.length ? (
+          <ErrorModal errorMessage={errors[0]} onClose={clearErrors} />
+        ) : null}
       </div>
     </div>
   );
