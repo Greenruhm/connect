@@ -9,13 +9,14 @@ describe('Sign In Page', async assert => {
   const renderSignInPage = props => render(<SignIn {...props} />);
 
   {
+    const given = 'a signed out user';
     const props = { authStatus: 'Signed Out' };
     const $ = renderSignInPage(props);
     const contains = match($.html());
     {
       const signInTitle = 'Sign In';
       assert({
-        given: 'sign in page',
+        given,
         should: 'render "Sign In" title',
         actual: contains(signInTitle),
         expected: signInTitle,
@@ -25,19 +26,19 @@ describe('Sign In Page', async assert => {
       const emailLabelText = 'Your Email';
       const emailInputPlaceholder = 'youremail@example.com';
       assert({
-        given: 'sign in page',
+        given,
         should: 'render email input',
         actual: $('.email').length,
         expected: 1,
       });
       assert({
-        given: 'sign in page',
+        given,
         should: 'render "Your email" label text',
         actual: contains(emailLabelText),
         expected: emailLabelText,
       });
       assert({
-        given: 'sign in page',
+        given,
         should: 'render email input placeholder text',
         actual: contains(emailInputPlaceholder),
         expected: emailInputPlaceholder,
@@ -45,7 +46,7 @@ describe('Sign In Page', async assert => {
     }
     {
       assert({
-        given: 'sign in page',
+        given,
         should: 'render "Sign In" button',
         actual: $('[name="sign-in"]').length,
         expected: 1,
@@ -54,24 +55,19 @@ describe('Sign In Page', async assert => {
     {
       const orSignUpLinkText = 'Or Sign Up';
       assert({
-        given: 'sign in page',
-        should: 'render "Or Sign Up" page link',
-        actual: $('.sign-up').length,
-        expected: 1,
-      });
-      assert({
-        given: 'sign in page',
-        should: 'render "Or Sign Up" link label',
+        given,
+        should: 'render "Or Sign Up" link',
         actual: contains(orSignUpLinkText),
         expected: orSignUpLinkText,
       });
     }
   }
   {
+    const given = 'a signed in user';
     const props = { authStatus: 'Signed In' };
     const $ = renderSignInPage(props);
     assert({
-      given: 'sign up page w "authStatus = Signed Up"',
+      given,
       should: 'render success view component',
       actual: $('.success-view').length,
       expected: 1,
