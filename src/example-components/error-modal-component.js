@@ -3,6 +3,14 @@ import React from 'react';
 import Theme from './theme';
 import TryAgainButton from './submit-button-component';
 
+const centered = {
+  position: 'absolute',
+  display: 'flex',
+  alignItems: 'center',
+  flexDirection: 'column',
+  justifyContent: 'center',
+};
+
 const xLine = {
   position: 'absolute',
   height: '100%',
@@ -15,20 +23,12 @@ const styles = {
     marginTop: '16px',
   },
   container: {
-    position: 'absolute',
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    ...centered,
     width: '100%',
     height: '100%',
   },
   content: {
-    position: 'absolute',
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    ...centered,
     padding: '20px',
     borderRadius: '32px',
     border: `solid 3px ${Theme.button}`,
@@ -47,7 +47,6 @@ const styles = {
     marginTop: '18px',
     marginBottom: '32px',
     textAlign: 'center',
-    wordBreak: 'break-word',
   },
   h2: {
     fontSize: '32px',
