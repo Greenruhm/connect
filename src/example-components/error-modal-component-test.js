@@ -11,7 +11,7 @@ describe('Errors View Component', async assert => {
   {
     const $ = renderErrorModal();
     assert({
-      given: 'error modal component',
+      given: 'no arguments',
       should: 'render "X" close icon',
       actual: $('.x-close-wrapper').length,
       expected: 1,
@@ -23,16 +23,10 @@ describe('Errors View Component', async assert => {
     const $ = renderErrorModal(props);
     const contains = match($.html());
     assert({
-      given: 'error modal component',
-      should: 'render "Error!" title',
+      given: 'no arguments',
+      should: 'render error modal title',
       actual: contains(title),
       expected: title,
-    });
-    assert({
-      given: 'error modal component',
-      should: 'render title divider',
-      actual: $('.title-divider').length,
-      expected: 1,
     });
   }
   {
@@ -41,16 +35,10 @@ describe('Errors View Component', async assert => {
     const $ = renderErrorModal(props);
     const contains = match($.html());
     assert({
-      given: 'error modal component w/ "errorMessage" prop',
-      should: 'render "errorMessage"',
+      given: 'error message',
+      should: 'render the error message',
       actual: contains(errorMessage),
       expected: errorMessage,
-    });
-    assert({
-      given: 'error modal component w/ "errorMessage" prop',
-      should: 'render error message',
-      actual: $('.error-message').length,
-      expected: 1,
     });
   }
   {
@@ -58,14 +46,8 @@ describe('Errors View Component', async assert => {
     const contains = match($.html());
     const tryAgainLabel = 'Try Again';
     assert({
-      given: 'error modal component',
+      given: 'no arguments',
       should: 'render "Try Again" button',
-      actual: $('[name="try-again"]').length,
-      expected: 1,
-    });
-    assert({
-      given: 'error modal component',
-      should: 'render "Try Again" button label',
       actual: contains(tryAgainLabel),
       expected: tryAgainLabel,
     });
