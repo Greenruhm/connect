@@ -9,7 +9,7 @@ const signUp = async ({
   dispatch,
   getState,
   magic,
-  signUpEmail = email
+  signUpEmail = email,
 } = {}) => {
   if (!email) {
     throw new Error('Email is required.');
@@ -32,7 +32,7 @@ const signUp = async ({
     // Gather the user info from magic.
     const magicUserData = await Promise.all([
       magicUser.getMetadata(),
-      magicUser.getIdToken()
+      magicUser.getIdToken(),
     ]).catch(() => {
       // If we can't get the user data, we can't create a user.
       // This is probably because the user is not logged in.
@@ -61,7 +61,7 @@ const signUp = async ({
         displayName,
         dispatch,
         getState,
-        magic
+        magic,
       });
     }
 
@@ -75,7 +75,7 @@ const signUp = async ({
       walletAddress,
       email,
       displayName,
-      username
+      username,
     })
       .then(({ _id: id, ...user }) => {
         const userData = {
@@ -84,7 +84,7 @@ const signUp = async ({
           walletAddress,
           email,
           isSignedIn: true,
-          sessionToken
+          sessionToken,
         };
         dispatch(setUser(userData));
         return userData;
@@ -106,9 +106,7 @@ const signUp = async ({
   // User isn't signed in - so lets send them a email link.
   console.log('Magic user is not logged in. Logging in with Magic...');
 
-  // The magic UX handles errors for sign-in, so we can ignore them.
-  const noop = () => {};
-  await magic.auth.loginWithMagicLink({ email }).catch(noop);
+  await magic.auth.loginWithMagicLink({ email });
 
   // And update the user in our state.
   return createUser(magic.user);
