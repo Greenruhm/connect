@@ -1,11 +1,17 @@
 import { setUser, setAnonUser } from './reducer';
 import {
   getProfile,
-  updateLastSignedIn
+  updateLastSignedIn,
 } from '../../services/greenruhm-api/index.js';
 import { getUserIsSignedIn } from './reducer';
 
-const signInUser = async ({ email, dispatch, getState, magic } = {}) => {
+const signInUser = async ({
+  email,
+  dispatch,
+  getState,
+  magic,
+  handleMagicError,
+} = {}) => {
   if (!email) {
     throw new Error('Email Required to Sign In User');
   }
@@ -20,7 +26,7 @@ const signInUser = async ({ email, dispatch, getState, magic } = {}) => {
     // Gather the user info from magic.
     const magicUserData = await Promise.all([
       magicUser.getMetadata(),
-      magicUser.getIdToken()
+      magicUser.getIdToken(),
     ]);
 
     const { publicAddress: walletAddress, email } = magicUserData[0];
@@ -48,7 +54,7 @@ const signInUser = async ({ email, dispatch, getState, magic } = {}) => {
       walletAddress,
       email,
       isSignedIn: true,
-      sessionToken
+      sessionToken,
     };
 
     // They're signed in, so we need to
@@ -65,7 +71,7 @@ const signInUser = async ({ email, dispatch, getState, magic } = {}) => {
   }
 
   // user isn't signed in - so lets send them a email link.
-  await magic.auth.loginWithMagicLink({ email });
+  await magic.auth.loginWithMagicLink({ email }).catch(handleMagicError);
 
   // And update the user in our state.
   return updateUser(magic.user);
