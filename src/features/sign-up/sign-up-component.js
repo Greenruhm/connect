@@ -6,6 +6,13 @@ import SignUpButton from '../../example-components/submit-button-component';
 import SuccessView from '../../example-components/success-view-component';
 import ErrorModal from '../../example-components/error-modal-component';
 
+// https://magic.link/docs/auth/api-reference/client-side-sdks/web#errors-warnings
+const errorsHandledByMagic = [
+  'Auth Link Expired',
+  'Invalid Email',
+  'Internal Error',
+];
+
 const styles = {
   a: {
     textDecoration: 'underline',
@@ -153,10 +160,13 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
         username: userData?.username,
       }));
     } catch (e) {
-      setState(state => ({
-        ...state,
-        errors: [...state.errors, e.message],
-      }));
+      // if error has NOT already been handled by Magic UI
+      if (!errorsHandledByMagic.includes(e.message)) {
+        setState(state => ({
+          ...state,
+          errors: [...state.errors, e.message],
+        }));
+      }
       setState(state => ({
         ...state,
         authStatus: 'Signed Out',

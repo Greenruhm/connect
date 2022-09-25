@@ -3,13 +3,14 @@ import { createUser as createGreenruhmUser } from '../../services/greenruhm-api/
 import { getUserIsSignedIn } from './reducer';
 
 const signUp = async ({
-  email,
-  username,
-  displayName = username,
   dispatch,
+  displayName = username,
+  email,
   getState,
+  handleMagicError,
   magic,
   signUpEmail = email,
+  username,
 } = {}) => {
   if (!email) {
     throw new Error('Email is required.');
@@ -106,7 +107,7 @@ const signUp = async ({
   // User isn't signed in - so lets send them a email link.
   console.log('Magic user is not logged in. Logging in with Magic...');
 
-  await magic.auth.loginWithMagicLink({ email });
+  await magic.auth.loginWithMagicLink({ email }).catch(handleMagicError);
 
   // And update the user in our state.
   return createUser(magic.user);
