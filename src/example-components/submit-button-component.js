@@ -16,6 +16,7 @@ const styles = {
   buttonDisabled: {
     ...button,
     backgroundColor: `${Theme.buttonDisabled}`,
+    color: 'black',
   },
   buttonLabel: {
     fontSize: '18px',

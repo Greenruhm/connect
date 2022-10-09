@@ -1,10 +1,19 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import connect from '../../index';
+import { isValidEmail } from '../../example-components/utils';
 import InputWithLabel from '../../example-components/input-with-label-component';
 import SignUpButton from '../../example-components/submit-button-component';
 import SuccessView from '../../example-components/success-view-component';
 import ErrorModal from '../../example-components/error-modal-component';
+
+// https://connect.greenruhm.com/fundamentals/user-accounts#new-user-sign-up
+const errorsHandledByConnect = [
+  'Auth Link Expired',
+  'Invalid Email',
+  'Internal Error',
+  'User Request Edit Email',
+];
 
 const styles = {
   a: {
@@ -49,6 +58,7 @@ const SignInLink = ({ href, label } = {}) => {
 
 const SignUpView = ({
   authStatus,
+  disabled,
   handleEmail,
   handleSignUp,
   handleUsername,
@@ -74,6 +84,7 @@ const SignUpView = ({
         type="text"
       />
       <SignUpButton
+        disabled={disabled}
         label="Sign Up"
         loading={authStatus === 'Signing Up'}
         name="sign-up"
@@ -86,6 +97,7 @@ const SignUpView = ({
 
 const renderView = ({
   authStatus,
+  disabled,
   email,
   handleEmail,
   handleSignUp,
@@ -96,6 +108,7 @@ const renderView = ({
   authStatus === 'Signed Out' || authStatus === 'Signing Up'
     ? SignUpView({
         authStatus,
+        disabled,
         handleEmail,
         handleSignUp,
         handleUsername,
@@ -153,10 +166,13 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
         username: userData?.username,
       }));
     } catch (e) {
-      setState(state => ({
-        ...state,
-        errors: [...state.errors, e.message],
-      }));
+      // if error has NOT already been handled by Connect UI
+      if (!errorsHandledByConnect.includes(e.message)) {
+        setState(state => ({
+          ...state,
+          errors: [...state.errors, e.message],
+        }));
+      }
       setState(state => ({
         ...state,
         authStatus: 'Signed Out',
@@ -179,11 +195,14 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
     }));
   };
 
+  const disabled = !isValidEmail(email) || !username;
+
   return (
     <div className="box-format font-format" style={styles.page}>
       <div className="sign-up-wrapper" style={styles.wrapper}>
         {renderView({
           authStatus,
+          disabled,
           email,
           handleEmail,
           handleSignUp,
