@@ -60,4 +60,23 @@ describe('Handle Magic Error', async assert => {
       });
     }
   }
+  {
+    const description = {
+      given: 'user requests to edit email',
+      should: 'throw an error',
+    };
+    const magicUserRequestEditEmail = { code: -10005 };
+    const message = AuthErrorMessages.UserRequestEditEmail;
+    try {
+      handleMagicError(magicUserRequestEditEmail);
+    } catch (error) {
+      const contains = match(error.message);
+
+      assert({
+        ...description,
+        actual: contains(message),
+        expected: message,
+      });
+    }
+  }
 });

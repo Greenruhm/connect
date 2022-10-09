@@ -7,12 +7,14 @@ const AuthErrors = {
   // InvalidParams on Magic's side
   InvalidEmail: -32602,
   InternalError: -32603,
+  UserRequestEditEmail: -10005,
 };
 
 export const AuthErrorMessages = {
   AuthLinkExpired: 'Auth Link Expired',
   InvalidEmail: 'Invalid Email',
   InternalError: 'Internal Error',
+  UserRequestEditEmail: 'User Request Edit Email',
 };
 
 export const handleMagicError = error => {
@@ -34,6 +36,13 @@ export const handleMagicError = error => {
   if (error.code === AuthErrors.InternalError) {
     throw new Error(AuthErrorMessages.InternalError, {
       cause: 'InternalError',
+    });
+  }
+
+  // if UserRequestEditEmail
+  if (error.code === AuthErrors.UserRequestEditEmail) {
+    throw new Error(AuthErrorMessages.UserRequestEditEmail, {
+      cause: 'UserRequestEditEmail',
     });
   }
 
