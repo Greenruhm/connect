@@ -1,16 +1,18 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import connect from '../../index';
+import { isValidEmail } from '../../example-components/utils';
 import InputWithLabel from '../../example-components/input-with-label-component';
 import SignInButton from '../../example-components/submit-button-component';
 import SuccessView from '../../example-components/success-view-component';
 import ErrorModal from '../../example-components/error-modal-component';
 
-// https://magic.link/docs/auth/api-reference/client-side-sdks/web#errors-warnings
-const errorsHandledByMagic = [
+// https://connect.greenruhm.com/fundamentals/user-accounts#sign-in
+const errorsHandledByConnect = [
   'Auth Link Expired',
   'Invalid Email',
   'Internal Error',
+  'User Request Edit Email',
 ];
 
 const styles = {
@@ -51,7 +53,12 @@ const SignUpLink = ({ href, label }) => {
   );
 };
 
-const SignInView = ({ authStatus, handleEmail, handleSignIn } = {}) => {
+const SignInView = ({
+  authStatus,
+  disabled,
+  handleEmail,
+  handleSignIn,
+} = {}) => {
   return (
     <>
       <h2 style={styles.h2}>Sign In</h2>
@@ -64,6 +71,7 @@ const SignInView = ({ authStatus, handleEmail, handleSignIn } = {}) => {
         type="email"
       />
       <SignInButton
+        disabled={disabled}
         label="Sign In"
         loading={authStatus === 'Signing In'}
         name="sign-in"
@@ -76,6 +84,7 @@ const SignInView = ({ authStatus, handleEmail, handleSignIn } = {}) => {
 
 const renderView = ({
   authStatus,
+  disabled,
   email,
   handleEmail,
   handleSignIn,
@@ -85,6 +94,7 @@ const renderView = ({
   authStatus === 'Signed Out' || authStatus === 'Signing In'
     ? SignInView({
         authStatus,
+        disabled,
         handleEmail,
         handleSignIn,
       })
@@ -134,8 +144,8 @@ const SignInPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
         username: userData.username,
       }));
     } catch (e) {
-      // if error has NOT already been handled by Magic UI
-      if (!errorsHandledByMagic.includes(e.message)) {
+      // if error has NOT already been handled by Connect UI
+      if (!errorsHandledByConnect.includes(e.message)) {
         setState(state => ({
           ...state,
           errors: [...state.errors, e.message],
@@ -163,11 +173,14 @@ const SignInPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
     }));
   };
 
+  const disabled = !isValidEmail(email);
+
   return (
     <div className="box-format font-format" style={styles.page}>
       <div className="sign-in-wrapper" style={styles.wrapper}>
         {renderView({
           authStatus,
+          disabled,
           email,
           handleEmail,
           handleSignIn,
