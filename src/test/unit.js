@@ -6,5 +6,6 @@ import '../features/user/sign-in.test.js';
 import '../features/user/withMagic.test';
 import '../features/sign-up/sign-up-component-test.js';
 import '../features/sign-in/sign-in-component-test.js';
+import '../features/sign-up-connect/sign-up-view-component-test.js';
 import '../example-components/success-view-component-test.js';
 import '../example-components/error-modal-component-test.js';

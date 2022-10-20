@@ -1,4 +1,6 @@
 import { Magic } from 'magic-sdk';
+import { ConnectExtension } from '@magic-ext/connect';
+import { ethers } from 'ethers';
 
 // https://magic.link/docs/auth/api-reference/client-side-sdks/web#errors-warnings
 const AuthErrors = {
@@ -17,7 +19,7 @@ export const AuthErrorMessages = {
   UserRequestEditEmail: 'User Request Edit Email',
 };
 
-export const handleMagicError = error => {
+export const handleMagicError = (error) => {
   // if MagicLinkExpired
   if (error.code === AuthErrors.AuthLinkExpired) {
     throw new Error(AuthErrorMessages.AuthLinkExpired, {
@@ -49,7 +51,7 @@ export const handleMagicError = error => {
   return;
 };
 
-const withMagic = params => {
+const withMagic = (params) => {
   const options = {
     ...(process?.env?.NODE_ENV === 'test' && { testMode: true }),
   };
@@ -60,6 +62,25 @@ const withMagic = params => {
     ...params,
     magic,
     handleMagicError,
+  };
+};
+
+// TODO: Oliver remove scratch work
+export const withMagicConnect = (params) => {
+  // TODO: Update key to one owned by Greenruhm
+  // current magic connect api key is tied to
+  // oliver.day.swe@gmail.com for testing purpose
+  const magic = new Magic('pk_live_4AE9F51174C333FF', {
+    extensions: [new ConnectExtension()],
+    network: 'mainnet',
+  });
+
+  const web3Provider = new ethers.providers.Web3Provider(magic.rpcProvider);
+
+  return {
+    ...params,
+    magic,
+    web3Provider,
   };
 };
 

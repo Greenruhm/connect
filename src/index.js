@@ -1,7 +1,7 @@
 import signIn from './features/user/sign-in';
-import signUp from './features/user/sign-up';
-import signOut from './features/user/sign-out';
-import withMagic from './features/user/withMagic';
+import signUp, { signUpThroughMagicConnect } from './features/user/sign-up';
+import signOut, { signOutThroughMagicConnect } from './features/user/sign-out';
+import withMagic, { withMagicConnect } from './features/user/withMagic';
 import { asyncPipe, withStore } from './utils';
 import { updateApiKeyAction } from './features/apiKey/reducer';
 import store from './reducer/store';
@@ -25,6 +25,17 @@ export const connect = ({ apiKey = '' } = {}) => {
         signUp
       )({ email, username, displayName }),
     signOut: () => asyncPipe(withMiddleware, withMagic, signOut)(),
+    signUpThroughMagicConnect: ({
+      username = '',
+      displayName = username,
+    } = {}) =>
+      asyncPipe(
+        withMiddleware,
+        withMagicConnect,
+        signUpThroughMagicConnect
+      )({ username, displayName }),
+    signOutThroughMagicConnect: () =>
+      asyncPipe(withMiddleware, withMagicConnect, signOutThroughMagicConnect)(),
   };
 };
 
