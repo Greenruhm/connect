@@ -1,4 +1,4 @@
-import signIn from './features/user/sign-in';
+import signIn, { signInThroughMagicConnect } from './features/user/sign-in';
 import signUp, { signUpThroughMagicConnect } from './features/user/sign-up';
 import signOut, { signOutThroughMagicConnect } from './features/user/sign-out';
 import withMagic, { withMagicConnect } from './features/user/withMagic';
@@ -34,6 +34,8 @@ export const connect = ({ apiKey = '' } = {}) => {
         withMagicConnect,
         signUpThroughMagicConnect
       )({ username, displayName }),
+    signInThroughMagicConnect: () =>
+      asyncPipe(withMiddleware, withMagicConnect, signInThroughMagicConnect)(),
     signOutThroughMagicConnect: () =>
       asyncPipe(withMiddleware, withMagicConnect, signOutThroughMagicConnect)(),
   };
