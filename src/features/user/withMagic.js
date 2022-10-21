@@ -67,10 +67,7 @@ const withMagic = (params) => {
 
 // TODO: Oliver remove scratch work
 export const withMagicConnect = (params) => {
-  // TODO: Update key to one owned by Greenruhm
-  // current magic connect api key is tied to
-  // oliver.day.swe@gmail.com for testing purpose
-  const magic = new Magic('pk_live_4AE9F51174C333FF', {
+  const magic = new Magic('pk_live_BDB8311A26CF3651', {
     extensions: [new ConnectExtension()],
     network: 'mainnet',
   });
