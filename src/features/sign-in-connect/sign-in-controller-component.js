@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
+import { useFeatures } from '@paralleldrive/react-feature-toggles';
 import connect from '../..';
 import SignInView from './sign-in-view-component';
 
@@ -10,10 +11,6 @@ const errorsHandledByConnect = [
   'Internal Error',
   'User Request Edit Email',
 ];
-
-const { signInThroughMagicConnect, signOutThroughMagicConnect } = connect({
-  apiKey: '<your-api-key>',
-});
 
 const SignInController = ({
   authStatus: initialAuthStatus = 'Signed Out',
@@ -26,6 +23,11 @@ const SignInController = ({
   });
   const { authStatus, email, errors, username } = state;
 
+  const features = useFeatures();
+  const { signIn, signOut } = connect({
+    apiKey: '<your-api-key>',
+    features,
+  });
   const clearErrors = (e) => {
     setState((state) => ({
       ...state,
@@ -39,7 +41,7 @@ const SignInController = ({
         ...state,
         authStatus: 'Signing In',
       }));
-      const userData = await signInThroughMagicConnect();
+      const userData = await signIn();
       setState((state) => ({
         ...state,
         authStatus: 'Signed In',
@@ -63,7 +65,7 @@ const SignInController = ({
 
   const handleSignOut = async () => {
     try {
-      await signOutThroughMagicConnect();
+      await signOut();
     } catch (e) {
       setState((state) => ({
         ...state,

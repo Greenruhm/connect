@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
+import { useFeatures } from '@paralleldrive/react-feature-toggles';
 import connect from '../..';
 import SignUpView from './sign-up-view-component';
 
@@ -11,11 +12,6 @@ const errorsHandledByConnect = [
   'User Request Edit Email',
 ];
 
-// consider if these should be name differently
-const { signUpThroughMagicConnect, signOutThroughMagicConnect } = connect({
-  apiKey: '<your-api-key>',
-});
-
 const SignUpController = ({
   authStatus: initialAuthStatus = 'Signed Out',
 } = {}) => {
@@ -26,6 +22,12 @@ const SignUpController = ({
     username: '',
   });
   const { authStatus, email, errors, username } = state;
+
+  const features = useFeatures();
+  const { signUp, signOut } = connect({
+    apiKey: '<your-api-key>',
+    features,
+  });
 
   const clearErrors = (e) => {
     setState((state) => ({
@@ -47,7 +49,7 @@ const SignUpController = ({
         ...state,
         authStatus: 'Signing Up',
       }));
-      const userData = await signUpThroughMagicConnect({ username });
+      const userData = await signUp({ username });
       setState((state) => ({
         ...state,
         authStatus: 'Signed Up',
@@ -71,7 +73,7 @@ const SignUpController = ({
 
   const handleSignOut = async () => {
     try {
-      await signOutThroughMagicConnect();
+      await signOut();
     } catch (e) {
       setState((state) => ({
         ...state,
