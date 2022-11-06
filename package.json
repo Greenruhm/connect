@@ -64,7 +64,7 @@
     "@magic-ext/connect": "3.0.0",
     "@paralleldrive/feature-toggles": "1.0.4",
     "@paralleldrive/react-feature-toggles": "2.3.1",
-    "error-causes": "1.1.0",
+    "error-causes": "3.0.0",
     "ethers": "5.7.2",
     "isomorphic-fetch": "3.0.0",
     "magic-sdk": "10.0.0",
