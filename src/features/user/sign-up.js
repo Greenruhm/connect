@@ -5,6 +5,7 @@ import { getUserIsSignedIn } from './reducer';
 export const signUpThroughMagicConnect = async ({
   dispatch,
   displayName,
+  handleMagicError,
   magic,
   username,
   web3Provider,
@@ -13,6 +14,7 @@ export const signUpThroughMagicConnect = async ({
     throw new Error('Username is required.');
   }
 
+  // TODO: Remove
   console.log({ username });
   console.log({ magic });
   console.log({ web3Provider });
@@ -23,20 +25,24 @@ export const signUpThroughMagicConnect = async ({
   const walletAddress = await web3Provider
     .listAccounts()
     .then((accounts) => accounts[0])
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      // TODO: Remove console log
+      console.log({ signInError: error });
+      handleMagicError(error);
+    });
 
   console.log({ walletAddress });
 
   const { email } = await magic.connect.requestUserInfo().catch((error) => {
-    console.log({ rejectedError: error });
     magic.connect.disconnect();
 
-    // TODO: Error handling when magic ux is closed
-
-    // TODO: Error handling when user rejects consent to share email
-    throw new Error(
-      'To sign up with Greenruhm you must consent to sharing your email.'
-    );
+    if (error.rawMessage === 'User rejected the action') {
+      throw new Error(
+        'To sign up with Greenruhm you must consent to sharing your email.'
+      );
+    } else {
+      handleMagicError(error);
+    }
   });
   console.log({ email });
 

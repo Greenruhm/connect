@@ -5,12 +5,7 @@ import connect from '../..';
 import SignUpView from './sign-up-view-component';
 
 // TODO: Update by using error-causes package
-const errorsHandledByConnect = [
-  'Auth Link Expired',
-  'Invalid Email',
-  'Internal Error',
-  'User Request Edit Email',
-];
+const errorsHandledByConnect = [-10001, -32602, -32603, -10005];
 
 const SignUpController = ({
   authStatus: initialAuthStatus = 'Signed Out',
@@ -58,7 +53,7 @@ const SignUpController = ({
       }));
     } catch (e) {
       // if error has NOT already been handled by Connect UI
-      if (!errorsHandledByConnect.includes(e.message)) {
+      if (!errorsHandledByConnect.includes(e?.cause?.code)) {
         setState((state) => ({
           ...state,
           errors: [...state.errors, e.message],
