@@ -1,8 +1,8 @@
 import { describe } from 'riteway';
 import match from 'riteway/match';
-import { AuthErrorMessages, handleMagicError } from './withMagic';
+import { AuthErrorMessages, handleMagicError } from './with-magic';
 
-describe('Handle Magic Error', async assert => {
+describe('Handle Magic Error', async (assert) => {
   {
     const description = {
       given: 'auth link expired',

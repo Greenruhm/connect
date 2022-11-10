@@ -2,7 +2,7 @@ import { isActiveFeatureName } from '@paralleldrive/feature-toggles';
 import signIn, { signInThroughMagicConnect } from './features/user/sign-in';
 import signUp, { signUpThroughMagicConnect } from './features/user/sign-up';
 import signOut, { signOutThroughMagicConnect } from './features/user/sign-out';
-import withMagic, { withMagicConnect } from './features/user/withMagic';
+import withMagic, { withMagicConnect } from './features/user/with-magic';
 import { asyncPipe, withStore } from './utils';
 import { updateApiKeyAction } from './features/apiKey/reducer';
 import store from './reducer/store';

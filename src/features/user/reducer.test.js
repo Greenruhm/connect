@@ -4,15 +4,17 @@ import {
   initialState,
   setUser,
   createUser,
-  setAnonUser
+  setAnonUser,
+  selectUser,
 } from './reducer.js';
+import { withSlice } from '../../utils';
 
-describe('User reducer()', async assert => {
+describe('User reducer()', async (assert) => {
   assert({
     given: 'no arguments',
     should: 'return initialstate',
     actual: reducer(),
-    expected: initialState
+    expected: initialState,
   });
 
   {
@@ -20,13 +22,13 @@ describe('User reducer()', async assert => {
       email: 'test@email.com',
       walletAddress: 'test',
       sessionToken: 'test-token',
-      isSignedIn: true
+      isSignedIn: true,
     });
     assert({
       given: 'initial state and setUser action with a user',
       should: 'set the user in state',
       actual: reducer(initialState, setUser(user)),
-      expected: user
+      expected: user,
     });
   }
 
@@ -35,13 +37,28 @@ describe('User reducer()', async assert => {
       email: 'test@email.com',
       walletAddress: 'test',
       sessionToken: 'test-token',
-      isSignedIn: true
+      isSignedIn: true,
     });
     assert({
       given: 'initial state with a user and setAnonUser aciton',
       should: 'set state back to initial state',
       actual: reducer(user, setAnonUser()),
-      expected: initialState
+      expected: initialState,
+    });
+  }
+  {
+    const user = createUser({
+      email: 'test@email.com',
+      walletAddress: 'test',
+      sessionToken: 'test-token',
+      isSignedIn: true,
+    });
+    const state = withSlice('user')(reducer(initialState, setUser(user)));
+    assert({
+      given: 'initial state and setUser action with a user',
+      should: 'select the user from state',
+      actual: selectUser(state),
+      expected: user,
     });
   }
 });

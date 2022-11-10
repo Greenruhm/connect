@@ -70,7 +70,7 @@ export const signUpThroughMagicConnect = async ({
         id,
         walletAddress,
         email,
-        // isSignedIn: true,
+        isSignedIn: true,
         // sessionToken,
       };
       dispatch(setUser(userData));

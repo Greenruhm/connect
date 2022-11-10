@@ -3,7 +3,7 @@ import '../features/drop/addMedia.test.js';
 import '../features/user/reducer.test.js';
 import '../features/user/sign-up.test.js';
 import '../features/user/sign-in.test.js';
-import '../features/user/withMagic.test';
+import '../features/user/with-magic.test';
 import '../features/sign-up/sign-up-component-test.js';
 import '../features/sign-in/sign-in-component-test.js';
 import '../features/sign-up-connect/sign-up-view-component-test.js';

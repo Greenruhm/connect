@@ -4,12 +4,21 @@ import page from '../src/HOCs/page';
 import SignInAuth from '../src/features/sign-in';
 import SignInConnect from '../src/features/sign-in-connect';
 
-const SignInPage = () => (
-  <Feature
-    activeComponent={SignInConnect}
-    inactiveComponent={SignInAuth}
-    name="magic-connect"
-  />
-);
+const SignInPage = (props) => {
+  const active = () => {
+    return <SignInConnect {...props} />;
+  };
+  const inactive = () => {
+    return <SignInAuth {...props} />;
+  };
+
+  return (
+    <Feature
+      activeComponent={active}
+      inactiveComponent={inactive}
+      name="magic-connect"
+    />
+  );
+};
 
 export default page(SignInPage);
