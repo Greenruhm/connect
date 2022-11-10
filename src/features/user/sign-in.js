@@ -5,29 +5,29 @@ import {
 } from '../../services/greenruhm-api/index.js';
 import { getUserIsSignedIn } from './reducer';
 
-// TODO: Oliver put behind feature toggle
 export const signInThroughMagicConnect = async ({
   dispatch,
+  handleMagicError,
   magic,
   web3Provider,
 }) => {
   const walletAddress = await web3Provider
     .listAccounts()
     .then((accounts) => accounts[0])
-    .catch((error) => console.log(error));
+    .catch(handleMagicError);
 
   console.log({ walletAddress });
 
   const { email } = await magic.connect.requestUserInfo().catch((error) => {
-    console.log({ rejectedError: error });
     magic.connect.disconnect();
 
-    // TODO: Error handling when magic ux is closed
-
-    // TODO: Error handling when user rejects consent to share email
-    throw new Error(
-      'To sign up with Greenruhm you must consent to sharing your email.'
-    );
+    if (error.rawMessage === 'User rejected the action') {
+      throw new Error(
+        'To sign up with Greenruhm you must consent to sharing your email.'
+      );
+    } else {
+      handleMagicError(error);
+    }
   });
   console.log({ email });
 

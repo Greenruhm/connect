@@ -1,16 +1,7 @@
 import { Magic } from 'magic-sdk';
 import { ConnectExtension } from '@magic-ext/connect';
 import { ethers } from 'ethers';
-
-// https://magic.link/docs/auth/api-reference/client-side-sdks/web#errors-warnings
-const AuthErrors = {
-  // MagicLinkExpired on Magic's side
-  AuthLinkExpired: -10001,
-  // InvalidParams on Magic's side
-  InvalidEmail: -32602,
-  InternalError: -32603,
-  UserRequestEditEmail: -10005,
-};
+import { createError, errorCauses } from 'error-causes';
 
 export const AuthErrorMessages = {
   AuthLinkExpired: 'Auth Link Expired',
@@ -19,33 +10,48 @@ export const AuthErrorMessages = {
   UserRequestEditEmail: 'User Request Edit Email',
 };
 
+// https://magic.link/docs/auth/api-reference/client-side-sdks/web#errors-warnings
+// eslint-disable-next-line no-unused-vars
+const [magicErrors, handleMagicErrors] = errorCauses({
+  AuthLinkExpired: {
+    code: -10001,
+    message: 'Auth Link Expired',
+  },
+  InvalidEmail: {
+    code: -32602,
+    message: 'Invalid Email',
+  },
+  InternalError: {
+    code: -32603,
+    message: 'Internal Error',
+  },
+  UserRequestEditEmail: {
+    code: -10005,
+    message: 'User Request Edit Email',
+  },
+});
+
+export const errorsHandledByConnect = magicErrors;
+
 export const handleMagicError = (error) => {
   // if MagicLinkExpired
-  if (error.code === AuthErrors.AuthLinkExpired) {
-    throw new Error(AuthErrorMessages.AuthLinkExpired, {
-      cause: 'AuthLinkExpired',
-    });
+  if (error.code === magicErrors.AuthLinkExpired.code) {
+    throw createError(magicErrors.AuthLinkExpired);
   }
 
   // if InvalidParams
-  if (error.code === AuthErrors.InvalidEmail) {
-    throw new Error(AuthErrorMessages.InvalidEmail, {
-      cause: 'InvalidEmail',
-    });
+  if (error.code === magicErrors.InvalidEmail.code) {
+    throw createError(magicErrors.InvalidEmail);
   }
 
   // if InternalError
-  if (error.code === AuthErrors.InternalError) {
-    throw new Error(AuthErrorMessages.InternalError, {
-      cause: 'InternalError',
-    });
+  if (error.code === magicErrors.InternalError.code) {
+    throw createError(magicErrors.InternalError);
   }
 
   // if UserRequestEditEmail
-  if (error.code === AuthErrors.UserRequestEditEmail) {
-    throw new Error(AuthErrorMessages.UserRequestEditEmail, {
-      cause: 'UserRequestEditEmail',
-    });
+  if (error.code === magicErrors.UserRequestEditEmail.code) {
+    throw createError(magicErrors.UserRequestEditEmail);
   }
 
   return;
@@ -76,9 +82,12 @@ export const withMagicConnect = (params) => {
 
   return {
     ...params,
+    handleMagicError,
     magic,
     web3Provider,
   };
 };
+
+export { magicErrors, handleMagicErrors };
 
 export default withMagic;

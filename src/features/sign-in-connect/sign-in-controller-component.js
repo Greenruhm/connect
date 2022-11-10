@@ -5,12 +5,7 @@ import connect from '../..';
 import SignInView from './sign-in-view-component';
 
 // https://connect.greenruhm.com/fundamentals/user-accounts#sign-in
-const errorsHandledByConnect = [
-  'Auth Link Expired',
-  'Invalid Email',
-  'Internal Error',
-  'User Request Edit Email',
-];
+const errorsHandledByConnect = [-10001, -32602, -32603, -10005];
 
 const SignInController = ({
   authStatus: initialAuthStatus = 'Signed Out',
@@ -28,6 +23,7 @@ const SignInController = ({
     apiKey: '<your-api-key>',
     features,
   });
+
   const clearErrors = (e) => {
     setState((state) => ({
       ...state,
@@ -50,7 +46,7 @@ const SignInController = ({
       }));
     } catch (e) {
       // if error has NOT already been handled by Connect UI
-      if (!errorsHandledByConnect.includes(e.message)) {
+      if (!errorsHandledByConnect.includes(e?.cause?.code)) {
         setState((state) => ({
           ...state,
           errors: [...state.errors, e.message],

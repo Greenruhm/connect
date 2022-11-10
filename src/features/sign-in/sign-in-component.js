@@ -8,12 +8,7 @@ import SuccessView from '../../example-components/success-view-component';
 import ErrorModal from '../../example-components/error-modal-component';
 
 // https://connect.greenruhm.com/fundamentals/user-accounts#sign-in
-const errorsHandledByConnect = [
-  'Auth Link Expired',
-  'Invalid Email',
-  'Internal Error',
-  'User Request Edit Email',
-];
+const errorsHandledByConnect = [-10001, -32602, -32603, -10005];
 
 const styles = {
   a: {
@@ -116,15 +111,15 @@ const SignInPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
   });
   const { authStatus, email, errors, username } = state;
 
-  const clearErrors = e => {
-    setState(state => ({
+  const clearErrors = (e) => {
+    setState((state) => ({
       ...state,
       errors: [],
     }));
   };
 
-  const handleEmail = e => {
-    setState(state => ({
+  const handleEmail = (e) => {
+    setState((state) => ({
       ...state,
       email: e.target.value,
     }));
@@ -132,26 +127,27 @@ const SignInPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
 
   const handleSignIn = async () => {
     try {
-      setState(state => ({
+      setState((state) => ({
         ...state,
         authStatus: 'Signing In',
       }));
       const userData = await signIn({ email, username });
-      setState(state => ({
+      setState((state) => ({
         ...state,
         authStatus: 'Signed In',
         email: userData.email,
         username: userData.username,
       }));
     } catch (e) {
+      console.log({ e });
       // if error has NOT already been handled by Connect UI
-      if (!errorsHandledByConnect.includes(e.message)) {
-        setState(state => ({
+      if (!errorsHandledByConnect.includes(e?.cause?.code)) {
+        setState((state) => ({
           ...state,
           errors: [...state.errors, e.message],
         }));
       }
-      setState(state => ({
+      setState((state) => ({
         ...state,
         authStatus: 'Signed Out',
       }));
@@ -162,12 +158,12 @@ const SignInPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
     try {
       await signOut({ email });
     } catch (e) {
-      setState(state => ({
+      setState((state) => ({
         ...state,
         errors: [...state.errors, e.message],
       }));
     }
-    setState(state => ({
+    setState((state) => ({
       ...state,
       authStatus: 'Signed Out',
     }));

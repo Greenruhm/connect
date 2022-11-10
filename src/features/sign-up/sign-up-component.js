@@ -8,12 +8,7 @@ import SuccessView from '../../example-components/success-view-component';
 import ErrorModal from '../../example-components/error-modal-component';
 
 // https://connect.greenruhm.com/fundamentals/user-accounts#new-user-sign-up
-const errorsHandledByConnect = [
-  'Auth Link Expired',
-  'Invalid Email',
-  'Internal Error',
-  'User Request Edit Email',
-];
+const errorsHandledByConnect = [-10001, -32602, -32603, -10005];
 
 const styles = {
   a: {
@@ -131,22 +126,22 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
   });
   const { authStatus, email, errors, username } = state;
 
-  const clearErrors = e => {
-    setState(state => ({
+  const clearErrors = (e) => {
+    setState((state) => ({
       ...state,
       errors: [],
     }));
   };
 
-  const handleEmail = e => {
-    setState(state => ({
+  const handleEmail = (e) => {
+    setState((state) => ({
       ...state,
       email: e.target.value,
     }));
   };
 
-  const handleUsername = e => {
-    setState(state => ({
+  const handleUsername = (e) => {
+    setState((state) => ({
       ...state,
       username: e.target.value,
     }));
@@ -154,12 +149,12 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
 
   const handleSignUp = async () => {
     try {
-      setState(state => ({
+      setState((state) => ({
         ...state,
         authStatus: 'Signing Up',
       }));
       const userData = await signUp({ email, username });
-      setState(state => ({
+      setState((state) => ({
         ...state,
         authStatus: 'Signed Up',
         email: userData?.email,
@@ -167,13 +162,13 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
       }));
     } catch (e) {
       // if error has NOT already been handled by Connect UI
-      if (!errorsHandledByConnect.includes(e.message)) {
-        setState(state => ({
+      if (!errorsHandledByConnect.includes(e?.cause?.code)) {
+        setState((state) => ({
           ...state,
           errors: [...state.errors, e.message],
         }));
       }
-      setState(state => ({
+      setState((state) => ({
         ...state,
         authStatus: 'Signed Out',
       }));
@@ -184,12 +179,12 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
     try {
       await signOut({ email });
     } catch (e) {
-      setState(state => ({
+      setState((state) => ({
         ...state,
         errors: [...state.errors, e.message],
       }));
     }
-    setState(state => ({
+    setState((state) => ({
       ...state,
       authStatus: 'Signed Out',
     }));
