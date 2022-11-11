@@ -5,8 +5,8 @@ import render from 'riteway/render-component';
 import match from 'riteway/match';
 import SignUp from './sign-up-component';
 
-describe('Sign Up Page', async assert => {
-  const renderSignUpPage = props => render(<SignUp {...props} />);
+describe('Sign Up Page', async (assert) => {
+  const renderSignUpPage = (props) => render(<SignUp {...props} />);
   {
     const given = 'a signed out user';
     const props = { authStatus: 'Signed Out' };

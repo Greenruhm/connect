@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import connect from '../../index';
-import { isValidEmail } from '../../example-components/utils';
-import InputWithLabel from '../../example-components/shared/input-with-label-component';
-import SignUpButton from '../../example-components/shared/submit-button-component';
-import SuccessView from '../../example-components/shared/success-view';
-import ErrorModal from '../../example-components/shared/error-modal';
+import { isValidEmail } from '../utils';
+import InputWithLabel from '../shared/input-with-label-component';
+import SignUpButton from '../shared/submit-button-component';
+import SuccessView from '../shared/success-view';
+import ErrorModal from '../shared/error-modal';
 
 // https://connect.greenruhm.com/fundamentals/user-accounts#new-user-sign-up
 const errorsHandledByConnect = [-10001, -32602, -32603, -10005];
