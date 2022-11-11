@@ -4,7 +4,7 @@ import connect from '../../index';
 import { isValidEmail } from '../../example-components/utils';
 import InputWithLabel from '../../example-components/input-with-label-component';
 import SignUpButton from '../../example-components/submit-button-component';
-import SuccessView from '../../example-components/success-view-component';
+import SuccessView from '../../example-components/shared/success-view';
 import ErrorModal from '../../example-components/shared/error-modal';
 
 // https://connect.greenruhm.com/fundamentals/user-accounts#new-user-sign-up

@@ -5,8 +5,8 @@ import render from 'riteway/render-component';
 import match from 'riteway/match';
 import SuccessView from './success-view-component';
 
-describe('Success view Component', async assert => {
-  const renderSuccessView = props => render(<SuccessView {...props} />);
+describe('Success view Component', async (assert) => {
+  const renderSuccessView = (props) => render(<SuccessView {...props} />);
 
   {
     const $ = renderSuccessView();
