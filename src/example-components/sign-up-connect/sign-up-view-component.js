@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import InputWithLabel from '../../example-components/shared/input-with-label-component';
-import SignUpButton from '../../example-components/shared/submit-button-component';
-import SuccessView from '../../example-components/shared/success-view';
-import ErrorModal from '../../example-components/shared/error-modal';
+import InputWithLabel from '../shared/input-with-label-component';
+import SignUpButton from '../shared/submit-button-component';
+import SuccessView from '../shared/success-view';
+import ErrorModal from '../shared/error-modal';
 
 const styles = {
   a: {

@@ -2,7 +2,7 @@
 import { Feature } from '@paralleldrive/react-feature-toggles';
 import page from '../src/HOCs/page';
 import SignUpAuth from '../src/example-components/sign-up';
-import SignUpConnect from '../src/features/sign-up-connect';
+import SignUpConnect from '../src/example-components/sign-up-connect';
 
 const SignUpPage = (props) => {
   const active = () => {
