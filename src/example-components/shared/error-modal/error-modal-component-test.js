@@ -5,8 +5,8 @@ import render from 'riteway/render-component';
 import match from 'riteway/match';
 import ErrorModal from './error-modal-component';
 
-describe('Errors View Component', async assert => {
-  const renderErrorModal = props => render(<ErrorModal {...props} />);
+describe('Errors View Component', async (assert) => {
+  const renderErrorModal = (props) => render(<ErrorModal {...props} />);
 
   {
     const $ = renderErrorModal();

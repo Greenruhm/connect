@@ -9,4 +9,4 @@ import '../features/sign-in/sign-in-component-test.js';
 import '../features/sign-up-connect/sign-up-view-component-test.js';
 import '../features/sign-in-connect/sign-in-view-component-test';
 import '../example-components/success-view-component-test.js';
-import '../example-components/error-modal-component-test.js';
+import '../example-components/shared/error-modal/error-modal-component-test';

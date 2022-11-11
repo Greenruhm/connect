@@ -3,7 +3,7 @@ import React from 'react';
 import InputWithLabel from '../../example-components/input-with-label-component';
 import SignUpButton from '../../example-components/submit-button-component';
 import SuccessView from '../../example-components/success-view-component';
-import ErrorModal from '../../example-components/error-modal-component';
+import ErrorModal from '../../example-components/shared/error-modal';
 
 const styles = {
   a: {
