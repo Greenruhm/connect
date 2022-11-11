@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import Theme from './theme';
+import Theme from '../theme';
 
 const input = {
   backgroundColor: `${Theme.primary}`,

@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import connect from '../../index';
 import { isValidEmail } from '../../example-components/utils';
-import InputWithLabel from '../../example-components/input-with-label-component';
-import SignInButton from '../../example-components/submit-button-component';
+import InputWithLabel from '../../example-components/shared/input-with-label-component';
+import SignInButton from '../../example-components/shared/submit-button-component';
 import SuccessView from '../../example-components/shared/success-view';
 import ErrorModal from '../../example-components/shared/error-modal';
 
