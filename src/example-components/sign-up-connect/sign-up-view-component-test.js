@@ -3,44 +3,23 @@ import React from 'react';
 import { describe } from 'riteway';
 import render from 'riteway/render-component';
 import match from 'riteway/match';
-import SignUp from './sign-up-component';
+import SignUpView from './sign-up-view-component';
+import { renderToReadableStream } from 'react-dom/server';
 
-describe('Sign Up Page', async assert => {
-  const renderSignUpPage = props => render(<SignUp {...props} />);
+describe('Sign Up View w/ Magic Connect', async (assert) => {
+  const renderSignUpView = (props) => render(<SignUpView {...props} />);
   {
     const given = 'a signed out user';
     const props = { authStatus: 'Signed Out' };
-    const $ = renderSignUpPage(props);
+    const $ = renderSignUpView(props);
     const contains = match($.html());
     {
-      const signUpTitle = 'Sign Up';
+      const signUpTitle = 'Sign Up (connect)';
       assert({
         given,
         should: 'render "Sign Up" title',
         actual: contains(signUpTitle),
         expected: signUpTitle,
-      });
-    }
-    {
-      const emailLabelText = 'Your Email';
-      const emailInputPlaceholder = 'youremail@example.com';
-      assert({
-        given,
-        should: 'render email input',
-        actual: $('.email').length,
-        expected: 1,
-      });
-      assert({
-        given,
-        should: 'render "Your email" label text',
-        actual: contains(emailLabelText),
-        expected: emailLabelText,
-      });
-      assert({
-        given,
-        should: 'render email input placeholder text',
-        actual: contains(emailInputPlaceholder),
-        expected: emailInputPlaceholder,
       });
     }
     {
@@ -86,7 +65,7 @@ describe('Sign Up Page', async assert => {
   {
     const given = 'a signed up user';
     const props = { authStatus: 'Signed Up' };
-    const $ = renderSignUpPage(props);
+    const $ = renderSignUpView(props);
     assert({
       given,
       should: 'render success view component',

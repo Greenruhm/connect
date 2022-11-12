@@ -2,12 +2,12 @@ export const createUser = ({
   email = '',
   walletAddress = '',
   sessionToken = '',
-  isSignedIn = false
+  isSignedIn = false,
 } = {}) => ({
   email,
   walletAddress,
   sessionToken,
-  isSignedIn
+  isSignedIn,
 });
 
 export const initialState = createUser();
@@ -25,18 +25,18 @@ export const reducer = (state = initialState, { type, payload } = {}) => {
 };
 
 // Action Creators
-export const setUser = user => ({
+export const setUser = (user) => ({
   payload: user,
-  type: setUser.type
+  type: setUser.type,
 });
 setUser.type = `${slice}/setUser`;
 
-export const setAnonUser = user => ({
+export const setAnonUser = (user) => ({
   payload: user,
-  type: setAnonUser.type
+  type: setAnonUser.type,
 });
 setAnonUser.type = `${slice}/setAnonUser`;
 
 // Selectors
-export const getUserIsSignedIn = state => state[slice].isSignedIn;
-export const getUserName = state => state[slice].username;
+export const getUserIsSignedIn = (state) => state[slice].isSignedIn;
+export const getUserName = (state) => state[slice].username;

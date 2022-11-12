@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import Theme from './theme';
-import TryAgainButton from './submit-button-component';
+import Theme from '../../theme';
+import TryAgainButton from '../submit-button-component';
 
 const centered = {
   position: 'absolute',
