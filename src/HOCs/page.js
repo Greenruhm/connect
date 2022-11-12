@@ -1,8 +1,6 @@
 import { compose } from '../utils';
-import withFeatures from './with-features';
-import initialFeatures from './with-features/initial-features';
 import withUser from './with-user';
 
-const page = compose(withUser, withFeatures({ initialFeatures }));
+const page = compose(withUser);
 
 export default page;
