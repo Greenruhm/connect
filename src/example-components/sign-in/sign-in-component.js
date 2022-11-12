@@ -102,10 +102,7 @@ const renderView = ({
 
 const { signIn, signOut } = connect({ apiKey: '<your-api-key>' });
 
-const SignInPage = ({
-  user,
-  authStatus: initialAuthStatus = user.isSignedIn ? 'Signed In' : 'Signed Out',
-} = {}) => {
+const SignInPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
   const [state, setState] = useState({
     authStatus: initialAuthStatus,
     email: '',

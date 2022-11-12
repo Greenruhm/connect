@@ -38,6 +38,5 @@ export const setAnonUser = (user) => ({
 setAnonUser.type = `${slice}/setAnonUser`;
 
 // Selectors
-export const selectUser = (state) => state[slice];
 export const getUserIsSignedIn = (state) => state[slice].isSignedIn;
 export const getUserName = (state) => state[slice].username;
