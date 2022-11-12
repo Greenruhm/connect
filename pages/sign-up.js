@@ -1,24 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { Feature } from '@paralleldrive/react-feature-toggles';
 import page from '../src/HOCs/page';
-import SignUpAuth from '../src/example-components/sign-up';
-import SignUpConnect from '../src/example-components/sign-up-connect';
+import SignUp from '../src/example-components/sign-up';
 
-const SignUpPage = (props) => {
-  const active = () => {
-    return <SignUpConnect {...props} />;
-  };
-  const inactive = () => {
-    return <SignUpAuth {...props} />;
-  };
-
-  return (
-    <Feature
-      activeComponent={active}
-      inactiveComponent={inactive}
-      name="magic-connect"
-    />
-  );
-};
+const SignUpPage = (props) => <SignUp {...props} />;
 
 export default page(SignUpPage);
