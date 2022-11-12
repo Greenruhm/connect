@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import { useFeatures } from '@paralleldrive/react-feature-toggles';
 import connect from '../..';
 import SignInView from './sign-in-view-component';
 
@@ -18,10 +17,9 @@ const SignInController = ({
   });
   const { authStatus, email, errors, username } = state;
 
-  const features = useFeatures();
   const { signIn, signOut } = connect({
     apiKey: '<your-api-key>',
-    features,
+    features: ['magic-connect'],
   });
 
   const clearErrors = (e) => {
