@@ -56,7 +56,7 @@ const SignInFormView = ({ authStatus, disabled, handleSignIn } = {}) => {
         name="sign-in"
         onClick={handleSignIn}
       />
-      <SignUpLink href="/sign-up" label="Or Sign Up" />
+      <SignUpLink href="/sign-up-connect" label="Or Sign Up" />
     </>
   );
 };
