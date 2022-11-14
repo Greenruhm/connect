@@ -1,5 +1,9 @@
 import { isActiveFeatureName } from '@paralleldrive/feature-toggles';
-import signIn, { signInThroughMagicConnect } from './features/user/sign-in';
+import signIn, {
+  signInThroughMagicConnect,
+  withSignInErrors,
+  handleSignInErrors,
+} from './features/user/sign-in';
 import signUp, { signUpThroughMagicConnect } from './features/user/sign-up';
 import signOut, { signOutThroughMagicConnect } from './features/user/sign-out';
 import withMagic, { withMagicConnect } from './features/user/with-magic';
@@ -22,10 +26,17 @@ export const connect = ({ apiKey = '', features = [] } = {}) => {
           asyncPipe(
             withMiddleware,
             withMagicConnect,
+            withSignInErrors,
             signInThroughMagicConnect
           )()
       : ({ email = '' } = {}) =>
-          asyncPipe(withMiddleware, withMagic, signIn)({ email }),
+          asyncPipe(
+            withMiddleware,
+            withMagic,
+            withSignInErrors,
+            signIn
+          )({ email }),
+    handleSignInErrors,
     signUp: isActiveFeatureName('magic-connect', features)
       ? ({ username = '', displayName = username } = {}) =>
           asyncPipe(
