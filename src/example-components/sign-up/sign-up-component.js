@@ -7,9 +7,6 @@ import SignUpButton from '../shared/submit-button-component';
 import SuccessView from '../shared/success-view';
 import ErrorModal from '../shared/error-modal';
 
-// https://connect.greenruhm.com/fundamentals/user-accounts#new-user-sign-up
-const errorsHandledByConnect = [-10001, -32602, -32603, -10005];
-
 const styles = {
   a: {
     textDecoration: 'underline',
@@ -115,7 +112,9 @@ const renderView = ({
         username,
       });
 
-const { signUp, signOut } = connect({ apiKey: '<your-api-key>' });
+const { signUp, handleSignUpErrors, signOut } = connect({
+  apiKey: '<your-api-key>',
+});
 
 const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
   const [state, setState] = useState({
@@ -125,6 +124,18 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
     username: '',
   });
   const { authStatus, email, errors, username } = state;
+
+  const setAuthStatusToSignedOut = () =>
+    setState((state) => ({
+      ...state,
+      authStatus: 'Signed Out',
+    }));
+
+  const setErrorMessage = (message) =>
+    setState((state) => ({
+      ...state,
+      errors: [...state.errors, message],
+    }));
 
   const clearErrors = (e) => {
     setState((state) => ({
@@ -147,31 +158,53 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
     }));
   };
 
+  const handleSignUpSuccess = (userData) =>
+    setState((state) => ({
+      ...state,
+      authStatus: 'Signed Up',
+      email: userData?.email,
+      username: userData?.username,
+    }));
+
   const handleSignUp = async () => {
     try {
       setState((state) => ({
         ...state,
         authStatus: 'Signing Up',
       }));
-      const userData = await signUp({ email, username });
-      setState((state) => ({
-        ...state,
-        authStatus: 'Signed Up',
-        email: userData?.email,
-        username: userData?.username,
-      }));
+      await signUp({ email, username })
+        .then(handleSignUpSuccess)
+        .catch(
+          handleSignUpErrors({
+            AuthLinkExpired: () => setAuthStatusToSignedOut(),
+            AccountAlreadyExists: ({ message }) => {
+              setErrorMessage(message);
+              setAuthStatusToSignedOut();
+            },
+            EmailIsRequired: ({ message }) => {
+              setErrorMessage(message);
+              setAuthStatusToSignedOut();
+            },
+            InvalidEmail: () => setAuthStatusToSignedOut(),
+            InternalError: () => setAuthStatusToSignedOut(),
+            UsernameIsUnavailable: ({ message }) => {
+              setErrorMessage(message);
+              setAuthStatusToSignedOut();
+            },
+            UsernameIsRequired: ({ message }) => {
+              setErrorMessage(message);
+              setAuthStatusToSignedOut();
+            },
+            UserRequestEditEmail: () => setAuthStatusToSignedOut(),
+            UserRejectedConsentToShareEmail: ({ message }) => {
+              setErrorMessage(message);
+              setAuthStatusToSignedOut();
+            },
+          })
+        );
     } catch (e) {
-      // if error has NOT already been handled by Connect UI
-      if (!errorsHandledByConnect.includes(e?.cause?.code)) {
-        setState((state) => ({
-          ...state,
-          errors: [...state.errors, e.message],
-        }));
-      }
-      setState((state) => ({
-        ...state,
-        authStatus: 'Signed Out',
-      }));
+      setErrorMessage(e.message);
+      setAuthStatusToSignedOut();
     }
   };
 
@@ -179,15 +212,9 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
     try {
       await signOut({ email });
     } catch (e) {
-      setState((state) => ({
-        ...state,
-        errors: [...state.errors, e.message],
-      }));
+      setErrorMessage(e.message);
     }
-    setState((state) => ({
-      ...state,
-      authStatus: 'Signed Out',
-    }));
+    setAuthStatusToSignedOut();
   };
 
   const disabled = !isValidEmail(email) || !username;
