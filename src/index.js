@@ -4,7 +4,11 @@ import signIn, {
   withSignInErrors,
   handleSignInErrors,
 } from './features/user/sign-in';
-import signUp, { signUpThroughMagicConnect } from './features/user/sign-up';
+import signUp, {
+  signUpThroughMagicConnect,
+  withSignUpErrors,
+  handleSignUpErrors,
+} from './features/user/sign-up';
 import signOut, { signOutThroughMagicConnect } from './features/user/sign-out';
 import withMagic, { withMagicConnect } from './features/user/with-magic';
 import { asyncPipe, withStore } from './utils';
@@ -42,14 +46,17 @@ export const connect = ({ apiKey = '', features = [] } = {}) => {
           asyncPipe(
             withMiddleware,
             withMagicConnect,
+            withSignUpErrors,
             signUpThroughMagicConnect
           )({ username, displayName })
       : ({ email = '', username = '', displayName = username } = {}) =>
           asyncPipe(
             withMiddleware,
             withMagic,
+            withSignUpErrors,
             signUp
           )({ email, username, displayName }),
+    handleSignUpErrors,
     signOut: isActiveFeatureName('magic-connect', features)
       ? () =>
           asyncPipe(

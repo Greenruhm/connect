@@ -10,27 +10,27 @@ import { getUserIsSignedIn } from './reducer';
 const [signInErrors, handleSignInErrors] = errorCauses({
   AuthLinkExpired: {
     code: -10001,
-    message: 'Auth link expired',
+    message: 'Auth link expired.',
   },
   AccountNotFound: {
     code: 404,
-    message: 'Account not found',
+    message: 'Account not found.',
   },
   EmailIsRequired: {
     code: 400,
-    message: 'Email required to sign in user',
+    message: 'Email required to sign in user.',
   },
   InvalidEmail: {
     code: -32602,
-    message: 'Invalid email',
+    message: 'Invalid email.',
   },
   InternalError: {
     code: -32603,
-    message: 'Internal error',
+    message: 'Internal error.',
   },
   UserRequestEditEmail: {
     code: -10005,
-    message: 'User request edit email',
+    message: 'User request edit email.',
   },
   /**
    * TODO: Remove after adapting Magic connect sign in flow
