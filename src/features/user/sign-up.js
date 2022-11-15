@@ -17,13 +17,9 @@ const [signUpErrors, handleSignUpErrors] = errorCauses({
     code: 400,
     message: 'Email is required.',
   },
-  InvalidEmailWithMagic: {
+  InvalidEmail: {
     code: -32602,
     message: 'Invalid email.',
-  },
-  InvalidUsername: {
-    code: 4001,
-    message: 'Invalid username.',
   },
   InternalError: {
     code: -32603,
@@ -59,8 +55,8 @@ const handleMagicSignUpError = (error) => {
   switch (error.code) {
     case signUpErrors.AuthLinkExpired.code:
       throw createError(signUpErrors.AuthLinkExpired);
-    case signUpErrors.InvalidEmailWithMagic.code:
-      throw createError(signUpErrors.InvalidEmailWithMagic);
+    case signUpErrors.InvalidEmail.code:
+      throw createError(signUpErrors.InvalidEmail);
     case signUpErrors.InternalError.code:
       throw createError(signUpErrors.InternalError);
     case signUpErrors.UserRequestEditEmail.code:
@@ -72,8 +68,6 @@ const handleCreateGreenruhmUserError = (error) => {
   switch (error.message) {
     case signUpErrors.AccountAlreadyExists.message:
       throw createError(signUpErrors.AccountAlreadyExists);
-    case signUpErrors.InvalidUsername.message:
-      throw createError(signUpErrors.InvalidUsername);
     case signUpErrors.UsernameIsUnavailable.message:
       throw createError(signUpErrors.UsernameIsUnavailable);
   }
