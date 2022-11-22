@@ -1,9 +1,27 @@
+import { errorCauses } from 'error-causes';
 import { setUser, setAnonUser } from './reducer';
 import {
   getProfile,
   updateLastSignedIn,
 } from '../../services/greenruhm-api/index.js';
 import { getUserIsSignedIn } from './reducer';
+
+const [signInErrors, handleSignInErrors] = errorCauses({
+  AccountNotFound: {
+    code: 404,
+    message: 'An account was not found. Please sign up.',
+  },
+  EmailIsRequired: {
+    code: 400,
+    message: 'An email is required. Please provide a valid email.',
+  },
+  InternalServerError: {
+    code: 500,
+    message: 'There was an unexpected error. Please try again.',
+  },
+});
+
+export { signInErrors, handleSignInErrors };
 
 export const signInThroughMagicConnect = async ({
   dispatch,

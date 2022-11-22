@@ -1,6 +1,43 @@
+import { errorCauses } from 'error-causes';
 import { setUser, setAnonUser } from './reducer';
 import { createUser as createGreenruhmUser } from '../../services/greenruhm-api/index.js';
 import { getUserIsSignedIn } from './reducer';
+
+const [signUpErrors, handleSignUpErrors] = errorCauses({
+  AccountAlreadyExists: {
+    code: 400,
+    message:
+      "You tried to sign up with an email that already has an account. Please sign in instead, or provide a different email if you'd like to create a different account.",
+  },
+  EmailIsRequired: {
+    code: 400,
+    message: 'An email is required. Please provide a valid email.',
+  },
+  InternalServerError: {
+    code: 500,
+    message: 'There was an unexpected error. Please try again.',
+  },
+  InvalidEmail: {
+    code: 400,
+    message: 'An invalid email was provided. Please provide a valid email.',
+  },
+  InvalidUserName: {
+    code: 400,
+    message:
+      'An invalid username was provided. Please provide a valid username.',
+  },
+  UsernameIsUnavailable: {
+    code: 400,
+    message:
+      'The requested username is unavailable. Please try a different username.',
+  },
+  UsernameIsRequired: {
+    code: 400,
+    message: 'A username is required. Please provide a valid username.',
+  },
+});
+
+export { signUpErrors, handleSignUpErrors };
 
 export const signUpThroughMagicConnect = async ({
   dispatch,
