@@ -17,7 +17,7 @@ const [signInErrors, handleSignInErrors] = errorCauses({
   },
   InternalServerError: {
     code: 500,
-    message: 'There was an internal server error. Please try again.',
+    message: 'There was an unexpected error. Please try again.',
   },
 });
 

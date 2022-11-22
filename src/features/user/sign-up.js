@@ -7,7 +7,7 @@ const [signUpErrors, handleSignUpErrors] = errorCauses({
   AccountAlreadyExists: {
     code: 400,
     message:
-      'An account already exists for this email. Please provide a different email.',
+      "You tried to sign up with an email that already has an account. Please sign in instead, or provide a different email if you'd like to create a different account.",
   },
   EmailIsRequired: {
     code: 400,
@@ -15,7 +15,7 @@ const [signUpErrors, handleSignUpErrors] = errorCauses({
   },
   InternalServerError: {
     code: 500,
-    message: 'There was an internal server error. Please try again.',
+    message: 'There was an unexpected error. Please try again.',
   },
   InvalidEmail: {
     code: 400,
@@ -29,7 +29,7 @@ const [signUpErrors, handleSignUpErrors] = errorCauses({
   UsernameIsUnavailable: {
     code: 400,
     message:
-      'Provided username is unavailable. Please provide a different username.',
+      'The requested username is unavailable. Please try a different username.',
   },
   UsernameIsRequired: {
     code: 400,
