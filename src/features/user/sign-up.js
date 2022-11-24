@@ -1,7 +1,8 @@
-import { errorCauses } from 'error-causes';
-import { setUser, setAnonUser } from './reducer';
-import { createUser as createGreenruhmUser } from '../../services/greenruhm-api/index.js';
-import { getUserIsSignedIn } from './reducer';
+const { errorCauses } = require('error-causes');
+const { getUserIsSignedIn, setUser, setAnonUser } = require('./reducer');
+const {
+  createUser: createGreenruhmUser,
+} = require('../../services/greenruhm-api/index.js');
 
 const [signUpErrors, handleSignUpErrors] = errorCauses({
   AccountAlreadyExists: {
@@ -37,9 +38,7 @@ const [signUpErrors, handleSignUpErrors] = errorCauses({
   },
 });
 
-export { signUpErrors, handleSignUpErrors };
-
-export const signUpThroughMagicConnect = async ({
+const signUpThroughMagicConnect = async ({
   dispatch,
   displayName,
   handleMagicError,
@@ -231,4 +230,7 @@ const signUp = async ({
   return createUser(magic.user);
 };
 
-export default signUp;
+module.exports.signUp = signUp;
+module.exports.signUpThroughMagicConnect = signUpThroughMagicConnect;
+module.exports.signUpErrors = signUpErrors;
+module.exports.handleSignUpErrors = handleSignUpErrors;
