@@ -1,18 +1,23 @@
-export const asyncPipe =
+const asyncPipe =
   (...fns) =>
   (x) =>
     fns.reduce(async (y, f) => f(await y), x);
 
-export const compose =
+const compose =
   (...fns) =>
   (x) =>
     fns.reduceRight((acc, fn) => fn(acc), x);
 
-export const withSlice = (slice) => (store) => ({ [slice]: store });
+const withSlice = (slice) => (store) => ({ [slice]: store });
 
-export const withStore = (store) => async (props) => ({
+const withStore = (store) => async (props) => ({
   ...props,
   dispatch: store.dispatch,
   addDispatch: store.addDispatch,
   getState: store.getState,
 });
+
+module.exports.asyncPipe = asyncPipe;
+module.exports.compose = compose;
+module.exports.withSlice = withSlice;
+module.exports.withStore = withStore;
