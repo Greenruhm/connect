@@ -1,9 +1,9 @@
-import { Magic } from 'magic-sdk';
-import { ConnectExtension } from '@magic-ext/connect';
-import { ethers } from 'ethers';
-import { createError, errorCauses } from 'error-causes';
+const { Magic } = require('magic-sdk');
+const { ConnectExtension } = require('@magic-ext/connect');
+const { ethers } = require('ethers');
+const { createError, errorCauses } = require('error-causes');
 
-export const AuthErrorMessages = {
+const AuthErrorMessages = {
   AuthLinkExpired: 'Auth Link Expired',
   InvalidEmail: 'Invalid Email',
   InternalError: 'Internal Error',
@@ -31,9 +31,7 @@ const [magicErrors, handleMagicErrors] = errorCauses({
   },
 });
 
-export const errorsHandledByConnect = magicErrors;
-
-export const handleMagicError = (error) => {
+const handleMagicError = (error) => {
   // if MagicLinkExpired
   if (error.code === magicErrors.AuthLinkExpired.code) {
     throw createError(magicErrors.AuthLinkExpired);
@@ -72,7 +70,7 @@ const withMagic = (params) => {
 };
 
 // TODO: Oliver remove scratch work
-export const withMagicConnect = (params) => {
+const withMagicConnect = (params) => {
   const magic = new Magic('pk_live_BDB8311A26CF3651', {
     extensions: [new ConnectExtension()],
     network: 'mainnet',
@@ -88,6 +86,10 @@ export const withMagicConnect = (params) => {
   };
 };
 
-export { magicErrors, handleMagicErrors };
-
-export default withMagic;
+module.exports.withMagic = withMagic;
+module.exports.withMagicConnect = withMagicConnect;
+module.exports.magicErrors = magicErrors;
+module.exports.handleMagicErrors = handleMagicErrors;
+module.exports.handleMagicError = handleMagicError;
+module.exports.errorsHandledByConnect = magicErrors;
+module.exports.AuthErrorMessages = AuthErrorMessages;
