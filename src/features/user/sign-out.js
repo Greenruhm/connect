@@ -1,6 +1,6 @@
-import { setAnonUser } from './reducer';
+const { setAnonUser } = require('./reducer');
 
-export const signOutThroughMagicConnect = ({ dispatch, magic } = {}) => {
+const signOutThroughMagicConnect = ({ dispatch, magic } = {}) => {
   console.log('called sign out through magic connect!!!');
   magic.connect.disconnect();
   dispatch(setAnonUser());
@@ -17,4 +17,5 @@ const signOutUser = async ({ dispatch, magic } = {}) => {
   return;
 };
 
-export default signOutUser;
+module.exports.signOut = signOutUser;
+module.exports.signOutThroughMagicConnect = signOutThroughMagicConnect;

@@ -1,21 +1,27 @@
-import { isActiveFeatureName } from '@paralleldrive/feature-toggles';
-import signIn, {
-  handleSignInErrors,
-  signInErrors,
+const { isActiveFeatureName } = require('@paralleldrive/feature-toggles');
+const {
+  signIn,
   signInThroughMagicConnect,
-} from './features/user/sign-in';
-import signUp, {
-  handleSignUpErrors,
-  signUpErrors,
+  signInErrors,
+  handleSignInErrors,
+} = require('./features/user/sign-in');
+const {
+  signUp,
   signUpThroughMagicConnect,
-} from './features/user/sign-up';
-import signOut, { signOutThroughMagicConnect } from './features/user/sign-out';
-import withMagic, { withMagicConnect } from './features/user/with-magic';
-import { asyncPipe, withStore } from './utils';
-import { updateApiKeyAction } from './features/apiKey/reducer';
-import store from './reducer/store';
+  signUpErrors,
+  handleSignUpErrors,
+} = require('./features/user/sign-up');
+const {
+  signOut,
+  signOutThroughMagicConnect,
+} = require('./features/user/sign-out');
+const { withMagic, withMagicConnect } = require('./features/user/with-magic');
 
-export const connect = ({ apiKey = '', features = [] } = {}) => {
+const { asyncPipe, withStore } = require('./utils');
+const { updateApiKeyAction } = require('./features/apiKey/reducer');
+const store = require('./reducer/store');
+
+const connect = ({ apiKey = '', features = [] } = {}) => {
   const brand = 'Greenruhm Connect';
   if (!apiKey) throw new Error(`${brand}: Missing API key`);
 
@@ -62,4 +68,4 @@ export const connect = ({ apiKey = '', features = [] } = {}) => {
   };
 };
 
-export default connect;
+module.exports = connect;

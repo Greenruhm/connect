@@ -1,10 +1,9 @@
-import { errorCauses } from 'error-causes';
-import { setUser, setAnonUser } from './reducer';
-import {
+const { errorCauses } = require('error-causes');
+const { getUserIsSignedIn, setUser, setAnonUser } = require('./reducer');
+const {
   getProfile,
   updateLastSignedIn,
-} from '../../services/greenruhm-api/index.js';
-import { getUserIsSignedIn } from './reducer';
+} = require('../../services/greenruhm-api/index.js');
 
 const [signInErrors, handleSignInErrors] = errorCauses({
   AccountNotFound: {
@@ -21,9 +20,7 @@ const [signInErrors, handleSignInErrors] = errorCauses({
   },
 });
 
-export { signInErrors, handleSignInErrors };
-
-export const signInThroughMagicConnect = async ({
+const signInThroughMagicConnect = async ({
   dispatch,
   handleMagicError,
   magic,
@@ -162,4 +159,7 @@ const signInUser = async ({
   return updateUser(magic.user);
 };
 
-export default signInUser;
+module.exports.signIn = signInUser;
+module.exports.signInThroughMagicConnect = signInThroughMagicConnect;
+module.exports.signInErrors = signInErrors;
+module.exports.handleSignInErrors = handleSignInErrors;

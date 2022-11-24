@@ -1,13 +1,12 @@
 import { describe } from 'riteway';
 import match from 'riteway/match';
+import { signUp } from './sign-up';
 
-import signUp from './sign-up';
-
-describe('signUp', async assert => {
+describe('signUp', async (assert) => {
   {
     const description = {
       given: 'missing email',
-      should: 'throw an error'
+      should: 'throw an error',
     };
     const message = 'Email is required';
     try {
@@ -18,7 +17,7 @@ describe('signUp', async assert => {
       assert({
         ...description,
         actual: contains(message),
-        expected: message
+        expected: message,
       });
     }
   }
@@ -26,7 +25,7 @@ describe('signUp', async assert => {
   {
     const description = {
       given: 'missing username',
-      should: 'throw an error'
+      should: 'throw an error',
     };
 
     const message = 'Username is required.';
@@ -39,7 +38,7 @@ describe('signUp', async assert => {
       assert({
         ...description,
         actual: contains(message),
-        expected: message
+        expected: message,
       });
     }
   }

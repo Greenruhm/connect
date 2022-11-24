@@ -1,8 +1,8 @@
-import fetch from 'isomorphic-fetch';
+const fetch = require('isomorphic-fetch');
 const GREENRUHM_URL =
   process.env.NEXT_PUBLIC_GREENRUHM_URL || 'https://greenruhm.com';
 
-const fetchDropsHandler = type => async id => {
+const fetchDropsHandler = (type) => async (id) => {
   const response = await fetch(`${GREENRUHM_URL}/api/drops/${type}/${id}`, {
     method: 'GET',
     headers: {
@@ -18,7 +18,7 @@ const fetchDropsHandler = type => async id => {
 };
 
 const fetchDrop = fetchDropsHandler('drop');
-export const getDrop = async id => {
+const getDrop = async (id) => {
   try {
     const drop = await fetchDrop(id);
     return drop;
@@ -27,7 +27,7 @@ export const getDrop = async id => {
   }
 };
 
-export const createDrop = async dropData => {
+const createDrop = async (dropData) => {
   const response = await fetch(`${GREENRUHM_URL}/api/drops/drop`, {
     method: 'POST',
     headers: {
@@ -43,7 +43,7 @@ export const createDrop = async dropData => {
   return await response.json();
 };
 
-export const getCloudinarySignature = async ({
+const getCloudinarySignature = async ({
   name: public_id,
   dropId: folder,
 } = {}) => {
@@ -61,7 +61,7 @@ export const getCloudinarySignature = async ({
   return response;
 };
 
-export const updateDropMedia = async (dropId, media) => {
+const updateDropMedia = async (dropId, media) => {
   const res = await fetch(`${GREENRUHM_URL}/api/drops/drop/${dropId}/update`, {
     method: 'PATCH',
     body: JSON.stringify(media),
@@ -73,7 +73,7 @@ export const updateDropMedia = async (dropId, media) => {
   return response;
 };
 
-export const getProfile = async walletAddress => {
+const getProfile = async (walletAddress) => {
   const res = await fetch(`${GREENRUHM_URL}/api/profile/${walletAddress}`);
 
   // Return an empty object if the user doesn't exist.
@@ -90,13 +90,13 @@ export const getProfile = async walletAddress => {
   return response;
 };
 
-export const updateLastSignedIn = async id =>
+const updateLastSignedIn = async (id) =>
   fetch(`${GREENRUHM_URL}/api/sign-in`, {
     method: 'POST',
     body: JSON.stringify({ id }),
   });
 
-export const createUser = async ({
+const createUser = async ({
   displayName,
   username,
   email,
@@ -114,12 +114,10 @@ export const createUser = async ({
   return body;
 };
 
-export default {
-  getDrop,
-  createDrop,
-  getCloudinarySignature,
-  updateDropMedia,
-  getProfile,
-  updateLastSignedIn,
-  createUser,
-};
+module.exports.createDrop = createDrop;
+module.exports.createUser = createUser;
+module.exports.getCloudinarySignature = getCloudinarySignature;
+module.exports.getDrop = getDrop;
+module.exports.getProfile = getProfile;
+module.exports.updateDropMedia = updateDropMedia;
+module.exports.updateLastSignedIn = updateLastSignedIn;

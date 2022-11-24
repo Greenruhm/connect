@@ -1,4 +1,4 @@
-export const createUser = ({
+const createUser = ({
   email = '',
   walletAddress = '',
   sessionToken = '',
@@ -10,10 +10,10 @@ export const createUser = ({
   isSignedIn,
 });
 
-export const initialState = createUser();
+const initialState = createUser();
 
-export const slice = 'user';
-export const reducer = (state = initialState, { type, payload } = {}) => {
+const slice = 'user';
+const reducer = (state = initialState, { type, payload } = {}) => {
   switch (type) {
     case setUser.type:
       return payload;
@@ -25,18 +25,27 @@ export const reducer = (state = initialState, { type, payload } = {}) => {
 };
 
 // Action Creators
-export const setUser = (user) => ({
+const setUser = (user) => ({
   payload: user,
   type: setUser.type,
 });
 setUser.type = `${slice}/setUser`;
 
-export const setAnonUser = (user) => ({
+const setAnonUser = (user) => ({
   payload: user,
   type: setAnonUser.type,
 });
 setAnonUser.type = `${slice}/setAnonUser`;
 
 // Selectors
-export const getUserIsSignedIn = (state) => state[slice].isSignedIn;
-export const getUserName = (state) => state[slice].username;
+const getUserIsSignedIn = (state) => state[slice].isSignedIn;
+const getUserName = (state) => state[slice].username;
+
+module.exports.createUser = createUser;
+module.exports.initialState = initialState;
+module.exports.slice = slice;
+module.exports.reducer = reducer;
+module.exports.setUser = setUser;
+module.exports.setAnonUser = setAnonUser;
+module.exports.getUserIsSignedIn = getUserIsSignedIn;
+module.exports.getUserName = getUserName;

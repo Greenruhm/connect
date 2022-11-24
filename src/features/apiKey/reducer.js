@@ -1,14 +1,14 @@
-export const apiStates = {
+const apiStates = {
   Invalid: 'Invalid',
   Valid: 'Valid',
-  Unknown: 'Unknown'
+  Unknown: 'Unknown',
 };
 const initialState = {
   apiKey: null,
-  status: apiStates.Unknown
+  status: apiStates.Unknown,
 };
-export const slice = 'apiKey';
-export const reducer = (state = initialState, { type, payload } = {}) => {
+const slice = 'apiKey';
+const reducer = (state = initialState, { type, payload } = {}) => {
   switch (type) {
     case updateApiKeyAction.type:
       state.apiKey = payload;
@@ -21,30 +21,42 @@ export const reducer = (state = initialState, { type, payload } = {}) => {
   }
 };
 
-const addApiStateToActionCreator = (type = apiStates.Unknown) => () => ({
-  payload: type,
-  type: addApiStateToActionCreator.type
-});
+const addApiStateToActionCreator =
+  (type = apiStates.Unknown) =>
+  () => ({
+    payload: type,
+    type: addApiStateToActionCreator.type,
+  });
 addApiStateToActionCreator.type = `${slice}/updateApiStatus`;
 
 //action creators
-export const updateApiStatusUnkownAction = addApiStateToActionCreator(
+const updateApiStatusUnkownAction = addApiStateToActionCreator(
   apiStates.Unknown
 );
-export const updateApiStatusValidAction = addApiStateToActionCreator(
-  apiStates.Valid
-);
-export const updateApiStatusInvalidAction = addApiStateToActionCreator(
+const updateApiStatusValidAction = addApiStateToActionCreator(apiStates.Valid);
+const updateApiStatusInvalidAction = addApiStateToActionCreator(
   apiStates.Invalid
 );
-export const updateApiKeyAction = apiKey => ({
+const updateApiKeyAction = (apiKey) => ({
   payload: apiKey,
-  type: updateApiKeyAction.type
+  type: updateApiKeyAction.type,
 });
 updateApiKeyAction.type = `${slice}/updateApiKey`;
 
 // Selectors
-export const getApiKey = state => state[slice].apiKey;
-export const getApiStatus = state => state[slice].status;
-export const getIsReady = state => state[slice].status !== apiStates.Unknown;
-export const getIsValid = state => state[slice].status === apiStates.Valid;
+const getApiKey = (state) => state[slice].apiKey;
+const getApiStatus = (state) => state[slice].status;
+const getIsReady = (state) => state[slice].status !== apiStates.Unknown;
+const getIsValid = (state) => state[slice].status === apiStates.Valid;
+
+module.exports.apiStates = apiStates;
+module.exports.slice = slice;
+module.exports.reducer = reducer;
+module.exports.updateApiStatusUnkownAction = updateApiStatusUnkownAction;
+module.exports.updateApiStatusValidAction = updateApiStatusValidAction;
+module.exports.updateApiStatusInvalidAction = updateApiStatusInvalidAction;
+module.exports.updateApiKeyAction = updateApiKeyAction;
+module.exports.getApiKey = getApiKey;
+module.exports.getApiStatus = getApiStatus;
+module.exports.getIsReady = getIsReady;
+module.exports.getIsValid = getIsValid;
