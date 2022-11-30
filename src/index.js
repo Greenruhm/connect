@@ -4,6 +4,7 @@ const {
   signInThroughMagicConnect,
   signInErrors,
   handleSignInErrors,
+  withSignInErrors,
 } = require('./features/user/sign-in');
 const {
   signUp,
@@ -36,10 +37,16 @@ const connect = ({ apiKey = '', features = [] } = {}) => {
           asyncPipe(
             withMiddleware,
             withMagicConnect,
+            withSignInErrors,
             signInThroughMagicConnect
           )()
       : ({ email = '' } = {}) =>
-          asyncPipe(withMiddleware, withMagic, signIn)({ email }),
+          asyncPipe(
+            withMiddleware,
+            withMagic,
+            withSignInErrors,
+            signIn
+          )({ email }),
     signInErrors,
     handleSignInErrors,
     signUp: isActiveFeatureName('magic-connect', features)
