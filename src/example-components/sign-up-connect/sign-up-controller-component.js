@@ -3,9 +3,6 @@ import React, { useState } from 'react';
 import connect from '../..';
 import SignUpView from './sign-up-view-component';
 
-// TODO: Update by using error-causes package
-const errorsHandledByConnect = [-10001, -32602, -32603, -10005];
-
 const SignUpController = ({
   authStatus: initialAuthStatus = 'Signed Out',
 } = {}) => {
@@ -17,10 +14,22 @@ const SignUpController = ({
   });
   const { authStatus, email, errors, username } = state;
 
-  const { signUp, signOut } = connect({
+  const { signUp, handleSignUpErrors, signOut } = connect({
     apiKey: '<your-api-key>',
     features: ['magic-connect'],
   });
+
+  const setAuthStatusToSignedOut = () =>
+    setState((state) => ({
+      ...state,
+      authStatus: 'Signed Out',
+    }));
+
+  const setErrorMessage = (message) =>
+    setState((state) => ({
+      ...state,
+      errors: [...state.errors, message],
+    }));
 
   const clearErrors = (e) => {
     setState((state) => ({
@@ -36,31 +45,65 @@ const SignUpController = ({
     }));
   };
 
+  const handleSignUpSuccess = (userData) =>
+    setState((state) => ({
+      ...state,
+      authStatus: 'Signed Up',
+      email: userData?.email,
+      username: userData?.username,
+    }));
+
   const handleSignUp = async () => {
     try {
       setState((state) => ({
         ...state,
         authStatus: 'Signing Up',
       }));
-      const userData = await signUp({ username });
-      setState((state) => ({
-        ...state,
-        authStatus: 'Signed Up',
-        email: userData?.email,
-        username: userData?.username,
-      }));
+      await signUp({ username })
+        .then(handleSignUpSuccess)
+        .catch(
+          handleSignUpErrors({
+            AccountAlreadyExists: ({ message }) => {
+              setErrorMessage(message);
+              setAuthStatusToSignedOut();
+            },
+            AuthInternalError: () => setAuthStatusToSignedOut(),
+            AuthInvalidEmail: () => setAuthStatusToSignedOut(),
+            AuthLinkExpired: () => setAuthStatusToSignedOut(),
+            AuthUserRequestEditEmail: () => setAuthStatusToSignedOut(),
+            AuthUserRejectedConsentToShareEmail: ({ message }) => {
+              setErrorMessage(message);
+              setAuthStatusToSignedOut();
+            },
+            EmailIsRequired: ({ message }) => {
+              setErrorMessage(message);
+              setAuthStatusToSignedOut();
+            },
+            InternalServerError: ({ message }) => {
+              setErrorMessage(message);
+              setAuthStatusToSignedOut();
+            },
+            InvalidEmail: ({ message }) => {
+              setErrorMessage(message);
+              setAuthStatusToSignedOut();
+            },
+            InvalidUserName: ({ message }) => {
+              setErrorMessage(message);
+              setAuthStatusToSignedOut();
+            },
+            UsernameIsUnavailable: ({ message }) => {
+              setErrorMessage(message);
+              setAuthStatusToSignedOut();
+            },
+            UsernameIsRequired: ({ message }) => {
+              setErrorMessage(message);
+              setAuthStatusToSignedOut();
+            },
+          })
+        );
     } catch (e) {
-      // if error has NOT already been handled by Connect UI
-      if (!errorsHandledByConnect.includes(e?.cause?.code)) {
-        setState((state) => ({
-          ...state,
-          errors: [...state.errors, e.message],
-        }));
-      }
-      setState((state) => ({
-        ...state,
-        authStatus: 'Signed Out',
-      }));
+      setErrorMessage(e.message);
+      setAuthStatusToSignedOut();
     }
   };
 
@@ -68,15 +111,9 @@ const SignUpController = ({
     try {
       await signOut();
     } catch (e) {
-      setState((state) => ({
-        ...state,
-        errors: [...state.errors, e.message],
-      }));
+      setErrorMessage(e.message);
     }
-    setState((state) => ({
-      ...state,
-      authStatus: 'Signed Out',
-    }));
+    setAuthStatusToSignedOut();
   };
 
   const disabled = !username;
