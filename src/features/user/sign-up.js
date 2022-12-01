@@ -71,16 +71,26 @@ const [signUpErrors, handleSignUpErrors] = errorCauses({
 });
 
 const handleMagicSignUpError = (error) => {
-  switch (error.code) {
-    case signUpErrors.AuthInternalError.code:
+  const actions = {
+    [signUpErrors.AuthInternalError.code]: () => {
       throw createError(signUpErrors.AuthInternalError);
-    case signUpErrors.AuthInvalidEmail.code:
+    },
+    [signUpErrors.AuthInvalidEmail.code]: () => {
       throw createError(signUpErrors.AuthInvalidEmail);
-    case signUpErrors.AuthLinkExpired.code:
+    },
+    [signUpErrors.AuthLinkExpired.code]: () => {
       throw createError(signUpErrors.AuthLinkExpired);
-    case signUpErrors.AuthUserRequestEditEmail.code:
+    },
+    [signUpErrors.AuthUserRequestEditEmail.code]: () => {
       throw createError(signUpErrors.AuthUserRequestEditEmail);
+    },
+  };
+
+  if (typeof actions[error.code] !== 'function') {
+    throw new Error('Invalid Magic error action!');
   }
+
+  return actions[error.code]();
 };
 
 const withSignUpErrors = (params) => {
