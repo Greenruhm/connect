@@ -115,7 +115,7 @@ const signInThroughMagicConnect = async ({
   }
 
   // Get user info from Greenruhm
-  const profileData = await getProfile(walletAddress);
+  const profileData = await getProfile({ walletAddress, signInErrors });
 
   const {
     _id: id,
@@ -178,7 +178,7 @@ const signInUser = async ({
     const sessionToken = magicUserData[1];
 
     // Get user info from Greenruhm
-    const profileData = await getProfile(walletAddress);
+    const profileData = await getProfile({ walletAddress, signInErrors });
 
     const {
       _id: id,

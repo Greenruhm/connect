@@ -157,6 +157,7 @@ const signUpThroughMagicConnect = async ({
     email,
     displayName,
     username,
+    signUpErrors,
   })
     .then(({ _id: id, ...user }) => {
       const userData = {
@@ -253,6 +254,7 @@ const signUp = async ({
       email,
       displayName,
       username,
+      signUpErrors,
     })
       .then(({ _id: id, ...user }) => {
         const userData = {

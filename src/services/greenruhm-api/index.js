@@ -1,3 +1,4 @@
+const { createError } = require('error-causes');
 const fetch = require('isomorphic-fetch');
 const GREENRUHM_URL =
   process.env.NEXT_PUBLIC_GREENRUHM_URL || 'https://greenruhm.com';
@@ -73,7 +74,7 @@ const updateDropMedia = async (dropId, media) => {
   return response;
 };
 
-const getProfile = async (walletAddress) => {
+const getProfile = async ({ walletAddress, signInErrors }) => {
   const res = await fetch(`${GREENRUHM_URL}/api/profile/${walletAddress}`);
 
   // Return an empty object if the user doesn't exist.
@@ -85,7 +86,7 @@ const getProfile = async (walletAddress) => {
 
   // Throw if we see a different kind of error. We have no idea what went wrong in this case.
   if (response.error) {
-    throw new Error(response.error);
+    throw createError(signInErrors.InternalServerError);
   }
   return response;
 };
@@ -101,15 +102,20 @@ const createUser = async ({
   username,
   email,
   walletAddress,
+  signUpErrors,
 } = {}) => {
   const res = await fetch(`${GREENRUHM_URL}/api/create-account`, {
     method: 'POST',
     body: JSON.stringify({ displayName, username, email, walletAddress }),
   });
 
+  if (res.status === 500) {
+    throw createError(signUpErrors.InternalServerError);
+  }
+
   const body = await res.json();
   if (body.error) {
-    throw new Error(body.error.message);
+    throw createError(body.error.cause);
   }
   return body;
 };
