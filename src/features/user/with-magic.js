@@ -1,59 +1,6 @@
 const { Magic } = require('magic-sdk');
 const { ConnectExtension } = require('@magic-ext/connect');
 const { ethers } = require('ethers');
-const { createError, errorCauses } = require('error-causes');
-
-const AuthErrorMessages = {
-  AuthLinkExpired: 'Auth Link Expired',
-  InvalidEmail: 'Invalid Email',
-  InternalError: 'Internal Error',
-  UserRequestEditEmail: 'User Request Edit Email',
-};
-
-// https://magic.link/docs/auth/api-reference/client-side-sdks/web#errors-warnings
-// eslint-disable-next-line no-unused-vars
-const [magicErrors, handleMagicErrors] = errorCauses({
-  AuthLinkExpired: {
-    code: -10001,
-    message: 'Auth Link Expired',
-  },
-  InvalidEmail: {
-    code: -32602,
-    message: 'Invalid Email',
-  },
-  InternalError: {
-    code: -32603,
-    message: 'Internal Error',
-  },
-  UserRequestEditEmail: {
-    code: -10005,
-    message: 'User Request Edit Email',
-  },
-});
-
-const handleMagicError = (error) => {
-  // if MagicLinkExpired
-  if (error.code === magicErrors.AuthLinkExpired.code) {
-    throw createError(magicErrors.AuthLinkExpired);
-  }
-
-  // if InvalidParams
-  if (error.code === magicErrors.InvalidEmail.code) {
-    throw createError(magicErrors.InvalidEmail);
-  }
-
-  // if InternalError
-  if (error.code === magicErrors.InternalError.code) {
-    throw createError(magicErrors.InternalError);
-  }
-
-  // if UserRequestEditEmail
-  if (error.code === magicErrors.UserRequestEditEmail.code) {
-    throw createError(magicErrors.UserRequestEditEmail);
-  }
-
-  return;
-};
 
 const withMagic = (params) => {
   const options = {
@@ -65,7 +12,6 @@ const withMagic = (params) => {
   return {
     ...params,
     magic,
-    handleMagicError,
   };
 };
 
@@ -80,7 +26,6 @@ const withMagicConnect = (params) => {
 
   return {
     ...params,
-    handleMagicError,
     magic,
     web3Provider,
   };
@@ -88,8 +33,3 @@ const withMagicConnect = (params) => {
 
 module.exports.withMagic = withMagic;
 module.exports.withMagicConnect = withMagicConnect;
-module.exports.magicErrors = magicErrors;
-module.exports.handleMagicErrors = handleMagicErrors;
-module.exports.handleMagicError = handleMagicError;
-module.exports.errorsHandledByConnect = magicErrors;
-module.exports.AuthErrorMessages = AuthErrorMessages;
