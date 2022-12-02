@@ -88,22 +88,12 @@ const handleMagicSignUpError = (error) => {
   return actions[error.code]();
 };
 
-const withSignUpErrors = (params) => {
-  return {
-    ...params,
-    handleMagicSignUpError,
-    signUpErrors,
-  };
-};
-
 const signUpThroughMagicConnect = async ({
   dispatch,
   displayName,
   magic,
   username,
   web3Provider,
-  signUpErrors,
-  handleMagicSignUpError,
 } = {}) => {
   if (!username) {
     throw createError(signUpErrors.UsernameIsRequired);
@@ -144,7 +134,6 @@ const signUpThroughMagicConnect = async ({
     email,
     displayName,
     username,
-    signUpErrors,
   })
     .then(({ _id: id, ...user }) => {
       const userData = {
@@ -173,8 +162,6 @@ const signUp = async ({
   magic,
   signUpEmail = email,
   username,
-  signUpErrors,
-  handleMagicSignUpError,
 } = {}) => {
   if (!email) {
     throw createError(signUpErrors.EmailIsRequired);
@@ -241,7 +228,6 @@ const signUp = async ({
       email,
       displayName,
       username,
-      signUpErrors,
     })
       .then(({ _id: id, ...user }) => {
         const userData = {
@@ -282,4 +268,3 @@ module.exports.signUp = signUp;
 module.exports.signUpThroughMagicConnect = signUpThroughMagicConnect;
 module.exports.signUpErrors = signUpErrors;
 module.exports.handleSignUpErrors = handleSignUpErrors;
-module.exports.withSignUpErrors = withSignUpErrors;

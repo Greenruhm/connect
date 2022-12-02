@@ -1,5 +1,6 @@
 const { createError } = require('error-causes');
 const fetch = require('isomorphic-fetch');
+const { signUpErrors } = require('../../features/user/sign-up');
 const GREENRUHM_URL =
   process.env.NEXT_PUBLIC_GREENRUHM_URL || 'https://greenruhm.com';
 
@@ -102,7 +103,6 @@ const createUser = async ({
   username,
   email,
   walletAddress,
-  signUpErrors,
 } = {}) => {
   const res = await fetch(`${GREENRUHM_URL}/api/create-account`, {
     method: 'POST',

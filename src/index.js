@@ -11,7 +11,6 @@ const {
   signUpThroughMagicConnect,
   signUpErrors,
   handleSignUpErrors,
-  withSignUpErrors,
 } = require('./features/user/sign-up');
 const {
   signOut,
@@ -55,14 +54,12 @@ const connect = ({ apiKey = '', features = [] } = {}) => {
           asyncPipe(
             withMiddleware,
             withMagicConnect,
-            withSignUpErrors,
             signUpThroughMagicConnect
           )({ username, displayName })
       : ({ email = '', username = '', displayName = username } = {}) =>
           asyncPipe(
             withMiddleware,
             withMagic,
-            withSignUpErrors,
             signUp
           )({ email, username, displayName }),
     signUpErrors,
