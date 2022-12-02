@@ -3,47 +3,23 @@ const { getUserIsSignedIn, setUser, setAnonUser } = require('./reducer');
 const {
   createUser: createGreenruhmUser,
 } = require('../../services/greenruhm-api/index.js');
+const { commonErrorCauses } = require('./common-error-causes');
 
 /**
  * For context around Auth related errors reference:
  * https://magic.link/docs/auth/api-reference/client-side-sdks/web#errors-warnings
  */
 const [signUpErrors, handleSignUpErrors] = errorCauses({
+  ...commonErrorCauses,
   AccountAlreadyExists: {
     code: 400,
     message:
       "You tried to sign up with an email that already has an account. Please sign in instead, or provide a different email if you'd like to create a different account.",
   },
-  AuthInternalError: {
-    code: -32603,
-    message:
-      'There was an unexpected error with auth service. Please try again.',
-  },
-  AuthInvalidEmail: {
-    code: -32602,
-    message:
-      'An invalid email was provided to auth service. Please provide a valid email.',
-  },
-  AuthLinkExpired: {
-    code: -10001,
-    message: 'The auth link expired. Please try again.',
-  },
-  AuthUserRequestEditEmail: {
-    code: -10005,
-    message: 'Error with user request to edit auth email. Please try again.',
-  },
   AuthUserRejectedConsentToShareEmail: {
     code: -99999,
     message:
       'To sign up with Greenruhm you must consent to sharing your email.',
-  },
-  EmailIsRequired: {
-    code: 400,
-    message: 'An email is required. Please provide a valid email.',
-  },
-  InternalServerError: {
-    code: 500,
-    message: 'There was an unexpected error. Please try again.',
   },
   InvalidEmail: {
     code: 400,

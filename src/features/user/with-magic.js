@@ -2,6 +2,27 @@ const { Magic } = require('magic-sdk');
 const { ConnectExtension } = require('@magic-ext/connect');
 const { ethers } = require('ethers');
 
+const magicErrorCauses = {
+  AuthInternalError: {
+    code: -32603,
+    message:
+      'There was an unexpected error with auth service. Please try again.',
+  },
+  AuthInvalidEmail: {
+    code: -32602,
+    message:
+      'An invalid email was provided to auth service. Please provide a valid email.',
+  },
+  AuthLinkExpired: {
+    code: -10001,
+    message: 'The auth link expired. Please try again.',
+  },
+  AuthUserRequestEditEmail: {
+    code: -10005,
+    message: 'Error with user request to edit auth email. Please try again.',
+  },
+};
+
 const withMagic = (params) => {
   const options = {
     ...(process?.env?.NODE_ENV === 'test' && { testMode: true }),
@@ -32,3 +53,4 @@ const withMagicConnect = (params) => {
 
 module.exports.withMagic = withMagic;
 module.exports.withMagicConnect = withMagicConnect;
+module.exports.magicErrorCauses = magicErrorCauses;

@@ -4,46 +4,22 @@ const {
   getProfile,
   updateLastSignedIn,
 } = require('../../services/greenruhm-api/index.js');
+const { commonErrorCauses } = require('./common-error-causes');
 
 /**
  * For context around Auth related errors reference:
  * https://magic.link/docs/auth/api-reference/client-side-sdks/web#errors-warnings
  */
 const [signInErrors, handleSignInErrors] = errorCauses({
+  ...commonErrorCauses,
   AccountNotFound: {
     code: 404,
     message: 'An account was not found. Please sign up.',
-  },
-  AuthInternalError: {
-    code: -32603,
-    message:
-      'There was an unexpected error with auth service. Please try again.',
-  },
-  AuthInvalidEmail: {
-    code: -32602,
-    message:
-      'An invalid email was provided to auth service. Please provide a valid email.',
-  },
-  AuthLinkExpired: {
-    code: -10001,
-    message: 'The auth link expired. Please try again.',
-  },
-  AuthUserRequestEditEmail: {
-    code: -10005,
-    message: 'Error with user request to edit auth email. Please try again.',
   },
   AuthUserRejectedConsentToShareEmail: {
     code: -99999,
     message:
       'To sign in with Greenruhm you must consent to sharing your email.',
-  },
-  EmailIsRequired: {
-    code: 400,
-    message: 'An email is required. Please provide a valid email.',
-  },
-  InternalServerError: {
-    code: 500,
-    message: 'There was an unexpected error. Please try again.',
   },
 });
 
