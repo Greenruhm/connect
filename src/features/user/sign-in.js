@@ -32,11 +32,6 @@ const [signInErrors, handleSignInErrors] = errorCauses({
     code: -10005,
     message: 'Error with user request to edit auth email. Please try again.',
   },
-  /**
-   * TODO: Remove after adapting Magic connect sign in flow
-   * to have user enter their email manually
-   * (i.e. after removal of magic.connect.requestUserInfo() from implementation)
-   */
   AuthUserRejectedConsentToShareEmail: {
     code: -99999,
     message:
@@ -95,28 +90,15 @@ const signInThroughMagicConnect = async ({
     .then((accounts) => accounts[0])
     .catch(handleMagicSignInError);
 
-  console.log({ walletAddress });
-
   const { email } = await magic.connect.requestUserInfo().catch((error) => {
     magic.connect.disconnect();
 
-    /**
-     * TODO: Remove after adapting Magic connect sign in flow
-     * to have user enter their email manually
-     * (i.e. after removal of magic.connect.requestUserInfo() from implementation)
-     *
-     * Magic uses the same error code -32603 when the user rejects consent
-     * to share their email as when their is an internal error so
-     * a check against the error message is required to differentiate
-     * the error cause we create here.
-     */
     if (error.rawMessage === 'User rejected the action') {
       throw createError(signInErrors.AuthUserRejectedConsentToShareEmail);
     } else {
       handleMagicSignInError(error);
     }
   });
-  console.log({ email });
 
   if (!email || !walletAddress) {
     dispatch(setAnonUser());

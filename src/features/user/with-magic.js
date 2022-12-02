@@ -15,7 +15,6 @@ const withMagic = (params) => {
   };
 };
 
-// TODO: Oliver remove scratch work
 const withMagicConnect = (params) => {
   const magic = new Magic('pk_live_BDB8311A26CF3651', {
     extensions: [new ConnectExtension()],

@@ -32,11 +32,6 @@ const [signUpErrors, handleSignUpErrors] = errorCauses({
     code: -10005,
     message: 'Error with user request to edit auth email. Please try again.',
   },
-  /**
-   * TODO: Remove after adapting Magic connect sign up flow
-   * to have user enter their email manually
-   * (i.e. after removal of magic.connect.requestUserInfo() from implementation)
-   */
   AuthUserRejectedConsentToShareEmail: {
     code: -99999,
     message:
@@ -114,11 +109,6 @@ const signUpThroughMagicConnect = async ({
     throw createError(signUpErrors.UsernameIsRequired);
   }
 
-  // TODO: Remove
-  console.log({ username });
-  console.log({ magic });
-  console.log({ web3Provider });
-
   const signer = web3Provider.getSigner();
   console.log({ signer });
 
@@ -127,28 +117,15 @@ const signUpThroughMagicConnect = async ({
     .then((accounts) => accounts[0])
     .catch(handleMagicSignUpError);
 
-  console.log({ walletAddress });
-
   const { email } = await magic.connect.requestUserInfo().catch((error) => {
     magic.connect.disconnect();
 
-    /**
-     * TODO: Remove after adapting Magic connect sign up flow
-     * to have user enter their email manually
-     * (i.e. after removal of magic.connect.requestUserInfo() from implementation)
-     *
-     * Magic uses the same error code -32603 when the user rejects consent
-     * to share their email as when their is an internal error so
-     * a check against the error message is required to differentiate
-     * the error cause we create here.
-     */
     if (error.rawMessage === 'User rejected the action') {
       throw createError(signUpErrors.AuthUserRejectedConsentToShareEmail);
     } else {
       handleMagicSignUpError(error);
     }
   });
-  console.log({ email });
 
   if (!email || !walletAddress) {
     dispatch(setAnonUser());
