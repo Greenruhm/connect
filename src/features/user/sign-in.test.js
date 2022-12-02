@@ -8,7 +8,7 @@ describe('signIn', async (assert) => {
   };
 
   try {
-    await signIn({ signInErrors });
+    await signIn();
   } catch (error) {
     assert({
       ...description,

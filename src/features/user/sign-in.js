@@ -70,21 +70,7 @@ const handleMagicSignInError = (error) => {
   return actions[error.code]();
 };
 
-const withSignInErrors = (params) => {
-  return {
-    ...params,
-    handleMagicSignInError,
-    signInErrors,
-  };
-};
-
-const signInThroughMagicConnect = async ({
-  dispatch,
-  magic,
-  web3Provider,
-  signInErrors,
-  handleMagicSignInError,
-}) => {
+const signInThroughMagicConnect = async ({ dispatch, magic, web3Provider }) => {
   const walletAddress = await web3Provider
     .listAccounts()
     .then((accounts) => accounts[0])
@@ -107,7 +93,7 @@ const signInThroughMagicConnect = async ({
   }
 
   // Get user info from Greenruhm
-  const profileData = await getProfile({ walletAddress, signInErrors });
+  const profileData = await getProfile({ walletAddress });
 
   const {
     _id: id,
@@ -141,14 +127,7 @@ const signInThroughMagicConnect = async ({
   return userData;
 };
 
-const signInUser = async ({
-  email,
-  dispatch,
-  getState,
-  magic,
-  signInErrors,
-  handleMagicSignInError,
-} = {}) => {
+const signInUser = async ({ email, dispatch, getState, magic } = {}) => {
   if (!email) {
     throw createError(signInErrors.EmailIsRequired);
   }
@@ -170,7 +149,7 @@ const signInUser = async ({
     const sessionToken = magicUserData[1];
 
     // Get user info from Greenruhm
-    const profileData = await getProfile({ walletAddress, signInErrors });
+    const profileData = await getProfile({ walletAddress });
 
     const {
       _id: id,
@@ -218,4 +197,3 @@ module.exports.signIn = signInUser;
 module.exports.signInThroughMagicConnect = signInThroughMagicConnect;
 module.exports.signInErrors = signInErrors;
 module.exports.handleSignInErrors = handleSignInErrors;
-module.exports.withSignInErrors = withSignInErrors;

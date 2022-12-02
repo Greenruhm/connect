@@ -1,6 +1,7 @@
 const { createError } = require('error-causes');
 const fetch = require('isomorphic-fetch');
 const { signUpErrors } = require('../../features/user/sign-up');
+const { signInErrors } = require('../../features/user/sign-in');
 const GREENRUHM_URL =
   process.env.NEXT_PUBLIC_GREENRUHM_URL || 'https://greenruhm.com';
 
@@ -75,7 +76,7 @@ const updateDropMedia = async (dropId, media) => {
   return response;
 };
 
-const getProfile = async ({ walletAddress, signInErrors }) => {
+const getProfile = async ({ walletAddress }) => {
   const res = await fetch(`${GREENRUHM_URL}/api/profile/${walletAddress}`);
 
   // Return an empty object if the user doesn't exist.
