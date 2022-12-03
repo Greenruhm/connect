@@ -1,7 +1,5 @@
 const { createError } = require('error-causes');
 const fetch = require('isomorphic-fetch');
-const { signUpErrors } = require('../../features/user/sign-up');
-const { signInErrors } = require('../../features/user/sign-in');
 const GREENRUHM_URL =
   process.env.NEXT_PUBLIC_GREENRUHM_URL || 'https://greenruhm.com';
 
@@ -88,6 +86,7 @@ const getProfile = async ({ walletAddress }) => {
 
   // Throw if we see a different kind of error. We have no idea what went wrong in this case.
   if (response.error) {
+    const { signInErrors } = require('../../features/user/sign-in');
     throw createError(signInErrors.InternalServerError);
   }
   return response;
@@ -111,6 +110,7 @@ const createUser = async ({
   });
 
   if (res.status === 500) {
+    const { signUpErrors } = require('../../features/user/sign-up');
     throw createError(signUpErrors.InternalServerError);
   }
 
