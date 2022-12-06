@@ -1,5 +1,6 @@
 import { describe } from 'riteway';
-import { signUp, signUpErrors } from './sign-up';
+import { signUp } from './sign-up';
+import { signUpErrors } from './sign-up-error-causes';
 
 describe('signUp', async (assert) => {
   {

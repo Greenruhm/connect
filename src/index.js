@@ -8,9 +8,11 @@ const {
 const {
   signUp,
   signUpThroughMagicConnect,
+} = require('./features/user/sign-up');
+const {
   signUpErrors,
   handleSignUpErrors,
-} = require('./features/user/sign-up');
+} = require('./features/user/sign-up-error-causes');
 const {
   signOut,
   signOutThroughMagicConnect,

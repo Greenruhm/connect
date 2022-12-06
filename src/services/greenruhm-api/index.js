@@ -2,6 +2,7 @@ const { createError } = require('error-causes');
 const fetch = require('isomorphic-fetch');
 const GREENRUHM_URL =
   process.env.NEXT_PUBLIC_GREENRUHM_URL || 'https://greenruhm.com';
+const { signUpErrors } = require('../../features/user/sign-up-error-causes');
 
 const fetchDropsHandler = (type) => async (id) => {
   const response = await fetch(`${GREENRUHM_URL}/api/drops/${type}/${id}`, {
@@ -110,7 +111,6 @@ const createUser = async ({
   });
 
   if (res.status === 500) {
-    const { signUpErrors } = require('../../features/user/sign-up');
     throw createError(signUpErrors.InternalServerError);
   }
 
