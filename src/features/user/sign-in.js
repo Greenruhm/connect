@@ -1,27 +1,10 @@
-const { createError, errorCauses } = require('error-causes');
+const { createError } = require('error-causes');
 const { getUserIsSignedIn, setUser, setAnonUser } = require('./reducer');
 const {
   getProfile,
   updateLastSignedIn,
 } = require('../../services/greenruhm-api/index.js');
-const { commonErrorCauses } = require('./common-error-causes');
-
-/**
- * For context around Auth related errors reference:
- * https://magic.link/docs/auth/api-reference/client-side-sdks/web#errors-warnings
- */
-const [signInErrors, handleSignInErrors] = errorCauses({
-  ...commonErrorCauses,
-  AccountNotFound: {
-    code: 404,
-    message: 'An account was not found. Please sign up.',
-  },
-  AuthUserRejectedConsentToShareEmail: {
-    code: -99999,
-    message:
-      'To sign in with Greenruhm you must consent to sharing your email.',
-  },
-});
+const { signInErrors } = require('./sign-in-error-causes');
 
 const handleMagicSignInError = (error) => {
   const actions = {
@@ -171,5 +154,3 @@ const signInUser = async ({ email, dispatch, getState, magic } = {}) => {
 
 module.exports.signIn = signInUser;
 module.exports.signInThroughMagicConnect = signInThroughMagicConnect;
-module.exports.signInErrors = signInErrors;
-module.exports.handleSignInErrors = handleSignInErrors;

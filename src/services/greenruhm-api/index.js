@@ -2,6 +2,7 @@ const { createError } = require('error-causes');
 const fetch = require('isomorphic-fetch');
 const GREENRUHM_URL =
   process.env.NEXT_PUBLIC_GREENRUHM_URL || 'https://greenruhm.com';
+const { signInErrors } = require('../../features/user/sign-in-error-causes');
 const { signUpErrors } = require('../../features/user/sign-up-error-causes');
 
 const fetchDropsHandler = (type) => async (id) => {
@@ -87,7 +88,6 @@ const getProfile = async ({ walletAddress }) => {
 
   // Throw if we see a different kind of error. We have no idea what went wrong in this case.
   if (response.error) {
-    const { signInErrors } = require('../../features/user/sign-in');
     throw createError(signInErrors.InternalServerError);
   }
   return response;

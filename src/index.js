@@ -2,9 +2,11 @@ const { isActiveFeatureName } = require('@paralleldrive/feature-toggles');
 const {
   signIn,
   signInThroughMagicConnect,
+} = require('./features/user/sign-in');
+const {
   signInErrors,
   handleSignInErrors,
-} = require('./features/user/sign-in');
+} = require('./features/user/sign-in-error-causes');
 const {
   signUp,
   signUpThroughMagicConnect,
@@ -18,7 +20,6 @@ const {
   signOutThroughMagicConnect,
 } = require('./features/user/sign-out');
 const { withMagic, withMagicConnect } = require('./features/user/with-magic');
-
 const { asyncPipe, withStore } = require('./utils');
 const { updateApiKeyAction } = require('./features/apiKey/reducer');
 const store = require('./reducer/store');

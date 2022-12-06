@@ -2,6 +2,10 @@ const { Magic } = require('magic-sdk');
 const { ConnectExtension } = require('@magic-ext/connect');
 const { ethers } = require('ethers');
 
+/**
+ * For context around Auth related errors reference:
+ * https://magic.link/docs/auth/api-reference/client-side-sdks/web#errors-warnings
+ */
 const magicErrorCauses = {
   AuthInternalError: {
     code: -32603,

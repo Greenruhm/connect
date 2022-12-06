@@ -1,10 +1,6 @@
 const { errorCauses } = require('error-causes');
 const { commonErrorCauses } = require('./common-error-causes');
 
-/**
- * For context around Auth related errors reference:
- * https://magic.link/docs/auth/api-reference/client-side-sdks/web#errors-warnings
- */
 const [signUpErrors, handleSignUpErrors] = errorCauses({
   ...commonErrorCauses,
   AccountAlreadyExists: {
