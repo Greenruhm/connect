@@ -4,29 +4,9 @@ const {
   createUser: createGreenruhmUser,
 } = require('../../services/greenruhm-api/index.js');
 const { signUpErrors } = require('./sign-up-error-causes');
+const { configureMagicErrorCauses } = require('./with-magic');
 
-const handleMagicSignUpError = (error) => {
-  const actions = {
-    [signUpErrors.AuthInternalError.code]: () => {
-      throw createError(signUpErrors.AuthInternalError);
-    },
-    [signUpErrors.AuthInvalidEmail.code]: () => {
-      throw createError(signUpErrors.AuthInvalidEmail);
-    },
-    [signUpErrors.AuthLinkExpired.code]: () => {
-      throw createError(signUpErrors.AuthLinkExpired);
-    },
-    [signUpErrors.AuthUserRequestEditEmail.code]: () => {
-      throw createError(signUpErrors.AuthUserRequestEditEmail);
-    },
-  };
-
-  if (typeof actions[error.code] !== 'function') {
-    throw new Error('Invalid Magic error action!');
-  }
-
-  return actions[error.code]();
-};
+const handleMagicSignUpError = configureMagicErrorCauses(signUpErrors);
 
 const signUpThroughMagicConnect = async ({
   dispatch,

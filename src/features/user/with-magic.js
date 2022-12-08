@@ -1,6 +1,7 @@
 const { Magic } = require('magic-sdk');
 const { ConnectExtension } = require('@magic-ext/connect');
 const { ethers } = require('ethers');
+const { createError } = require('error-causes');
 
 /**
  * For context around Auth related errors reference:
@@ -25,6 +26,29 @@ const magicErrorCauses = {
     code: -10005,
     message: 'Error with user request to edit auth email. Please try again.',
   },
+};
+
+const configureMagicErrorCauses = (errorCauses) => (error) => {
+  const actions = {
+    [errorCauses.AuthInternalError.code]: () => {
+      throw createError(errorCauses.AuthInternalError);
+    },
+    [errorCauses.AuthInvalidEmail.code]: () => {
+      throw createError(errorCauses.AuthInvalidEmail);
+    },
+    [errorCauses.AuthLinkExpired.code]: () => {
+      throw createError(errorCauses.AuthLinkExpired);
+    },
+    [errorCauses.AuthUserRequestEditEmail.code]: () => {
+      throw createError(errorCauses.AuthUserRequestEditEmail);
+    },
+  };
+
+  if (typeof actions[error.code] !== 'function') {
+    throw new Error('Invalid Magic error action!');
+  }
+
+  return actions[error.code]();
 };
 
 const withMagic = (params) => {
@@ -58,3 +82,4 @@ const withMagicConnect = (params) => {
 module.exports.withMagic = withMagic;
 module.exports.withMagicConnect = withMagicConnect;
 module.exports.magicErrorCauses = magicErrorCauses;
+module.exports.configureMagicErrorCauses = configureMagicErrorCauses;

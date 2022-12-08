@@ -5,29 +5,9 @@ const {
   updateLastSignedIn,
 } = require('../../services/greenruhm-api/index.js');
 const { signInErrors } = require('./sign-in-error-causes');
+const { configureMagicErrorCauses } = require('./with-magic');
 
-const handleMagicSignInError = (error) => {
-  const actions = {
-    [signInErrors.AuthInternalError.code]: () => {
-      throw createError(signInErrors.AuthInternalError);
-    },
-    [signInErrors.AuthInvalidEmail.code]: () => {
-      throw createError(signInErrors.AuthInvalidEmail);
-    },
-    [signInErrors.AuthLinkExpired.code]: () => {
-      throw createError(signInErrors.AuthLinkExpired);
-    },
-    [signInErrors.AuthUserRequestEditEmail.code]: () => {
-      throw createError(signInErrors.AuthUserRequestEditEmail);
-    },
-  };
-
-  if (typeof actions[error.code] !== 'function') {
-    throw new Error('Invalid Magic error action!');
-  }
-
-  return actions[error.code]();
-};
+const handleMagicSignInError = configureMagicErrorCauses(signInErrors);
 
 const signInThroughMagicConnect = async ({ dispatch, magic, web3Provider }) => {
   const walletAddress = await web3Provider
