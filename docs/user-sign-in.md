@@ -44,7 +44,7 @@ type User {
 
 The Greenruhm Connect API includes a `handleSignInErrors` method for handling any errors thrown while the user is trying to sign in.
 
-`handleSignInErrors` can be imported from the Greenruhm Connect API like so:
+`signIn` and `handleSignInErrors` can be destructured from the Greenruhm Connect API:
 
 ```js
 const { signIn, handleSignInErrors } = connect({ apiKey: '<your-api-key>' });
@@ -52,50 +52,76 @@ const { signIn, handleSignInErrors } = connect({ apiKey: '<your-api-key>' });
 
 The `handleSignInErrors` method should be passed to the `catch()` method of the `connection.signIn()` promise and you should define how you want each potential sign in error cause to be handled.
 
-The code snippet belows includes all known potential sign in error causes with example handler functions individually defined for them within the `handleSignInErrors` method:
+You can defined some helper functions in your React component:
+
+```js
+  // Use this enum instead of strings for 
+  const AuthStatuses = {
+    SigningIn: 'Signing In',
+    SignedOut: 'Signed Out',
+    SignedIn: 'Signed In',
+  };
+
+  const setAuthStatus = (authStatus) => () => setState(state => ({
+    ...state,
+    authStatus,
+  });
+
+  const setSigningIn = setAuthStatus(AuthStatus.SigningIn);
+  const setSignedOut = setAuthStatus(AuthStatuses.SigningOut);
+
+  const setErrorAndSignOut = ({ message }) => {
+    setErrorMessage(message);
+    setSignedOut();
+  };
+```
+
+The code snippet belows includes all known potential sign in error causes and sample handlers to pass to `handleSignInErrors`:
 
 ```js
 const handleSignIn = async () => {
   try {
-    setState((state) => ({
-      ...state,
-      authStatus: 'Signing In',
-    }));
+    setSigningIn();
+
     await signIn({ email, username })
       .then(handleSignInSuccess)
       .catch(
         handleSignInErrors({
-          AccountNotFound: ({ message }) => {
-            setErrorMessage(message);
-            setAuthStatusToSignedOut();
-          },
-          AuthInternalError: () => setAuthStatusToSignedOut(),
-          AuthInvalidEmail: () => setAuthStatusToSignedOut(),
-          AuthLinkExpired: () => setAuthStatusToSignedOut(),
-          AuthUserRequestEditEmail: () => setAuthStatusToSignedOut(),
-          AuthUserRejectedConsentToShareEmail: ({ message }) => {
-            setErrorMessage(message);
-            setAuthStatusToSignedOut();
-          },
-          EmailIsRequired: ({ message }) => {
-            setErrorMessage(message);
-            setAuthStatusToSignedOut();
-          },
-          InternalServerError: ({ message }) => {
-            setErrorMessage(message);
-            setAuthStatusToSignedOut();
-          },
+          // All causes prefixed with "Auth" display are handled by the
+          // built-in authentication flow, so all you need to in most
+          // cases is reset the state.
+
+          // An error was encountered during the authentication flow.
+          AuthInternalError: setSignedOut,
+          AuthInvalidEmail: setSignedOut,
+          AuthLinkExpired: setSignedOut,
+
+          // What is this case?
+          AuthUserRequestEditEmail: setSignedOut,
+
+          // In this case, the user intentionally rejected email sharing
+          // in the authentication flow. If you need their email, you
+          // should explain why:
+          AuthUserRejectedConsentToShareEmail: setErrorAndSignOut,
+
+          // The account does not exist in Greenruhm.
+          AccountNotFound: setErrorAndSignOut,
+
+          // The user did not supply an email address.
+          EmailIsRequired: setErrorAndSignOut,
+
+          // An unknown error occurred signing the user into Greenruhm.
+          InternalServerError: setErrorAndSignOut,
         })
       );
   } catch (e) {
-    setErrorMessage(e.message);
-    setAuthStatusToSignedOut();
+    setErrorAndSignOut(e);
   }
 };
 ```
 
-Note that all named sign in error causes with the prefix "Auth" already display an error message through the built-in Connect UX for you, so your UX should not display the error again. Instead, handle any cleanup that is necessary to allow the user to try the sign in request again.
+Note that all named sign in error causes with the prefix "Auth" already display an error message through the built-in Connect UX for you, so your UX should not display the error again. Instead, handle any cleanup that is needed to allow the user to try the sign in request again.
 
 For all named error causes that are NOT prefixed with "Auth", you should destructure the `message` parameter in your handler function and include any logic to display the error message in your UX—as well as any cleanup that is required for the user to attempt another sign in request.
 
-Since the `handleSignInErrors` method is defined with the [`error-causes`](https://github.com/paralleldrive/error-causes) package, if you pass an errors handler object to `handleSignInErrors` that does not include all of the named sign in error causes shown in the code snippet above `handleSignInErrors` will throw an error with the message: `"Missing error handler"`. This error is thrown to encourage you not to accidentally forget to handle a known potential sign in error.
+Greenruhm uses the [`error-causes`](https://github.com/paralleldrive/error-causes) library to accomplish the automatic error branching you see above. If you pass an object to `handleSignInErrors` that does not include all of the named sign in error causes shown in the code snippet above `handleSignInErrors` will throw an error with the message: `"Missing error handler"` in order to protect you from forgetting to handle a known error cause.
