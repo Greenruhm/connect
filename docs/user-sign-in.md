@@ -11,7 +11,7 @@ import { connect } from '@greenruhm/connect';
 
 const connection = connect({ apiKey: '<your API key here>' });
 
-const getSignedInUser = async email => {
+const getSignedInUser = async (email) => {
   const user = await connection.signIn(email);
   // You can now use user.displayName, user.avatarImage, etc.
   return user;
@@ -42,8 +42,60 @@ type User {
 
 ## Error Handling
 
-If the user does not exist, the connection.signIn() promise will reject with an `"Account not found"` error.
+The Greenruhm Connect API includes a `handleSignInErrors` method for handling any errors thrown while the user is trying to sign in.
 
-If there is an error with the auth service then `connection.signIn()` will reject with an error: `"Internal Error"`. Since this error is handled by the Connect UX for you, your UX should not display the error again. Instead, handle any cleanup that is necessary to allow the user to try the sign in request again.
+`handleSignInErrors` can be imported from the Greenruhm Connect API like so:
 
-If the auth link expires `connection.signIn()` will reject with an error: `"Auth Link Expired"`. This error is also handled by the Connect UX so you should handle any cleanup necessary to allow the user to try the sign in request again.
+```js
+const { signIn, handleSignInErrors } = connect({ apiKey: '<your-api-key>' });
+```
+
+The `handleSignInErrors` method should be passed to the `catch()` method of the `connection.signIn()` promise and you should define how you want each potential sign in error cause to be handled.
+
+The code snippet belows includes all known potential sign in error causes with example handler functions individually defined for them within the `handleSignInErrors` method:
+
+```js
+const handleSignIn = async () => {
+  try {
+    setState((state) => ({
+      ...state,
+      authStatus: 'Signing In',
+    }));
+    await signIn({ email, username })
+      .then(handleSignInSuccess)
+      .catch(
+        handleSignInErrors({
+          AccountNotFound: ({ message }) => {
+            setErrorMessage(message);
+            setAuthStatusToSignedOut();
+          },
+          AuthInternalError: () => setAuthStatusToSignedOut(),
+          AuthInvalidEmail: () => setAuthStatusToSignedOut(),
+          AuthLinkExpired: () => setAuthStatusToSignedOut(),
+          AuthUserRequestEditEmail: () => setAuthStatusToSignedOut(),
+          AuthUserRejectedConsentToShareEmail: ({ message }) => {
+            setErrorMessage(message);
+            setAuthStatusToSignedOut();
+          },
+          EmailIsRequired: ({ message }) => {
+            setErrorMessage(message);
+            setAuthStatusToSignedOut();
+          },
+          InternalServerError: ({ message }) => {
+            setErrorMessage(message);
+            setAuthStatusToSignedOut();
+          },
+        })
+      );
+  } catch (e) {
+    setErrorMessage(e.message);
+    setAuthStatusToSignedOut();
+  }
+};
+```
+
+Note that all named sign in error causes with the prefix "Auth" already display an error message through the built-in Connect UX for you, so your UX should not display the error again. Instead, handle any cleanup that is necessary to allow the user to try the sign in request again.
+
+For all named error causes that are NOT prefixed with "Auth", you should destructure the `message` parameter in your handler function and include any logic to display the error message in your UX—as well as any cleanup that is required for the user to attempt another sign in request.
+
+Since the `handleSignInErrors` method is defined with the [`error-causes`](https://github.com/paralleldrive/error-causes) package, if you pass an errors handler object to `handleSignInErrors` that does not include all of the named sign in error causes shown in the code snippet above `handleSignInErrors` will throw an error with the message: `"Missing error handler"`. This error is thrown to encourage you not to accidentally forget to handle a known potential sign in error.
