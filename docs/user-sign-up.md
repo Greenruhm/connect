@@ -12,8 +12,76 @@ If the account does not already exist, the `connection.signUp()` method will res
 
 ## Error Handling
 
-If an account already exists for the given email, `connection.signUp()` will reject with an error: `"An account already exists for this email."`.
+The Greenruhm Connect API includes a `handleSignUpErrors` method for handling any errors thrown while the user is trying to sign up.
 
-If the email provided to `connection.signUp()` is invalid it will reject with an error: `"Invalid Email"`. Since this error is handled by the Connect UX for you, your UX should not display the error again. Instead, handle any cleanup that is necessary to allow the user to try the sign up request again.
+`handleSignUpErrors` can be imported from the Greenruhm Connect API like so:
 
-If the auth link expires `connection.signUp()` will reject with an error: `"Auth Link Expired"`. This error is also handled by the Connect UX so you should handle any cleanup necessary to allow the user to try the sign up request again.
+```js
+const { signUp, handleSignUpErrors } = connect({ apiKey: '<your-api-key>' });
+```
+
+The `handleSignUpErrors` method should be passed to the `catch()` method of the `connection.signUp()` promise and you should define how you want each potential sign up error cause to be handled.
+
+The code snippet belows includes all known potential sign up error causes with example handler functions individually defined for them within the `handleSignUpErrors` method:
+
+```js
+const handleSignUp = async () => {
+  try {
+    setState((state) => ({
+      ...state,
+      authStatus: 'Signing Up',
+    }));
+    await signUp({ email, username })
+      .then(handleSignUpSuccess)
+      .catch(
+        handleSignUpErrors({
+          AccountAlreadyExists: ({ message }) => {
+            setErrorMessage(message);
+            setAuthStatusToSignedOut();
+          },
+          AuthInternalError: () => setAuthStatusToSignedOut(),
+          AuthInvalidEmail: () => setAuthStatusToSignedOut(),
+          AuthLinkExpired: () => setAuthStatusToSignedOut(),
+          AuthUserRequestEditEmail: () => setAuthStatusToSignedOut(),
+          AuthUserRejectedConsentToShareEmail: ({ message }) => {
+            setErrorMessage(message);
+            setAuthStatusToSignedOut();
+          },
+          EmailIsRequired: ({ message }) => {
+            setErrorMessage(message);
+            setAuthStatusToSignedOut();
+          },
+          InternalServerError: ({ message }) => {
+            setErrorMessage(message);
+            setAuthStatusToSignedOut();
+          },
+          InvalidEmail: ({ message }) => {
+            setErrorMessage(message);
+            setAuthStatusToSignedOut();
+          },
+          InvalidUsername: ({ message }) => {
+            setErrorMessage(message);
+            setAuthStatusToSignedOut();
+          },
+          UsernameIsUnavailable: ({ message }) => {
+            setErrorMessage(message);
+            setAuthStatusToSignedOut();
+          },
+          UsernameIsRequired: ({ message }) => {
+            setErrorMessage(message);
+            setAuthStatusToSignedOut();
+          },
+        })
+      );
+  } catch (e) {
+    setErrorMessage(e.message);
+    setAuthStatusToSignedOut();
+  }
+};
+```
+
+Note that all named sign up error causes with the prefix "Auth" already display an error message through the built-in Connect UX for you, so your UX should not display the error again. Instead, handle any cleanup that is necessary to allow the user to try the sign up request again.
+
+For all named error causes that are NOT prefixed with "Auth", you should destructure the `message` parameter in your handler function and include any logic to display the error message in your UX—as well as any cleanup that is required for the user to attempt another sign up request.
+
+Since the `handleSignUpErrors` method is defined with the [`error-causes`](https://github.com/paralleldrive/error-causes) package, if you pass an errors handler object to `handleSignUpErrors` that does not include all of the named sign up error causes shown in the code snippet above `handleSignUpErrors` will throw an error with the message: `"Missing error handler"`. This error is thrown to encourage you not to accidentally forget to handle a known potential sign up error.
