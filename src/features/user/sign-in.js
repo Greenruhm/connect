@@ -1,122 +1,29 @@
-const { createError, errorCauses } = require('error-causes');
+const { createError } = require('error-causes');
 const { getUserIsSignedIn, setUser, setAnonUser } = require('./reducer');
 const {
   getProfile,
   updateLastSignedIn,
 } = require('../../services/greenruhm-api/index.js');
+const { signInErrors } = require('./sign-in-error-causes');
+const { configureMagicErrorCauses } = require('./with-magic');
 
-/**
- * For context around Auth related errors reference:
- * https://magic.link/docs/auth/api-reference/client-side-sdks/web#errors-warnings
- */
-const [signInErrors, handleSignInErrors] = errorCauses({
-  AccountNotFound: {
-    code: 404,
-    message: 'An account was not found. Please sign up.',
-  },
-  AuthInternalError: {
-    code: -32603,
-    message:
-      'There was an unexpected error with auth service. Please try again.',
-  },
-  AuthInvalidEmail: {
-    code: -32602,
-    message:
-      'An invalid email was provided to auth service. Please provide a valid email.',
-  },
-  AuthLinkExpired: {
-    code: -10001,
-    message: 'The auth link expired. Please try again.',
-  },
-  AuthUserRequestEditEmail: {
-    code: -10005,
-    message: 'Error with user request to edit auth email. Please try again.',
-  },
-  /**
-   * TODO: Remove after adapting Magic connect sign in flow
-   * to have user enter their email manually
-   * (i.e. after removal of magic.connect.requestUserInfo() from implementation)
-   */
-  AuthUserRejectedConsentToShareEmail: {
-    code: -99999,
-    message:
-      'To sign in with Greenruhm you must consent to sharing your email.',
-  },
-  EmailIsRequired: {
-    code: 400,
-    message: 'An email is required. Please provide a valid email.',
-  },
-  InternalServerError: {
-    code: 500,
-    message: 'There was an unexpected error. Please try again.',
-  },
-});
+const handleMagicSignInError = configureMagicErrorCauses(signInErrors);
 
-const handleMagicSignInError = (error) => {
-  const actions = {
-    [signInErrors.AuthInternalError.code]: () => {
-      throw createError(signInErrors.AuthInternalError);
-    },
-    [signInErrors.AuthInvalidEmail.code]: () => {
-      throw createError(signInErrors.AuthInvalidEmail);
-    },
-    [signInErrors.AuthLinkExpired.code]: () => {
-      throw createError(signInErrors.AuthLinkExpired);
-    },
-    [signInErrors.AuthUserRequestEditEmail.code]: () => {
-      throw createError(signInErrors.AuthUserRequestEditEmail);
-    },
-  };
-
-  if (typeof actions[error.code] !== 'function') {
-    throw new Error('Invalid Magic error action!');
-  }
-
-  return actions[error.code]();
-};
-
-const withSignInErrors = (params) => {
-  return {
-    ...params,
-    handleMagicSignInError,
-    signInErrors,
-  };
-};
-
-const signInThroughMagicConnect = async ({
-  dispatch,
-  magic,
-  web3Provider,
-  signInErrors,
-  handleMagicSignInError,
-}) => {
+const signInThroughMagicConnect = async ({ dispatch, magic, web3Provider }) => {
   const walletAddress = await web3Provider
     .listAccounts()
     .then((accounts) => accounts[0])
     .catch(handleMagicSignInError);
 
-  console.log({ walletAddress });
-
   const { email } = await magic.connect.requestUserInfo().catch((error) => {
     magic.connect.disconnect();
 
-    /**
-     * TODO: Remove after adapting Magic connect sign in flow
-     * to have user enter their email manually
-     * (i.e. after removal of magic.connect.requestUserInfo() from implementation)
-     *
-     * Magic uses the same error code -32603 when the user rejects consent
-     * to share their email as when their is an internal error so
-     * a check against the error message is required to differentiate
-     * the error cause we create here.
-     */
     if (error.rawMessage === 'User rejected the action') {
       throw createError(signInErrors.AuthUserRejectedConsentToShareEmail);
     } else {
       handleMagicSignInError(error);
     }
   });
-  console.log({ email });
 
   if (!email || !walletAddress) {
     dispatch(setAnonUser());
@@ -125,7 +32,7 @@ const signInThroughMagicConnect = async ({
   }
 
   // Get user info from Greenruhm
-  const profileData = await getProfile({ walletAddress, signInErrors });
+  const profileData = await getProfile({ walletAddress });
 
   const {
     _id: id,
@@ -159,14 +66,7 @@ const signInThroughMagicConnect = async ({
   return userData;
 };
 
-const signInUser = async ({
-  email,
-  dispatch,
-  getState,
-  magic,
-  signInErrors,
-  handleMagicSignInError,
-} = {}) => {
+const signInUser = async ({ email, dispatch, getState, magic } = {}) => {
   if (!email) {
     throw createError(signInErrors.EmailIsRequired);
   }
@@ -188,7 +88,7 @@ const signInUser = async ({
     const sessionToken = magicUserData[1];
 
     // Get user info from Greenruhm
-    const profileData = await getProfile({ walletAddress, signInErrors });
+    const profileData = await getProfile({ walletAddress });
 
     const {
       _id: id,
@@ -234,6 +134,3 @@ const signInUser = async ({
 
 module.exports.signIn = signInUser;
 module.exports.signInThroughMagicConnect = signInThroughMagicConnect;
-module.exports.signInErrors = signInErrors;
-module.exports.handleSignInErrors = handleSignInErrors;
-module.exports.withSignInErrors = withSignInErrors;

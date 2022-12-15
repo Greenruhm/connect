@@ -1,5 +1,6 @@
 import { describe } from 'riteway';
-import { signUp, signUpErrors } from './sign-up';
+import { signUp } from './sign-up';
+import { signUpErrors } from './sign-up-error-causes';
 
 describe('signUp', async (assert) => {
   {
@@ -9,7 +10,7 @@ describe('signUp', async (assert) => {
     };
 
     try {
-      await signUp({ username: 'foo', signUpErrors });
+      await signUp({ username: 'foo' });
     } catch (error) {
       assert({
         ...description,
@@ -26,7 +27,7 @@ describe('signUp', async (assert) => {
     };
 
     try {
-      await signUp({ email: 'foo@example.com', signUpErrors });
+      await signUp({ email: 'foo@example.com' });
     } catch (error) {
       assert({
         ...description,

@@ -1,5 +1,6 @@
 import { describe } from 'riteway';
-import { signIn, signInErrors } from './sign-in';
+import { signIn } from './sign-in';
+import { signInErrors } from './sign-in-error-causes';
 
 describe('signIn', async (assert) => {
   const description = {
@@ -8,7 +9,7 @@ describe('signIn', async (assert) => {
   };
 
   try {
-    await signIn({ signInErrors });
+    await signIn();
   } catch (error) {
     assert({
       ...description,
