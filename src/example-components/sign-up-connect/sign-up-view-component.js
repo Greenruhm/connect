@@ -4,6 +4,7 @@ import InputWithLabel from '../shared/input-with-label-component';
 import SignUpButton from '../shared/submit-button-component';
 import SuccessView from '../shared/success-view';
 import ErrorModal from '../shared/error-modal';
+import { AuthStatuses } from './sign-up-controller-component';
 
 const styles = {
   a: {
@@ -69,7 +70,7 @@ const SignUpFormView = ({
       <SignUpButton
         disabled={disabled}
         label="Sign Up"
-        loading={authStatus === 'Signing Up'}
+        loading={authStatus === AuthStatuses.SigningUp}
         name="sign-up"
         onClick={handleSignUp}
       />
@@ -87,7 +88,7 @@ const renderView = ({
   handleUsername,
   username,
 } = {}) =>
-  authStatus === 'Signed Out' || authStatus === 'Signing Up'
+  authStatus === AuthStatuses.SignedOut || authStatus === AuthStatuses.SigningUp
     ? SignUpFormView({
         authStatus,
         disabled,
@@ -102,7 +103,7 @@ const renderView = ({
       });
 
 const SignUpView = ({
-  authStatus = 'Signed Out',
+  authStatus = AuthStatuses.SignedOut,
   clearErrors = noop,
   disabled = false,
   email = '',
