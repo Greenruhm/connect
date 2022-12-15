@@ -4,6 +4,7 @@ import InputWithLabel from '../shared/input-with-label-component';
 import SignInButton from '../shared/submit-button-component';
 import SuccessView from '../shared/success-view';
 import ErrorModal from '../shared/error-modal';
+import { AuthStatuses } from './sign-in-controller-component';
 
 const styles = {
   a: {
@@ -52,7 +53,7 @@ const SignInFormView = ({ authStatus, disabled, handleSignIn } = {}) => {
       <SignInButton
         disabled={disabled}
         label="Sign In"
-        loading={authStatus === 'Signing In'}
+        loading={authStatus === AuthStatuses.SigningIn}
         name="sign-in"
         onClick={handleSignIn}
       />
@@ -69,7 +70,7 @@ const renderView = ({
   handleSignOut,
   username,
 } = {}) =>
-  authStatus === 'Signed Out' || authStatus === 'Signing In'
+  authStatus === AuthStatuses.SignedOut || authStatus === AuthStatuses.SigningIn
     ? SignInFormView({
         authStatus,
         disabled,
@@ -83,7 +84,7 @@ const renderView = ({
       });
 
 const SignInView = ({
-  authStatus = 'Signed Out',
+  authStatus = AuthStatuses.SignedOut,
   clearErrors = noop,
   disabled = false,
   email = '',

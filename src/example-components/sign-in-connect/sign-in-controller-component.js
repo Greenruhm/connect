@@ -3,8 +3,14 @@ import React, { useState } from 'react';
 import connect from '../..';
 import SignInView from './sign-in-view-component';
 
+export const AuthStatuses = {
+  SignedOut: 'Signed Out',
+  SigningIn: 'Signing In',
+  SignedIn: 'Signed In',
+};
+
 const SignInController = ({
-  authStatus: initialAuthStatus = 'Signed Out',
+  authStatus: initialAuthStatus = AuthStatuses.SignedOut,
 } = {}) => {
   const [state, setState] = useState({
     authStatus: initialAuthStatus,
@@ -19,17 +25,25 @@ const SignInController = ({
     features: ['magic-connect'],
   });
 
-  const setAuthStatusToSignedOut = () =>
+  const setAuthStatus = (authStatus) => () =>
     setState((state) => ({
       ...state,
-      authStatus: 'Signed Out',
+      authStatus,
     }));
+
+  const setSignedOut = setAuthStatus(AuthStatuses.SignedOut);
+  const setSigningIn = setAuthStatus(AuthStatuses.SigningIn);
 
   const setErrorMessage = (message) =>
     setState((state) => ({
       ...state,
       errors: [...state.errors, message],
     }));
+
+  const setErrorAndSignOut = ({ message }) => {
+    setErrorMessage(message);
+    setSignedOut();
+  };
 
   const clearErrors = (e) => {
     setState((state) => ({
@@ -41,46 +55,54 @@ const SignInController = ({
   const handleSignInSuccess = (userData) =>
     setState((state) => ({
       ...state,
-      authStatus: 'Signed In',
+      authStatus: AuthStatuses.SignedIn,
       email: userData.email,
       username: userData.username,
     }));
 
   const handleSignIn = async () => {
     try {
-      setState((state) => ({
-        ...state,
-        authStatus: 'Signing In',
-      }));
+      setSigningIn();
       await signIn()
         .then(handleSignInSuccess)
         .catch(
           handleSignInErrors({
-            AccountNotFound: ({ message }) => {
-              setErrorMessage(message);
-              setAuthStatusToSignedOut();
-            },
-            AuthInternalError: () => setAuthStatusToSignedOut(),
-            AuthInvalidEmail: () => setAuthStatusToSignedOut(),
-            AuthLinkExpired: () => setAuthStatusToSignedOut(),
-            AuthUserRequestEditEmail: () => setAuthStatusToSignedOut(),
-            AuthUserRejectedConsentToShareEmail: ({ message }) => {
-              setErrorMessage(message);
-              setAuthStatusToSignedOut();
-            },
-            EmailIsRequired: ({ message }) => {
-              setErrorMessage(message);
-              setAuthStatusToSignedOut();
-            },
-            InternalServerError: ({ message }) => {
-              setErrorMessage(message);
-              setAuthStatusToSignedOut();
-            },
+            /*
+             * All causes prefixed with "Auth" are handled by the
+             * built-in authentication flow, so all you need to do
+             * in most cases is reset the state.
+             */
+
+            // An error was encountered during the authentication flow.
+            AuthInternalError: setSignedOut,
+            AuthInvalidEmail: setSignedOut,
+            AuthLinkExpired: setSignedOut,
+
+            /*
+             * User requested to edit their email address during
+             * the authentication flow.
+             */
+            AuthUserRequestEditEmail: setSignedOut,
+
+            /*
+             * In this case, the user intentionally rejected email sharing
+             * in the authentication flow. If you need their email, you
+             * should explain why you need it and ask them to try again.
+             */
+            AuthUserRejectedConsentToShareEmail: setErrorAndSignOut,
+
+            // The account does not exist in Greenruhm.
+            AccountNotFound: setErrorAndSignOut,
+
+            // The user did not supply an email address.
+            EmailIsRequired: setErrorAndSignOut,
+
+            // An unknown error occurred signing the user into Greenruhm.
+            InternalServerError: setErrorAndSignOut,
           })
         );
     } catch (e) {
-      setErrorMessage(e.message);
-      setAuthStatusToSignedOut();
+      setErrorAndSignOut(e);
     }
   };
 
@@ -90,7 +112,7 @@ const SignInController = ({
     } catch (e) {
       setErrorMessage(e.message);
     }
-    setAuthStatusToSignedOut();
+    setSignedOut();
   };
 
   return (
