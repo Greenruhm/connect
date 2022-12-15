@@ -7,6 +7,12 @@ import SignInButton from '../shared/submit-button-component';
 import SuccessView from '../shared/success-view';
 import ErrorModal from '../shared/error-modal';
 
+const AuthStatuses = {
+  SignedOut: 'Signed Out',
+  SigningIn: 'Signing In',
+  SignedIn: 'Signed In',
+};
+
 const styles = {
   a: {
     textDecoration: 'underline',
@@ -65,7 +71,7 @@ const SignInView = ({
       <SignInButton
         disabled={disabled}
         label="Sign In"
-        loading={authStatus === 'Signing In'}
+        loading={authStatus === AuthStatuses.SigningIn}
         name="sign-in"
         onClick={handleSignIn}
       />
@@ -83,7 +89,7 @@ const renderView = ({
   handleSignOut,
   username,
 } = {}) =>
-  authStatus === 'Signed Out' || authStatus === 'Signing In'
+  authStatus === AuthStatuses.SignedOut || authStatus === AuthStatuses.SigningIn
     ? SignInView({
         authStatus,
         disabled,
@@ -101,7 +107,9 @@ const { signIn, handleSignInErrors, signOut } = connect({
   apiKey: '<your-api-key>',
 });
 
-const SignInPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
+const SignInPage = ({
+  authStatus: initialAuthStatus = AuthStatuses.SignedOut,
+} = {}) => {
   const [state, setState] = useState({
     authStatus: initialAuthStatus,
     email: '',
@@ -110,17 +118,25 @@ const SignInPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
   });
   const { authStatus, email, errors, username } = state;
 
-  const setAuthStatusToSignedOut = () =>
+  const setAuthStatus = (authStatus) => () =>
     setState((state) => ({
       ...state,
-      authStatus: 'Signed Out',
+      authStatus,
     }));
+
+  const setSignedOut = setAuthStatus(AuthStatuses.SignedOut);
+  const setSigningIn = setAuthStatus(AuthStatuses.SigningIn);
 
   const setErrorMessage = (message) =>
     setState((state) => ({
       ...state,
       errors: [...state.errors, message],
     }));
+
+  const setErrorAndSignOut = ({ message }) => {
+    setErrorMessage(message);
+    setSignedOut();
+  };
 
   const clearErrors = (e) => {
     setState((state) => ({
@@ -139,46 +155,54 @@ const SignInPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
   const handleSignInSuccess = (userData) =>
     setState((state) => ({
       ...state,
-      authStatus: 'Signed In',
+      authStatus: AuthStatuses.SignedIn,
       email: userData.email,
       username: userData.username,
     }));
 
   const handleSignIn = async () => {
     try {
-      setState((state) => ({
-        ...state,
-        authStatus: 'Signing In',
-      }));
+      setSigningIn();
       await signIn({ email, username })
         .then(handleSignInSuccess)
         .catch(
           handleSignInErrors({
-            AccountNotFound: ({ message }) => {
-              setErrorMessage(message);
-              setAuthStatusToSignedOut();
-            },
-            AuthInternalError: () => setAuthStatusToSignedOut(),
-            AuthInvalidEmail: () => setAuthStatusToSignedOut(),
-            AuthLinkExpired: () => setAuthStatusToSignedOut(),
-            AuthUserRequestEditEmail: () => setAuthStatusToSignedOut(),
-            AuthUserRejectedConsentToShareEmail: ({ message }) => {
-              setErrorMessage(message);
-              setAuthStatusToSignedOut();
-            },
-            EmailIsRequired: ({ message }) => {
-              setErrorMessage(message);
-              setAuthStatusToSignedOut();
-            },
-            InternalServerError: ({ message }) => {
-              setErrorMessage(message);
-              setAuthStatusToSignedOut();
-            },
+            /*
+             * All causes prefixed with "Auth" are handled by the
+             * built-in authentication flow, so all you need to do
+             * in most cases is reset the state.
+             */
+
+            // An error was encountered during the authentication flow.
+            AuthInternalError: setSignedOut,
+            AuthInvalidEmail: setSignedOut,
+            AuthLinkExpired: setSignedOut,
+
+            /*
+             * User requested to edit their email address during
+             * the authentication flow.
+             */
+            AuthUserRequestEditEmail: setSignedOut,
+
+            /*
+             * In this case, the user intentionally rejected email sharing
+             * in the authentication flow. If you need their email, you
+             * should explain why you need it and ask them to try again.
+             */
+            AuthUserRejectedConsentToShareEmail: setErrorAndSignOut,
+
+            // The account does not exist in Greenruhm.
+            AccountNotFound: setErrorAndSignOut,
+
+            // The user did not supply an email address.
+            EmailIsRequired: setErrorAndSignOut,
+
+            // An unknown error occurred signing the user into Greenruhm.
+            InternalServerError: setErrorAndSignOut,
           })
         );
     } catch (e) {
-      setErrorMessage(e.message);
-      setAuthStatusToSignedOut();
+      setErrorAndSignOut(e);
     }
   };
 
@@ -188,7 +212,7 @@ const SignInPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
     } catch (e) {
       setErrorMessage(e.message);
     }
-    setAuthStatusToSignedOut();
+    setSignedOut();
   };
 
   const disabled = !isValidEmail(email);
