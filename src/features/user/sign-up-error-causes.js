@@ -17,7 +17,7 @@ const [signUpErrors, handleSignUpErrors] = errorCauses({
     code: 400,
     message: 'An invalid email was provided. Please provide a valid email.',
   },
-  InvalidUserName: {
+  InvalidUsername: {
     code: 400,
     message:
       'An invalid username was provided. Please provide a valid username.',
