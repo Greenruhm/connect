@@ -1,8 +1,8 @@
 import '../index-test';
-import '../features/drop/addMedia.test.js';
-import '../features/user/reducer.test.js';
-import '../features/user/sign-up.test.js';
-import '../features/user/sign-in.test.js';
+import '../features/drop/addMedia-test.js';
+import '../features/user/reducer-test.js';
+import '../features/user/sign-up-test.js';
+import '../features/user/sign-in-test.js';
 import '../example-components/shared/error-modal/error-modal-component-test.js';
 import '../example-components/shared/success-view/success-view-component-test.js';
 import '../example-components/sign-in/sign-in-component-test.js';
