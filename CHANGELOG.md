@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/Greenruhm/connect/compare/v1.2.1...v1.3.0) (2022-12-16)
+
+### Features
+
+- add 'configureMagicErrorCauses' ([615968d](https://github.com/Greenruhm/connect/commit/615968d0e62f766fbc0ef0c871f4b808f44908df))
+- add auth errors to 'signInErrors' ([5f9969b](https://github.com/Greenruhm/connect/commit/5f9969b6c5f9c16b23abda235fa1448e051c7b99))
+- add auth errors to 'signUpErrors' ([307ac90](https://github.com/Greenruhm/connect/commit/307ac90ffe930b65aebb618e96c32aa2153d7d72))
+- add common error causes ([3890738](https://github.com/Greenruhm/connect/commit/3890738bada1a3aff510c640f2653510cd19df91))
+- add internal server error cause to routes hit on sign-up/-in ([93bb542](https://github.com/Greenruhm/connect/commit/93bb542130dbcd9284ba338858ad15772d0dd4c7))
+
+### Bug Fixes
+
+- correct 'invalidUsername' casing ([82d327a](https://github.com/Greenruhm/connect/commit/82d327a049891ea50400c2703f1ed3fc19f5fbe3))
+- resolve circular dep between user feature and greenruhm-api ([0ea829a](https://github.com/Greenruhm/connect/commit/0ea829a3f0cebf1cd78f4337b78155bd9665aa70))
+
 ### [1.2.1](https://github.com/Greenruhm/connect/compare/v1.2.0...v1.2.1) (2022-11-25)
 
 ## [1.2.0](https://github.com/Greenruhm/connect/compare/v1.1.0...v1.2.0) (2022-11-25)
