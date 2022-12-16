@@ -226,7 +226,7 @@ const SignUpPage = ({
             UsernameIsRequired: setErrorAndSignOut,
 
             // The user did not supply a valid username.
-            InvalidUserName: setErrorAndSignOut,
+            InvalidUsername: setErrorAndSignOut,
 
             // The user provided a username that is already taken.
             UsernameIsUnavailable: setErrorAndSignOut,
