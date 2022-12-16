@@ -1,21 +1,20 @@
 import { describe } from 'riteway';
-import match from 'riteway/match';
 import { signIn } from './sign-in';
+import { signInErrors } from './sign-in-error-causes';
 
 describe('signIn', async (assert) => {
   const description = {
     given: 'missing email',
-    should: 'throw an error',
+    should: 'throw an error with email is required cause',
   };
-  const message = 'Email Required to Sign In User';
+
   try {
     await signIn();
   } catch (error) {
-    const contains = match(error.message);
     assert({
       ...description,
-      actual: contains(message),
-      expected: message,
+      actual: error.cause,
+      expected: signInErrors.EmailIsRequired,
     });
   }
 });

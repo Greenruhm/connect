@@ -1,50 +1,29 @@
-const { errorCauses } = require('error-causes');
+const { createError } = require('error-causes');
 const { getUserIsSignedIn, setUser, setAnonUser } = require('./reducer');
 const {
   getProfile,
   updateLastSignedIn,
 } = require('../../services/greenruhm-api/index.js');
+const { signInErrors } = require('./sign-in-error-causes');
+const { configureMagicErrorCauses } = require('./with-magic');
 
-const [signInErrors, handleSignInErrors] = errorCauses({
-  AccountNotFound: {
-    code: 404,
-    message: 'An account was not found. Please sign up.',
-  },
-  EmailIsRequired: {
-    code: 400,
-    message: 'An email is required. Please provide a valid email.',
-  },
-  InternalServerError: {
-    code: 500,
-    message: 'There was an unexpected error. Please try again.',
-  },
-});
+const handleMagicSignInError = configureMagicErrorCauses(signInErrors);
 
-const signInThroughMagicConnect = async ({
-  dispatch,
-  handleMagicError,
-  magic,
-  web3Provider,
-}) => {
+const signInThroughMagicConnect = async ({ dispatch, magic, web3Provider }) => {
   const walletAddress = await web3Provider
     .listAccounts()
     .then((accounts) => accounts[0])
-    .catch(handleMagicError);
-
-  console.log({ walletAddress });
+    .catch(handleMagicSignInError);
 
   const { email } = await magic.connect.requestUserInfo().catch((error) => {
     magic.connect.disconnect();
 
     if (error.rawMessage === 'User rejected the action') {
-      throw new Error(
-        'To sign up with Greenruhm you must consent to sharing your email.'
-      );
+      throw createError(signInErrors.AuthUserRejectedConsentToShareEmail);
     } else {
-      handleMagicError(error);
+      handleMagicSignInError(error);
     }
   });
-  console.log({ email });
 
   if (!email || !walletAddress) {
     dispatch(setAnonUser());
@@ -53,7 +32,7 @@ const signInThroughMagicConnect = async ({
   }
 
   // Get user info from Greenruhm
-  const profileData = await getProfile(walletAddress);
+  const profileData = await getProfile({ walletAddress });
 
   const {
     _id: id,
@@ -65,7 +44,7 @@ const signInThroughMagicConnect = async ({
 
   if (!id) {
     magic.connect.disconnect();
-    throw new Error('Account not found.');
+    throw createError(signInErrors.AccountNotFound);
   }
 
   // Update users last signed in date in Greenruhm.
@@ -76,7 +55,7 @@ const signInThroughMagicConnect = async ({
     id,
     walletAddress,
     email,
-    // isSignedIn: true,
+    isSignedIn: true,
     // sessionToken,
   };
 
@@ -87,15 +66,9 @@ const signInThroughMagicConnect = async ({
   return userData;
 };
 
-const signInUser = async ({
-  email,
-  dispatch,
-  getState,
-  magic,
-  handleMagicError,
-} = {}) => {
+const signInUser = async ({ email, dispatch, getState, magic } = {}) => {
   if (!email) {
-    throw new Error('Email Required to Sign In User');
+    throw createError(signInErrors.EmailIsRequired);
   }
 
   const updateUser = async (magicUser) => {
@@ -115,7 +88,7 @@ const signInUser = async ({
     const sessionToken = magicUserData[1];
 
     // Get user info from Greenruhm
-    const profileData = await getProfile(walletAddress);
+    const profileData = await getProfile({ walletAddress });
 
     const {
       _id: id,
@@ -125,7 +98,7 @@ const signInUser = async ({
       ...user
     } = profileData[walletAddress];
 
-    if (!id) throw new Error('Account not found.');
+    if (!id) throw createError(signInErrors.AccountNotFound);
 
     // Update users last signed in date in Greenruhm.
     updateLastSignedIn(id);
@@ -153,7 +126,7 @@ const signInUser = async ({
   }
 
   // user isn't signed in - so lets send them a email link.
-  await magic.auth.loginWithMagicLink({ email }).catch(handleMagicError);
+  await magic.auth.loginWithMagicLink({ email }).catch(handleMagicSignInError);
 
   // And update the user in our state.
   return updateUser(magic.user);
@@ -161,5 +134,3 @@ const signInUser = async ({
 
 module.exports.signIn = signInUser;
 module.exports.signInThroughMagicConnect = signInThroughMagicConnect;
-module.exports.signInErrors = signInErrors;
-module.exports.handleSignInErrors = handleSignInErrors;

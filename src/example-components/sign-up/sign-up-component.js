@@ -7,8 +7,11 @@ import SignUpButton from '../shared/submit-button-component';
 import SuccessView from '../shared/success-view';
 import ErrorModal from '../shared/error-modal';
 
-// https://connect.greenruhm.com/fundamentals/user-accounts#new-user-sign-up
-const errorsHandledByConnect = [-10001, -32602, -32603, -10005];
+const AuthStatuses = {
+  SignedOut: 'Signed Out',
+  SigningUp: 'Signing Up',
+  SignedIn: 'Signed In',
+};
 
 const styles = {
   a: {
@@ -81,7 +84,7 @@ const SignUpView = ({
       <SignUpButton
         disabled={disabled}
         label="Sign Up"
-        loading={authStatus === 'Signing Up'}
+        loading={authStatus === AuthStatuses.SigningUp}
         name="sign-up"
         onClick={handleSignUp}
       />
@@ -100,7 +103,7 @@ const renderView = ({
   handleUsername,
   username,
 } = {}) =>
-  authStatus === 'Signed Out' || authStatus === 'Signing Up'
+  authStatus === AuthStatuses.SignedOut || authStatus === AuthStatuses.SigningUp
     ? SignUpView({
         authStatus,
         disabled,
@@ -115,9 +118,13 @@ const renderView = ({
         username,
       });
 
-const { signUp, signOut } = connect({ apiKey: '<your-api-key>' });
+const { signUp, handleSignUpErrors, signOut } = connect({
+  apiKey: '<your-api-key>',
+});
 
-const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
+const SignUpPage = ({
+  authStatus: initialAuthStatus = AuthStatuses.SignedOut,
+} = {}) => {
   const [state, setState] = useState({
     authStatus: initialAuthStatus,
     email: '',
@@ -125,6 +132,26 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
     username: '',
   });
   const { authStatus, email, errors, username } = state;
+
+  const setAuthStatus = (authStatus) => () =>
+    setState((state) => ({
+      ...state,
+      authStatus,
+    }));
+
+  const setSignedOut = setAuthStatus(AuthStatuses.SignedOut);
+  const setSigningUp = setAuthStatus(AuthStatuses.SigningUp);
+
+  const setErrorMessage = (message) =>
+    setState((state) => ({
+      ...state,
+      errors: [...state.errors, message],
+    }));
+
+  const setErrorAndSignOut = ({ message }) => {
+    setErrorMessage(message);
+    setSignedOut();
+  };
 
   const clearErrors = (e) => {
     setState((state) => ({
@@ -147,47 +174,79 @@ const SignUpPage = ({ authStatus: initialAuthStatus = 'Signed Out' } = {}) => {
     }));
   };
 
+  const handleSignUpSuccess = (userData) =>
+    setState((state) => ({
+      ...state,
+      authStatus: AuthStatuses.SignedIn,
+      email: userData?.email,
+      username: userData?.username,
+    }));
+
   const handleSignUp = async () => {
     try {
-      setState((state) => ({
-        ...state,
-        authStatus: 'Signing Up',
-      }));
-      const userData = await signUp({ email, username });
-      setState((state) => ({
-        ...state,
-        authStatus: 'Signed Up',
-        email: userData?.email,
-        username: userData?.username,
-      }));
+      setSigningUp();
+      await signUp({ email, username })
+        .then(handleSignUpSuccess)
+        .catch(
+          handleSignUpErrors({
+            /*
+             * All causes prefixed with "Auth" are handled by the
+             * built-in authentication flow, so all you need to do
+             * in most cases is reset the state.
+             */
+
+            // An error was encountered during the authentication flow.
+            AuthInternalError: setSignedOut,
+            AuthInvalidEmail: setSignedOut,
+            AuthLinkExpired: setSignedOut,
+
+            /*
+             * User requested to edit their email address during
+             * the authentication flow.
+             */
+            AuthUserRequestEditEmail: setSignedOut,
+
+            /*
+             * In this case, the user intentionally rejected email sharing
+             * in the authentication flow. If you need their email, you
+             * should explain why you need it and ask them to try again.
+             */
+            AuthUserRejectedConsentToShareEmail: setErrorAndSignOut,
+
+            // The account already exists in Greenruhm.
+            AccountAlreadyExists: setErrorAndSignOut,
+
+            // The user did not supply an email address.
+            EmailIsRequired: setErrorAndSignOut,
+
+            // The user did not supply a valid email address.
+            InvalidEmail: setErrorAndSignOut,
+
+            // The user did not supply a username.
+            UsernameIsRequired: setErrorAndSignOut,
+
+            // The user did not supply a valid username.
+            InvalidUserName: setErrorAndSignOut,
+
+            // The user provided a username that is already taken.
+            UsernameIsUnavailable: setErrorAndSignOut,
+
+            // An unknown error occurred signing up the user with Greenruhm.
+            InternalServerError: setErrorAndSignOut,
+          })
+        );
     } catch (e) {
-      // if error has NOT already been handled by Connect UI
-      if (!errorsHandledByConnect.includes(e?.cause?.code)) {
-        setState((state) => ({
-          ...state,
-          errors: [...state.errors, e.message],
-        }));
-      }
-      setState((state) => ({
-        ...state,
-        authStatus: 'Signed Out',
-      }));
+      setErrorAndSignOut(e);
     }
   };
 
   const handleSignOut = async () => {
     try {
-      await signOut({ email });
+      await signOut();
     } catch (e) {
-      setState((state) => ({
-        ...state,
-        errors: [...state.errors, e.message],
-      }));
+      setErrorMessage(e.message);
     }
-    setState((state) => ({
-      ...state,
-      authStatus: 'Signed Out',
-    }));
+    setSignedOut();
   };
 
   const disabled = !isValidEmail(email) || !username;

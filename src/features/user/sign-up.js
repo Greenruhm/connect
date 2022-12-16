@@ -1,59 +1,23 @@
-const { errorCauses } = require('error-causes');
+const { createError } = require('error-causes');
 const { getUserIsSignedIn, setUser, setAnonUser } = require('./reducer');
 const {
   createUser: createGreenruhmUser,
 } = require('../../services/greenruhm-api/index.js');
+const { signUpErrors } = require('./sign-up-error-causes');
+const { configureMagicErrorCauses } = require('./with-magic');
 
-const [signUpErrors, handleSignUpErrors] = errorCauses({
-  AccountAlreadyExists: {
-    code: 400,
-    message:
-      "You tried to sign up with an email that already has an account. Please sign in instead, or provide a different email if you'd like to create a different account.",
-  },
-  EmailIsRequired: {
-    code: 400,
-    message: 'An email is required. Please provide a valid email.',
-  },
-  InternalServerError: {
-    code: 500,
-    message: 'There was an unexpected error. Please try again.',
-  },
-  InvalidEmail: {
-    code: 400,
-    message: 'An invalid email was provided. Please provide a valid email.',
-  },
-  InvalidUserName: {
-    code: 400,
-    message:
-      'An invalid username was provided. Please provide a valid username.',
-  },
-  UsernameIsUnavailable: {
-    code: 400,
-    message:
-      'The requested username is unavailable. Please try a different username.',
-  },
-  UsernameIsRequired: {
-    code: 400,
-    message: 'A username is required. Please provide a valid username.',
-  },
-});
+const handleMagicSignUpError = configureMagicErrorCauses(signUpErrors);
 
 const signUpThroughMagicConnect = async ({
   dispatch,
   displayName,
-  handleMagicError,
   magic,
   username,
   web3Provider,
 } = {}) => {
   if (!username) {
-    throw new Error('Username is required.');
+    throw createError(signUpErrors.UsernameIsRequired);
   }
-
-  // TODO: Remove
-  console.log({ username });
-  console.log({ magic });
-  console.log({ web3Provider });
 
   const signer = web3Provider.getSigner();
   console.log({ signer });
@@ -61,26 +25,17 @@ const signUpThroughMagicConnect = async ({
   const walletAddress = await web3Provider
     .listAccounts()
     .then((accounts) => accounts[0])
-    .catch((error) => {
-      // TODO: Remove console log
-      console.log({ signInError: error });
-      handleMagicError(error);
-    });
-
-  console.log({ walletAddress });
+    .catch(handleMagicSignUpError);
 
   const { email } = await magic.connect.requestUserInfo().catch((error) => {
     magic.connect.disconnect();
 
     if (error.rawMessage === 'User rejected the action') {
-      throw new Error(
-        'To sign up with Greenruhm you must consent to sharing your email.'
-      );
+      throw createError(signUpErrors.AuthUserRejectedConsentToShareEmail);
     } else {
-      handleMagicError(error);
+      handleMagicSignUpError(error);
     }
   });
-  console.log({ email });
 
   if (!email || !walletAddress) {
     dispatch(setAnonUser());
@@ -124,16 +79,15 @@ const signUp = async ({
   displayName = username,
   email,
   getState,
-  handleMagicError,
   magic,
   signUpEmail = email,
   username,
 } = {}) => {
   if (!email) {
-    throw new Error('Email is required.');
+    throw createError(signUpErrors.EmailIsRequired);
   }
   if (!username) {
-    throw new Error('Username is required.');
+    throw createError(signUpErrors.UsernameIsRequired);
   }
 
   const createUser = async (magicUser) => {
@@ -224,7 +178,7 @@ const signUp = async ({
   // User isn't signed in - so lets send them a email link.
   console.log('Magic user is not logged in. Logging in with Magic...');
 
-  await magic.auth.loginWithMagicLink({ email }).catch(handleMagicError);
+  await magic.auth.loginWithMagicLink({ email }).catch(handleMagicSignUpError);
 
   // And update the user in our state.
   return createUser(magic.user);
@@ -232,5 +186,3 @@ const signUp = async ({
 
 module.exports.signUp = signUp;
 module.exports.signUpThroughMagicConnect = signUpThroughMagicConnect;
-module.exports.signUpErrors = signUpErrors;
-module.exports.handleSignUpErrors = handleSignUpErrors;

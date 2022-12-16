@@ -1,58 +1,54 @@
 const { Magic } = require('magic-sdk');
 const { ConnectExtension } = require('@magic-ext/connect');
 const { ethers } = require('ethers');
-const { createError, errorCauses } = require('error-causes');
+const { createError } = require('error-causes');
 
-const AuthErrorMessages = {
-  AuthLinkExpired: 'Auth Link Expired',
-  InvalidEmail: 'Invalid Email',
-  InternalError: 'Internal Error',
-  UserRequestEditEmail: 'User Request Edit Email',
-};
-
-// https://magic.link/docs/auth/api-reference/client-side-sdks/web#errors-warnings
-// eslint-disable-next-line no-unused-vars
-const [magicErrors, handleMagicErrors] = errorCauses({
+/**
+ * For context around Auth related errors reference:
+ * https://magic.link/docs/auth/api-reference/client-side-sdks/web#errors-warnings
+ */
+const magicErrorCauses = {
+  AuthInternalError: {
+    code: -32603,
+    message:
+      'There was an unexpected error with auth service. Please try again.',
+  },
+  AuthInvalidEmail: {
+    code: -32602,
+    message:
+      'An invalid email was provided to auth service. Please provide a valid email.',
+  },
   AuthLinkExpired: {
     code: -10001,
-    message: 'Auth Link Expired',
+    message: 'The auth link expired. Please try again.',
   },
-  InvalidEmail: {
-    code: -32602,
-    message: 'Invalid Email',
-  },
-  InternalError: {
-    code: -32603,
-    message: 'Internal Error',
-  },
-  UserRequestEditEmail: {
+  AuthUserRequestEditEmail: {
     code: -10005,
-    message: 'User Request Edit Email',
+    message: 'Error with user request to edit auth email. Please try again.',
   },
-});
+};
 
-const handleMagicError = (error) => {
-  // if MagicLinkExpired
-  if (error.code === magicErrors.AuthLinkExpired.code) {
-    throw createError(magicErrors.AuthLinkExpired);
+const configureMagicErrorCauses = (errorCauses) => (error) => {
+  const actions = {
+    [errorCauses.AuthInternalError.code]: () => {
+      throw createError(errorCauses.AuthInternalError);
+    },
+    [errorCauses.AuthInvalidEmail.code]: () => {
+      throw createError(errorCauses.AuthInvalidEmail);
+    },
+    [errorCauses.AuthLinkExpired.code]: () => {
+      throw createError(errorCauses.AuthLinkExpired);
+    },
+    [errorCauses.AuthUserRequestEditEmail.code]: () => {
+      throw createError(errorCauses.AuthUserRequestEditEmail);
+    },
+  };
+
+  if (typeof actions[error.code] !== 'function') {
+    throw new Error('Invalid Magic error action!');
   }
 
-  // if InvalidParams
-  if (error.code === magicErrors.InvalidEmail.code) {
-    throw createError(magicErrors.InvalidEmail);
-  }
-
-  // if InternalError
-  if (error.code === magicErrors.InternalError.code) {
-    throw createError(magicErrors.InternalError);
-  }
-
-  // if UserRequestEditEmail
-  if (error.code === magicErrors.UserRequestEditEmail.code) {
-    throw createError(magicErrors.UserRequestEditEmail);
-  }
-
-  return;
+  return actions[error.code]();
 };
 
 const withMagic = (params) => {
@@ -65,11 +61,9 @@ const withMagic = (params) => {
   return {
     ...params,
     magic,
-    handleMagicError,
   };
 };
 
-// TODO: Oliver remove scratch work
 const withMagicConnect = (params) => {
   const magic = new Magic('pk_live_BDB8311A26CF3651', {
     extensions: [new ConnectExtension()],
@@ -80,7 +74,6 @@ const withMagicConnect = (params) => {
 
   return {
     ...params,
-    handleMagicError,
     magic,
     web3Provider,
   };
@@ -88,8 +81,5 @@ const withMagicConnect = (params) => {
 
 module.exports.withMagic = withMagic;
 module.exports.withMagicConnect = withMagicConnect;
-module.exports.magicErrors = magicErrors;
-module.exports.handleMagicErrors = handleMagicErrors;
-module.exports.handleMagicError = handleMagicError;
-module.exports.errorsHandledByConnect = magicErrors;
-module.exports.AuthErrorMessages = AuthErrorMessages;
+module.exports.magicErrorCauses = magicErrorCauses;
+module.exports.configureMagicErrorCauses = configureMagicErrorCauses;

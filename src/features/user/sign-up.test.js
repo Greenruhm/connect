@@ -1,23 +1,21 @@
 import { describe } from 'riteway';
-import match from 'riteway/match';
 import { signUp } from './sign-up';
+import { signUpErrors } from './sign-up-error-causes';
 
 describe('signUp', async (assert) => {
   {
     const description = {
       given: 'missing email',
-      should: 'throw an error',
+      should: 'throw an error with email is required cause',
     };
-    const message = 'Email is required';
+
     try {
       await signUp({ username: 'foo' });
     } catch (error) {
-      const contains = match(error.message);
-
       assert({
         ...description,
-        actual: contains(message),
-        expected: message,
+        actual: error.cause,
+        expected: signUpErrors.EmailIsRequired,
       });
     }
   }
@@ -25,20 +23,16 @@ describe('signUp', async (assert) => {
   {
     const description = {
       given: 'missing username',
-      should: 'throw an error',
+      should: 'throw an error with username is required cause',
     };
-
-    const message = 'Username is required.';
 
     try {
       await signUp({ email: 'foo@example.com' });
     } catch (error) {
-      const contains = match(error.message);
-
       assert({
         ...description,
-        actual: contains(message),
-        expected: message,
+        actual: error.cause,
+        expected: signUpErrors.UsernameIsRequired,
       });
     }
   }

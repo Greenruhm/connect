@@ -3,11 +3,14 @@ import React, { useState } from 'react';
 import connect from '../..';
 import SignUpView from './sign-up-view-component';
 
-// TODO: Update by using error-causes package
-const errorsHandledByConnect = [-10001, -32602, -32603, -10005];
+export const AuthStatuses = {
+  SignedOut: 'Signed Out',
+  SigningUp: 'Signing Up',
+  SignedIn: 'Signed In',
+};
 
 const SignUpController = ({
-  authStatus: initialAuthStatus = 'Signed Out',
+  authStatus: initialAuthStatus = AuthStatuses.SignedOut,
 } = {}) => {
   const [state, setState] = useState({
     authStatus: initialAuthStatus,
@@ -17,10 +20,30 @@ const SignUpController = ({
   });
   const { authStatus, email, errors, username } = state;
 
-  const { signUp, signOut } = connect({
+  const { signUp, handleSignUpErrors, signOut } = connect({
     apiKey: '<your-api-key>',
     features: ['magic-connect'],
   });
+
+  const setAuthStatus = (authStatus) => () =>
+    setState((state) => ({
+      ...state,
+      authStatus,
+    }));
+
+  const setSignedOut = setAuthStatus(AuthStatuses.SignedOut);
+  const setSigningUp = setAuthStatus(AuthStatuses.SigningUp);
+
+  const setErrorMessage = (message) =>
+    setState((state) => ({
+      ...state,
+      errors: [...state.errors, message],
+    }));
+
+  const setErrorAndSignOut = ({ message }) => {
+    setErrorMessage(message);
+    setSignedOut();
+  };
 
   const clearErrors = (e) => {
     setState((state) => ({
@@ -36,31 +59,69 @@ const SignUpController = ({
     }));
   };
 
+  const handleSignUpSuccess = (userData) =>
+    setState((state) => ({
+      ...state,
+      authStatus: AuthStatuses.SignedIn,
+      email: userData?.email,
+      username: userData?.username,
+    }));
+
   const handleSignUp = async () => {
     try {
-      setState((state) => ({
-        ...state,
-        authStatus: 'Signing Up',
-      }));
-      const userData = await signUp({ username });
-      setState((state) => ({
-        ...state,
-        authStatus: 'Signed Up',
-        email: userData?.email,
-        username: userData?.username,
-      }));
+      setSigningUp();
+      await signUp({ username })
+        .then(handleSignUpSuccess)
+        .catch(
+          handleSignUpErrors({
+            /*
+             * All causes prefixed with "Auth" are handled by the
+             * built-in authentication flow, so all you need to do
+             * in most cases is reset the state.
+             */
+
+            // An error was encountered during the authentication flow.
+            AuthInternalError: setSignedOut,
+            AuthInvalidEmail: setSignedOut,
+            AuthLinkExpired: setSignedOut,
+
+            /*
+             * User requested to edit their email address during
+             * the authentication flow.
+             */
+            AuthUserRequestEditEmail: setSignedOut,
+
+            /*
+             * In this case, the user intentionally rejected email sharing
+             * in the authentication flow. If you need their email, you
+             * should explain why you need it and ask them to try again.
+             */
+            AuthUserRejectedConsentToShareEmail: setErrorAndSignOut,
+
+            // The account already exists in Greenruhm.
+            AccountAlreadyExists: setErrorAndSignOut,
+
+            // The user did not supply an email address.
+            EmailIsRequired: setErrorAndSignOut,
+
+            // The user did not supply a valid email address.
+            InvalidEmail: setErrorAndSignOut,
+
+            // The user did not supply a username.
+            UsernameIsRequired: setErrorAndSignOut,
+
+            // The user did not supply a valid username.
+            InvalidUserName: setErrorAndSignOut,
+
+            // The user provided a username that is already taken.
+            UsernameIsUnavailable: setErrorAndSignOut,
+
+            // An unknown error occurred signing up the user with Greenruhm.
+            InternalServerError: setErrorAndSignOut,
+          })
+        );
     } catch (e) {
-      // if error has NOT already been handled by Connect UI
-      if (!errorsHandledByConnect.includes(e?.cause?.code)) {
-        setState((state) => ({
-          ...state,
-          errors: [...state.errors, e.message],
-        }));
-      }
-      setState((state) => ({
-        ...state,
-        authStatus: 'Signed Out',
-      }));
+      setErrorAndSignOut(e);
     }
   };
 
@@ -68,15 +129,9 @@ const SignUpController = ({
     try {
       await signOut();
     } catch (e) {
-      setState((state) => ({
-        ...state,
-        errors: [...state.errors, e.message],
-      }));
+      setErrorMessage(e.message);
     }
-    setState((state) => ({
-      ...state,
-      authStatus: 'Signed Out',
-    }));
+    setSignedOut();
   };
 
   const disabled = !username;
