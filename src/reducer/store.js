@@ -7,18 +7,13 @@ const {
   slice: apiKeySlice,
 } = require('../features/apiKey/reducer');
 
-const testMode = process?.env?.NODE_ENV === 'test';
-
 const createStore = (reducer) => {
   let state;
 
   const getState = () => state;
 
   const dispatch = (action) => {
-    !testMode &&
-      console.log('Dispatching action: ', action, 'Previous state: ', state);
     state = reducer(state, action);
-    !testMode && console.log('New state:', state);
   };
 
   const addDispatch = (params) => (actionCreator) =>
