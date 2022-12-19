@@ -3,10 +3,10 @@ import React from 'react';
 import { describe } from 'riteway';
 import render from 'riteway/render-component';
 import match from 'riteway/match';
-import SignUp from './sign-up-component';
+import SignUpView from './sign-up-view-component';
 
 describe('Sign Up Page', async (assert) => {
-  const renderSignUpPage = (props) => render(<SignUp {...props} />);
+  const renderSignUpPage = (props) => render(<SignUpView {...props} />);
   {
     const given = 'a signed out user';
     const props = { authStatus: 'Signed Out' };

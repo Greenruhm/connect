@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
+import InputWithLabel from '../shared/input-with-label-component';
 import SignInButton from '../shared/submit-button-component';
 import SuccessView from '../shared/success-view';
 import ErrorModal from '../shared/error-modal';
@@ -45,10 +46,23 @@ const SignUpLink = ({ href, label }) => {
   );
 };
 
-const SignInFormView = ({ authStatus, disabled, handleSignIn } = {}) => {
+const SignInFormView = ({
+  authStatus,
+  disabled,
+  handleEmail,
+  handleSignIn,
+} = {}) => {
   return (
     <>
-      <h2 style={styles.h2}>Sign In (connect)</h2>
+      <h2 style={styles.h2}>Sign In</h2>
+      <InputWithLabel
+        className="email"
+        inputPlaceholder="youremail@example.com"
+        label="Your Email"
+        name="email"
+        onChange={handleEmail}
+        type="email"
+      />
       <SignInButton
         disabled={disabled}
         label="Sign In"
@@ -56,7 +70,7 @@ const SignInFormView = ({ authStatus, disabled, handleSignIn } = {}) => {
         name="sign-in"
         onClick={handleSignIn}
       />
-      <SignUpLink href="/sign-up-connect" label="Or Sign Up" />
+      <SignUpLink href="/sign-up" label="Or Sign Up" />
     </>
   );
 };
@@ -65,6 +79,7 @@ const renderView = ({
   authStatus,
   disabled,
   email,
+  handleEmail,
   handleSignIn,
   handleSignOut,
   username,
@@ -73,6 +88,7 @@ const renderView = ({
     ? SignInFormView({
         authStatus,
         disabled,
+        handleEmail,
         handleSignIn,
       })
     : SuccessView({
@@ -88,6 +104,7 @@ const SignInView = ({
   disabled = false,
   email = '',
   errors = [],
+  handleEmail = noop,
   handleSignIn = noop,
   handleSignOut = noop,
   username = '',
@@ -99,6 +116,7 @@ const SignInView = ({
           authStatus,
           disabled,
           email,
+          handleEmail,
           handleSignIn,
           handleSignOut,
           username,
