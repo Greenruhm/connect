@@ -5,7 +5,7 @@ const {
 const {
   reducer: apiKeyReducer,
   slice: apiKeySlice,
-} = require('../features/apiKey/reducer');
+} = require('../features/api-key/reducer');
 
 const createStore = (reducer) => {
   let state;

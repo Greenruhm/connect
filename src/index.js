@@ -21,7 +21,7 @@ const {
 } = require('./features/user/sign-out');
 const { withMagic, withMagicConnect } = require('./features/user/with-magic');
 const { asyncPipe, withStore } = require('./utils');
-const { updateApiKeyAction } = require('./features/apiKey/reducer');
+const { updateApiKeyAction } = require('./features/api-key/reducer');
 const store = require('./reducer/store');
 
 const connect = ({ apiKey = '', features = [] } = {}) => {
