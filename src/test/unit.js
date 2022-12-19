@@ -7,5 +7,5 @@ import '../example-components/shared/error-modal/error-modal-component-test.js';
 import '../example-components/shared/success-view/success-view-component-test.js';
 import '../example-components/sign-in/sign-in-component-test.js';
 import '../example-components/sign-in-connect/sign-in-view-component-test.js';
-import '../example-components/sign-up/sign-up-component-test.js';
+import '../example-components/sign-up/sign-up-view-component-test.js';
 import '../example-components/sign-up-connect/sign-up-view-component-test.js';

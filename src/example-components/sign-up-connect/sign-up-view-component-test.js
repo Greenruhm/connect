@@ -4,7 +4,6 @@ import { describe } from 'riteway';
 import render from 'riteway/render-component';
 import match from 'riteway/match';
 import SignUpView from './sign-up-view-component';
-import { renderToReadableStream } from 'react-dom/server';
 
 describe('Sign Up View w/ Magic Connect', async (assert) => {
   const renderSignUpView = (props) => render(<SignUpView {...props} />);
