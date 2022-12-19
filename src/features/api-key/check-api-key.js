@@ -3,13 +3,13 @@ import {
   getIsValid,
   getApiKey,
   updateApiStatusInvalidAction,
-  updateApiStatusValidAction
+  updateApiStatusValidAction,
 } from './reducer';
 
 // TODO: VALIDATE API KEY IN DATABASE;
-const isValidApiKey = async apiKey => !!apiKey;
+const isValidApiKey = async (apiKey) => !!apiKey;
 
-const checkApiKey = async params => {
+const checkApiKey = async (params) => {
   const { getState, dispatch } = params;
   const state = getState();
   const isReady = getIsReady(state);

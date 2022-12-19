@@ -1,5 +1,5 @@
 import { describe } from 'riteway';
-import { getUploadParams, mapUploadedMedia } from './addMedia.js';
+import { getUploadParams, mapUploadedMedia } from './add-media.js';
 
 describe('getUploadParams()', async (assert) => {
   assert({
