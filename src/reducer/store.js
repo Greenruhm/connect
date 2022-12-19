@@ -13,9 +13,7 @@ const createStore = (reducer) => {
   const getState = () => state;
 
   const dispatch = (action) => {
-    console.log('Dispatching action: ', action, 'Previous state: ', state);
     state = reducer(state, action);
-    console.log('New state:', state);
   };
 
   const addDispatch = (params) => (actionCreator) =>
