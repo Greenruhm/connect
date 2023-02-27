@@ -35,6 +35,7 @@ const styles = {
 
 const InputWithLabel = ({
   className,
+  defaultValue,
   inputPlaceholder,
   label,
   name,
@@ -42,10 +43,16 @@ const InputWithLabel = ({
   style,
   type,
 } = {}) => {
+  const [value, setValue] = useState(defaultValue);
   const [inputStyle, setInputStyle] = useState(styles.input);
 
   const onFocus = () => setInputStyle(styles.inputFocus);
   const onBlur = () => setInputStyle(styles.input);
+
+  const handleChange = (event) => {
+    setValue(event.target.value);
+    onChange(event);
+  };
 
   return (
     <>
@@ -58,11 +65,12 @@ const InputWithLabel = ({
             name={name}
             onBlur={onBlur}
             onFocus={onFocus}
-            onChange={onChange}
+            onChange={handleChange}
             placeholder={inputPlaceholder}
             required={true}
             style={inputStyle}
             type={type}
+            value={value}
           />
         </div>
       </div>

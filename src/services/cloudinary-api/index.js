@@ -1,13 +1,13 @@
 import fetch from 'isomorphic-fetch';
 
-export const uploadToCloudinary = async ({
+const uploadToCloudinary = async ({
   file,
   name,
   dropId,
   signature,
   timestamp,
   apiKey,
-  cloudName
+  cloudName,
 }) => {
   const formData = new FormData();
   formData.append('file', file);
@@ -20,7 +20,7 @@ export const uploadToCloudinary = async ({
     `https://api.cloudinary.com/v1_1/${cloudName}/upload`,
     {
       method: 'POST',
-      body: formData
+      body: formData,
     }
   );
   const response = await res.json();
@@ -30,6 +30,4 @@ export const uploadToCloudinary = async ({
   return response;
 };
 
-export default {
-  uploadToCloudinary
-};
+export { uploadToCloudinary };

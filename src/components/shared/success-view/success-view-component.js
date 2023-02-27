@@ -2,6 +2,7 @@
 import React from 'react';
 import Theme from '../../theme';
 import SignOutButton from '../submit-button-component';
+import withLayout from '../with-layout';
 
 const styles = {
   divider: {
@@ -65,4 +66,4 @@ const SuccessView = ({
   );
 };
 
-export default SuccessView;
+export default withLayout(SuccessView);

@@ -1,3 +1,3 @@
-import SignUpController from './sign-up-controller-component';
+import SignUp from '../../components/sign-up';
 
-export default SignUpController;
+export default SignUp;
