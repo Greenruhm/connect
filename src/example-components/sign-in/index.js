@@ -1,3 +1,3 @@
-import SignInController from './sign-in-controller-component';
+import SignIn from '../../components/sign-in';
 
-export default SignInController;
+export default SignIn;

@@ -5,6 +5,8 @@ import SignUpButton from '../shared/submit-button-component';
 import SuccessView from '../shared/success-view';
 import ErrorModal from '../shared/error-modal';
 import { AuthStatuses } from './sign-up-controller-component';
+import Loading from '../shared/loading';
+import withLayout from '../shared/with-layout';
 
 const styles = {
   a: {
@@ -51,16 +53,19 @@ const SignInLink = ({ href, label } = {}) => {
 
 const SignUpFormView = ({
   authStatus,
+  defaultUsername,
   disabled,
   handleSignUp,
   handleUsername,
+  usernamePlaceholder,
 } = {}) => {
   return (
     <>
       <h2 style={styles.h2}>Sign Up (connect)</h2>
       <InputWithLabel
         className="username"
-        inputPlaceholder="kendrick-lamar-fan-2001"
+        defaultValue={defaultUsername}
+        inputPlaceholder={usernamePlaceholder}
         label="Username"
         name="username"
         onChange={handleUsername}
@@ -78,29 +83,7 @@ const SignUpFormView = ({
     </>
   );
 };
-
-const renderView = ({
-  authStatus,
-  disabled,
-  email,
-  handleSignUp,
-  handleSignOut,
-  handleUsername,
-  username,
-} = {}) =>
-  authStatus === AuthStatuses.SignedOut || authStatus === AuthStatuses.SigningUp
-    ? SignUpFormView({
-        authStatus,
-        disabled,
-        handleSignUp,
-        handleUsername,
-      })
-    : SuccessView({
-        email,
-        handleSignOut,
-        successMessage: 'Your Greenruhm account has been created! 🎉',
-        username,
-      });
+const SignUpFormComponent = withLayout(SignUpFormView);
 
 const SignUpView = ({
   authStatus = AuthStatuses.SignedOut,
@@ -108,28 +91,36 @@ const SignUpView = ({
   disabled = false,
   email = '',
   errors = [],
+  ErrorComponent = ErrorModal,
+  FormComponent = SignUpFormComponent,
   handleUsername = noop,
   handleSignUp = noop,
   handleSignOut = noop,
+  LoadingComponent = Loading,
+  SuccessComponent = SuccessView,
   username = '',
+  usernamePlaceholder = 'kendrick-lamar-fan-2001',
 } = {}) => {
-  return (
-    <div className="box-format font-format" style={styles.page}>
-      <div className="sign-up-wrapper" style={styles.wrapper}>
-        {renderView({
-          authStatus,
-          disabled,
-          email,
-          handleSignUp,
-          handleSignOut,
-          handleUsername,
-          username,
-        })}
-        {errors.length ? (
-          <ErrorModal errorMessage={errors[0]} onClose={clearErrors} />
-        ) : null}
-      </div>
-    </div>
+  return errors.length > 0 ? (
+    <ErrorComponent errorMessage={errors[0]} onClose={clearErrors} />
+  ) : authStatus === AuthStatuses.SignedOut ? (
+    FormComponent({
+      authStatus,
+      disabled,
+      defaultUsername: username,
+      handleSignUp,
+      handleUsername,
+      usernamePlaceholder,
+    })
+  ) : authStatus === AuthStatuses.SigningUp ? (
+    <LoadingComponent />
+  ) : (
+    SuccessComponent({
+      email,
+      handleSignOut,
+      successMessage: 'Your Greenruhm account has been created! 🎉',
+      username,
+    })
   );
 };
 

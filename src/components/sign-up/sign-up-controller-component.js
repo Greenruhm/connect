@@ -9,8 +9,23 @@ export const AuthStatuses = {
   SignedIn: 'Signed In',
 };
 
+const onSuccessDefault = (props) => {
+  console.log(
+    'SignUp success! Replace this onSuccess function with a custom implementation.'
+  );
+  console.log(JSON.stringify(props));
+};
+
 const SignUpController = ({
+  apiKey = '<your-api-key>',
   authStatus: initialAuthStatus = AuthStatuses.SignedOut,
+  ErrorComponent,
+  FormComponent,
+  LoadingComponent,
+  onSuccess = onSuccessDefault,
+  SuccessComponent,
+  usernamePlaceholder = 'kendrick-lamar-fan-2001',
+  ViewComponent = SignUpView,
 } = {}) => {
   const [state, setState] = useState({
     authStatus: initialAuthStatus,
@@ -21,7 +36,7 @@ const SignUpController = ({
   const { authStatus, email, errors, username } = state;
 
   const { signUp, handleSignUpErrors, signOut } = connect({
-    apiKey: '<your-api-key>',
+    apiKey,
     features: ['magic-connect'],
   });
 
@@ -52,20 +67,25 @@ const SignUpController = ({
     }));
   };
 
-  const handleUsername = (e) => {
+  const handleUsername = (event) => {
     setState((state) => ({
       ...state,
-      username: e.target.value,
+      username: event.target.value,
     }));
   };
 
-  const handleSignUpSuccess = (userData) =>
-    setState((state) => ({
-      ...state,
+  const handleSignUpSuccess = (userData) => {
+    const props = {
       authStatus: AuthStatuses.SignedIn,
       email: userData?.email,
       username: userData?.username,
+    };
+    setState((state) => ({
+      ...state,
+      ...props,
     }));
+    onSuccess(props);
+  };
 
   const handleSignUp = async () => {
     try {
@@ -137,16 +157,21 @@ const SignUpController = ({
   const disabled = !username;
 
   return (
-    <SignUpView
+    <ViewComponent
       authStatus={authStatus}
       clearErrors={clearErrors}
       disabled={disabled}
       email={email}
       errors={errors}
+      ErrorComponent={ErrorComponent}
+      FormComponent={FormComponent}
       handleUsername={handleUsername}
       handleSignUp={handleSignUp}
       handleSignOut={handleSignOut}
+      LoadingComponent={LoadingComponent}
+      SuccessComponent={SuccessComponent}
       username={username}
+      usernamePlaceholder={usernamePlaceholder}
     />
   );
 };
