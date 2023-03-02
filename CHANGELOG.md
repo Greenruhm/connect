@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/Greenruhm/connect/compare/v2.0.0...v2.2.0) (2023-03-02)
+
+### Features
+
+- export components; ([2a16b9f](https://github.com/Greenruhm/connect/commit/2a16b9fbac67d1d13ffe2efa9be45f84b51b4aff))
+- rename SignUpController to SignUp ([89b89f7](https://github.com/Greenruhm/connect/commit/89b89f747025b809ae2406c3c4495195208b28db))
+
 ## [2.1.0](https://github.com/Greenruhm/connect/compare/v2.0.0...v2.1.0) (2023-03-02)
 
 ### Features
