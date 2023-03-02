@@ -1,6 +1,6 @@
 {
   "name": "@greenruhm/connect",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Greenruhm Connect is your white label, custom-branded connection to the music metaverse. It allows you to provide music NFT services inside your app with your branding.",
   "main": "src/index.js",
   "engines": {
