@@ -6,8 +6,8 @@ Object.defineProperty(exports, 'default', {
   enumerable: true,
   get: () => _default,
 });
-const _signUpControllerComponent = _interopRequireDefault(
-  require('./sign-up-controller-component')
+const _signInControllerComponent = _interopRequireDefault(
+  require('./sign-in-controller-component')
 );
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule
@@ -16,4 +16,4 @@ function _interopRequireDefault(obj) {
         default: obj,
       };
 }
-const _default = _signUpControllerComponent.default;
+const _default = _signInControllerComponent.default;
