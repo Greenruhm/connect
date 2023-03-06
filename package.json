@@ -12,17 +12,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint src && echo '-- linting finished --'",
-    "prettier": "prettier --write 'src/**/*.js'",
     "test": "NODE_ENV=test node -r @swc/register src/test/unit.js | tap-nirvana",
-    "pretty-quick": "pretty-quick --staged",
     "watch": "watch 'npm run -s test && npm run -s lint' src",
     "update": "updtr",
-    "release": "standard-version && git push --follow-tags && npm publish",
-    "build-for-release": "rm -rf ./components && swc --config-file .swcrc-build -d . src/components"
+    "release": "npm run build-for-release && npm run commit-for-release && standard-version && git push --follow-tags && npm publish",
+    "build-for-release": "rm -rf ./components && swc --config-file .swcrc-build -d . src/components",
+    "commit-for-release": "git add ./components && git commit -m 'chore: build components'"
   },
   "pre-commit": [
     "lint",
-    "pretty-quick",
     "test"
   ],
   "repository": {
