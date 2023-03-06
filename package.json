@@ -71,8 +71,6 @@
     "components",
     "src",
     "styles",
-    "pages",
-    "next.config.js",
     "docs"
   ]
 }
