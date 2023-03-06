@@ -18,7 +18,7 @@
     "watch": "watch 'npm run -s test && npm run -s lint' src",
     "update": "updtr",
     "release": "standard-version && git push --follow-tags && npm publish",
-    "b": "rm -rf ./components && swc --config-file .swcrc-build -d . src/components"
+    "build-for-release": "rm -rf ./components && swc --config-file .swcrc-build -d . src/components"
   },
   "pre-commit": [
     "lint",
