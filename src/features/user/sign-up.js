@@ -76,12 +76,12 @@ const signUpThroughMagicConnect = async ({
 
 const signUp = async ({
   dispatch,
-  displayName = username,
   email,
   getState,
   magic,
   signUpEmail = email,
   username,
+  displayName = username,
 } = {}) => {
   if (!email) {
     throw createError(signUpErrors.EmailIsRequired);
