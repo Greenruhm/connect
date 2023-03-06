@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/Greenruhm/connect/compare/v2.2.1...v2.3.0) (2023-03-06)
+
+
+### Features
+
+* commit build ([23c61f4](https://github.com/Greenruhm/connect/commit/23c61f441a92ed699ae52604fbcdd9791b2d1756))
+
+
+### Bug Fixes
+
+* modify order of params to avoid usage of undefined variable ([dd3b59f](https://github.com/Greenruhm/connect/commit/dd3b59f75d612a0aa162b4715ea7e6d83c47f48b))
+
 ### [2.2.1](https://github.com/Greenruhm/connect/compare/v2.2.0...v2.2.1) (2023-03-02)
 
 ## [2.2.0](https://github.com/Greenruhm/connect/compare/v2.0.0...v2.2.0) (2023-03-02)
