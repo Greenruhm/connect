@@ -15,7 +15,7 @@
     "test": "NODE_ENV=test node -r @swc/register src/test/unit.js | tap-nirvana",
     "watch": "watch 'npm run -s test && npm run -s lint' src",
     "update": "updtr",
-    "release": "npm run build-for-release && npm run commit-for-release && standard-version && git push --follow-tags && npm publish",
+    "release": "standard-version && git push --follow-tags && npm publish",
     "prepublishOnly": "rm -rf ./components && swc --config-file .swcrc-build -d . src/components"
   },
   "pre-commit": [
