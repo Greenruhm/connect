@@ -16,7 +16,7 @@
     "watch": "watch 'npm run -s test && npm run -s lint' src",
     "update": "updtr",
     "release": "standard-version && git push --follow-tags && npm publish",
-    "prepublishOnly": "rm -rf ./components && swc --config-file .swcrc-build -d . src/components"
+    "prepare": "rm -rf ./components && swc --config-file .swcrc-build -d . src/components"
   },
   "pre-commit": [
     "lint",
@@ -66,5 +66,13 @@
     "isomorphic-fetch": "3.0.0",
     "magic-sdk": "10.1.0",
     "prop-types": "15.8.1"
-  }
+  },
+  "files": [
+    "components",
+    "src",
+    "styles",
+    "pages",
+    "next.config.js",
+    "docs"
+  ]
 }
