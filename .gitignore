@@ -110,4 +110,4 @@ dist/
 .swc
 
 # Build artifacts
-components/
+ui/

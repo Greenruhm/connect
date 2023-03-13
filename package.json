@@ -16,7 +16,7 @@
     "watch": "watch 'npm run -s test && npm run -s lint' src",
     "update": "updtr",
     "release": "standard-version && git push --follow-tags && npm publish",
-    "prepare": "rm -rf ./components && swc --config-file .swcrc-build -d . src/components"
+    "prepare": "rm -rf ./ui && swc --config-file .swcrc-build -d ui src"
   },
   "pre-commit": [
     "lint",
@@ -68,7 +68,7 @@
     "prop-types": "15.8.1"
   },
   "files": [
-    "components",
+    "ui",
     "src",
     "styles",
     "docs"
