@@ -55,8 +55,9 @@ const SignUpController = ({
       errors: [...state.errors, message],
     }));
 
-  const setErrorAndSignOut = ({ message }) => {
-    setErrorMessage(message);
+  const setErrorAndSignOut = (error) => {
+    console.log(error);
+    setErrorMessage(error.message);
     setSignedOut();
   };
 
