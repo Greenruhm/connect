@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/Greenruhm/connect/compare/v2.3.2...v2.4.0) (2023-03-13)
+
+
+### Features
+
+* log errors in sign up screen ([fc82b0b](https://github.com/Greenruhm/connect/commit/fc82b0bfe07b17c87bea53cd0a5e4c61f374b56c))
+
 ### [2.3.2](https://github.com/Greenruhm/connect/compare/v2.3.1...v2.3.2) (2023-03-13)
 
 ### [2.3.1](https://github.com/Greenruhm/connect/compare/v2.3.0...v2.3.1) (2023-03-06)
