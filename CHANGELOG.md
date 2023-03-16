@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/Greenruhm/connect/compare/v2.4.0...v2.5.0) (2023-03-16)
+
+
+### Features
+
+* update error-causes library ([bf3fedd](https://github.com/Greenruhm/connect/commit/bf3fedd2855e746b50ce21206ab055f9e758abed))
+
 ## [2.4.0](https://github.com/Greenruhm/connect/compare/v2.3.2...v2.4.0) (2023-03-13)
 
 
