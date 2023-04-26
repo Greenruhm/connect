@@ -22,11 +22,13 @@ const {
 const { withMagic, withMagicConnect } = require('./features/user/with-magic');
 const { asyncPipe, withStore } = require('./utils');
 const { updateApiKeyAction } = require('./features/api-key/reducer');
-const store = require('./reducer/store');
+const createStore = require('./reducer/store');
 
 const connect = ({ apiKey = '', features = [] } = {}) => {
   const brand = 'Greenruhm Connect';
   if (!apiKey) throw new Error(`${brand}: Missing API key`);
+
+  const store = createStore();
 
   // Set API key in store:
   store.dispatch(updateApiKeyAction(apiKey));
