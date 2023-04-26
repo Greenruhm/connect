@@ -9,3 +9,5 @@ import '../components/sign-in/sign-in-view-component-test.js';
 import '../components/sign-in-link/sign-in-view-component-test.js';
 import '../components/sign-up/sign-up-view-component-test.js';
 import '../components/sign-up-link/sign-up-view-component-test.js';
+import '../utils/index-test.js';
+import '../reducer/store-test.js';
