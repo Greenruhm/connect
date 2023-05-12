@@ -81,7 +81,7 @@ describe('sign in status listener middleware', async (assert) => {
     await sleep();
 
     assert({
-      given: 'an action that does not change the signed in status',
+      given: 'user is already signed in and the action sets signed in to true',
       should: 'not call the on change signed in function',
       expected: false,
       actual: middleware.called,
