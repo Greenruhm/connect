@@ -33,7 +33,7 @@ describe('createStore function', async (assert) => {
       middleware: [middleware],
       reducer: (state) => state,
     });
-    1;
+
     dispatch({});
     assert({
       given: 'a create store function call with middleware',
