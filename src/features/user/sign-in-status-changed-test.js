@@ -1,42 +1,90 @@
 import { describe } from 'riteway';
 import createSignInStatusChanged from './sign-in-status-changed';
-import { initialState, setUser, slice } from './reducer';
+import { createUser, reducer, setUser, slice } from './reducer';
 
-describe('sign in status listener middleware', async (assert) => {
-  let signedIn = false;
-  const onChangeSignedIn = () => {
-    signedIn = !signedIn;
+const sleep = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const createMiddleware = () => {
+  function onChangeSignedIn() {
+    this.called = true;
+  }
+  const obj = {
+    called: false,
   };
 
+  obj.onChangeSignedIn = createSignInStatusChanged(onChangeSignedIn.bind(obj));
+
+  return obj;
+};
+
+describe('sign in status listener middleware', async (assert) => {
   {
-    let state = { [slice]: initialState };
+    const middleware = createMiddleware();
+
+    let state = { [slice]: reducer() };
     const action = { type: 'foo' };
 
-    const signInStatusListener = createSignInStatusChanged(onChangeSignedIn);
+    middleware.onChangeSignedIn(state, action);
+    /**
+     * The onChangeSignedIn middleware implementation uses a set timeout
+     * to execute the callback after the action has been processed by the
+     * reducer. If we do not do something here in the test, the assertion
+     * will run before the callback has been executed. This is why there is
+     * a `sleep` call in here, which just executes a set timeout.
+     */
+    await sleep();
 
-    signInStatusListener(state, action);
     assert({
       given: 'an action that does not change the signed in status',
       should: 'not call the on change signed in function',
       expected: false,
-      actual: signedIn,
+      actual: middleware.called,
     });
+  }
+  {
+    const middleware = createMiddleware();
 
-    signInStatusListener(state, setUser({ isSignedIn: true }));
-    state = { [slice]: { ...initialState, isSignedIn: true } };
+    const state = { [slice]: reducer() };
+    const action = setUser({ isSignedIn: true });
+
+    middleware.onChangeSignedIn(state, action);
+    /**
+     * The onChangeSignedIn middleware implementation uses a set timeout
+     * to execute the callback after the action has been processed by the
+     * reducer. If we do not do something here in the test, the assertion
+     * will run before the callback has been executed. This is why there is
+     * a `sleep` call in here, which just executes a set timeout.
+     */
+    await sleep();
+
     assert({
       given: 'an action that does change the signed in status',
       should: 'call the on change signed in function',
       expected: true,
-      actual: signedIn,
+      actual: middleware.called,
     });
+  }
+  {
+    const middleware = createMiddleware();
 
-    signInStatusListener(state, setUser({ isSignedIn: true }));
+    const state = { [slice]: reducer(createUser({ isSignedIn: true })) };
+    const action = setUser({ isSignedIn: true });
+
+    middleware.onChangeSignedIn(state, action);
+    /**
+     * The onChangeSignedIn middleware implementation uses a set timeout
+     * to execute the callback after the action has been processed by the
+     * reducer. If we do not do something here in the test, the assertion
+     * will run before the callback has been executed. This is why there is
+     * a `sleep` call in here, which just executes a set timeout.
+     */
+    await sleep();
+
     assert({
       given: 'an action that does not change the signed in status',
       should: 'not call the on change signed in function',
-      expected: true,
-      actual: signedIn,
+      expected: false,
+      actual: middleware.called,
     });
   }
 });

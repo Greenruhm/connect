@@ -5,7 +5,7 @@ const signInStatusChanged = (onChangedSignIn) => (state, action) => {
     const signedIn = getUserIsSignedIn(state);
     const updatedSignedIn = action.payload.isSignedIn;
     if (signedIn !== updatedSignedIn) {
-      onChangedSignIn();
+      setTimeout(onChangedSignIn, 0);
     }
   }
 
