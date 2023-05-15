@@ -60,3 +60,4 @@ module.exports.getApiKey = getApiKey;
 module.exports.getApiStatus = getApiStatus;
 module.exports.getIsReady = getIsReady;
 module.exports.getIsValid = getIsValid;
+module.exports.initialState = initialState;
