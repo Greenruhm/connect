@@ -19,7 +19,7 @@ const {
   signOut,
   signOutThroughMagicConnect,
 } = require('./features/user/sign-out');
-const { createDrop } = require('./features/drop/api');
+const { createDrop, addMedia } = require('./features/drop/api');
 const { withMagic, withMagicConnect } = require('./features/user/with-magic');
 const { asyncPipe, withStore } = require('./utils');
 const { updateApiKeyAction } = require('./features/api-key/reducer');
@@ -72,7 +72,12 @@ const connect = ({ apiKey = '', features = [] } = {}) => {
           )()
       : () => asyncPipe(withMiddleware, withMagic, signOut)(),
     createDrop: ({ title = '', description = '', editionLimit = 0 } = {}) =>
-      asyncPipe(withMiddleware, createDrop)({ title, description, editionLimit }),
+      asyncPipe(
+        withMiddleware,
+        createDrop
+      )({ title, description, editionLimit }),
+    addMedia: (dropId) => (params) =>
+      asyncPipe(withMiddleware, addMedia(dropId))(params),
   };
 };
 
