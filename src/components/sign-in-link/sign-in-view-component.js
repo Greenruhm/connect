@@ -70,7 +70,7 @@ const SignInFormView = ({
         name="sign-in"
         onClick={handleSignIn}
       />
-      <SignUpLink href="/sign-up" label="Or Sign Up" />
+      <SignUpLink href="/sign-up-link" label="Or Sign Up" />
     </>
   );
 };
