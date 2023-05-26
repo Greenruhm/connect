@@ -48,7 +48,7 @@ const uploadImage = async ({ name, dropId, file }) => {
   };
 };
 
-const addMedia = async ({ dropId, ...params }) => {
+const addMedia = dropId => async (params) => {
   const uploadedMedia = await Promise.all(
     getUploadParams(dropId, params).map(uploadImage)
   );

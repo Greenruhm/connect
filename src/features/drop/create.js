@@ -1,6 +1,6 @@
 import { createDrop as createDropApi } from '../../services/greenruhm-api/index.js';
 import { getUserName } from '../user/reducer';
-import { addMedia } from './addMedia';
+import { addMedia } from './add-media';
 
 const createDrop = async ({
   getState,

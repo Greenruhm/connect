@@ -1,5 +1,5 @@
 import { getDrop as getDropApi } from '../../services/greenruhm-api/index.js';
-import { addMedia } from './addMedia';
+import { addMedia } from './add-media';
 
 const getDrop = async ({ dropId }) => {
   const drop = getDropApi(dropId);
