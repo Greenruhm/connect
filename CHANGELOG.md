@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/Greenruhm/connect/compare/v2.5.1...v2.6.0) (2023-05-26)
+
+
+### Features
+
+* add middleware capabilities to the store ([7201cfc](https://github.com/Greenruhm/connect/commit/7201cfcb18c45000c4fab65dbf4108664a36d2da))
+* connect new tests ([83376a7](https://github.com/Greenruhm/connect/commit/83376a779aebd4504f31d277ddaf5501d86b0f6b))
+* connect tests ([90bb7e9](https://github.com/Greenruhm/connect/commit/90bb7e9c476f69eae82307f5c9af7c7cd63ea4e7))
+* create a function that turns a reducer into a composable reducer; add pipe function ([47586e6](https://github.com/Greenruhm/connect/commit/47586e6fdb8a5665557086d6e436ad128503f5d0))
+* create a sign in status changed middleware ([179ebb6](https://github.com/Greenruhm/connect/commit/179ebb66ec7632d4cdbd8cc5fbf6b2ce1baf21bb))
+* **createDrop:** exposes addMedia ([77656b1](https://github.com/Greenruhm/connect/commit/77656b156dc14b5bbc9a357b73d4b856b424f6e0))
+* **createDrop:** exposes createDrop and updates addMedia to curry dropId ([d8f3522](https://github.com/Greenruhm/connect/commit/d8f3522cae91f3569c75af627ae8fe2b3148e856))
+* use create store function ([376e908](https://github.com/Greenruhm/connect/commit/376e9080996a412e80f27d3ecfaf5e2fa2ee27a8))
+
+
+### Bug Fixes
+
+* execute callback for onChangeSignedIn after the action has been reduced and update tests ([0e15db9](https://github.com/Greenruhm/connect/commit/0e15db982996b8f5bef3e279c0196e84d8eac4f8))
+* export api key slice initial state ([ea537f6](https://github.com/Greenruhm/connect/commit/ea537f604510ad7aff5ce88d917ed8443b78841c))
+* improve test description ([c5b7c92](https://github.com/Greenruhm/connect/commit/c5b7c92b11100038bb79406cc27d108d48c38b9b))
+* remove useless line ([6040468](https://github.com/Greenruhm/connect/commit/6040468dba33168b992ab0623fad4cca1c132644))
+
 ### [2.5.1](https://github.com/Greenruhm/connect/compare/v2.5.0...v2.5.1) (2023-03-20)
 
 ## [2.5.0](https://github.com/Greenruhm/connect/compare/v2.4.0...v2.5.0) (2023-03-16)
