@@ -19,7 +19,8 @@ const {
   signOut,
   signOutThroughMagicConnect,
 } = require('./features/user/sign-out');
-const { createDrop, addMedia } = require('./features/drop/api');
+const { addMedia } = require('./features/drop/create');
+const { createDrop } = require('./features/drop/add-media');
 const { withMagic, withMagicConnect } = require('./features/user/with-magic');
 const { asyncPipe, withStore } = require('./utils');
 const { updateApiKeyAction } = require('./features/api-key/reducer');

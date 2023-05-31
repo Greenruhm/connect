@@ -1,10 +1,10 @@
-import {
+const {
   getCloudinarySignature,
   updateDropMedia,
-} from '../../services/greenruhm-api/index.js';
-import { uploadToCloudinary } from '../../services/cloudinary-api/index.js';
+} = require('../../services/greenruhm-api/index.js');
+const { uploadToCloudinary } = require('../../services/cloudinary-api/index.js');
 
-export const getUploadParams = (dropId, params = {}) => {
+const getUploadParams = (dropId, params = {}) => {
   if (!dropId) return [];
   const fileTypes = ['posterImage', 'embedImage', 'video'];
   return fileTypes
@@ -16,7 +16,7 @@ export const getUploadParams = (dropId, params = {}) => {
     .filter((x) => x);
 };
 
-export const mapUploadedMedia = (responses = []) =>
+const mapUploadedMedia = (responses = []) =>
   responses.reduce((media, file) => {
     return {
       ...media,
@@ -55,4 +55,6 @@ const addMedia = dropId => async (params) => {
   return updateDropMedia(dropId, mapUploadedMedia(uploadedMedia));
 };
 
-export default addMedia;
+module.exports.addMedia = addMedia;
+module.exports.getUploadParams = getUploadParams;
+module.exports.mapUploadedMedia = mapUploadedMedia;

@@ -1,6 +1,6 @@
-import { createDrop as createDropApi } from '../../services/greenruhm-api/index.js';
-import { getUserName } from '../user/reducer';
-import { addMedia } from './add-media';
+const { createDrop: createDropApi } = require('../../services/greenruhm-api/index.js');
+const { getUserName } = require('../user/reducer');
+const { addMedia } = require('./add-media');
 
 const createDrop = async ({
   getState,
@@ -30,4 +30,4 @@ const createDrop = async ({
   };
 };
 
-export default createDrop;
+module.exports.createDrop = createDrop;
