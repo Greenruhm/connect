@@ -6,16 +6,4 @@ const signOutThroughMagicConnect = ({ dispatch, magic } = {}) => {
   dispatch(setAnonUser());
 };
 
-const signOutUser = async ({ dispatch, magic } = {}) => {
-  const isLoggedIn = await magic.user.isLoggedIn();
-
-  if (isLoggedIn) {
-    await magic.user.logout();
-  }
-  dispatch(setAnonUser());
-
-  return;
-};
-
-module.exports.signOut = signOutUser;
 module.exports.signOutThroughMagicConnect = signOutThroughMagicConnect;

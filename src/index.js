@@ -1,27 +1,17 @@
-const { isActiveFeatureName } = require('@paralleldrive/feature-toggles');
-const {
-  signIn,
-  signInThroughMagicConnect,
-} = require('./features/user/sign-in');
+const { signInThroughMagicConnect } = require('./features/user/sign-in');
 const {
   signInErrors,
   handleSignInErrors,
 } = require('./features/user/sign-in-error-causes');
-const {
-  signUp,
-  signUpThroughMagicConnect,
-} = require('./features/user/sign-up');
+const { signUpThroughMagicConnect } = require('./features/user/sign-up');
 const {
   signUpErrors,
   handleSignUpErrors,
 } = require('./features/user/sign-up-error-causes');
-const {
-  signOut,
-  signOutThroughMagicConnect,
-} = require('./features/user/sign-out');
 const { addMedia } = require('./features/drop/create');
 const { createDrop } = require('./features/drop/add-media');
-const { withMagic, withMagicConnect } = require('./features/user/with-magic');
+const { signOutThroughMagicConnect } = require('./features/user/sign-out');
+const { withMagicConnect } = require('./features/user/with-magic');
 const { asyncPipe, withStore } = require('./utils');
 const { updateApiKeyAction } = require('./features/api-key/reducer');
 const createStore = require('./reducer/store');
@@ -35,7 +25,6 @@ const defaultOnChangedSignIn = () => {
 
 const connect = ({
   apiKey = '',
-  features = [],
   onChangedSignIn = defaultOnChangedSignIn,
 } = {}) => {
   const brand = 'Greenruhm Connect';
@@ -50,40 +39,20 @@ const connect = ({
   const withMiddleware = asyncPipe(withStore(store));
 
   return {
-    signIn: isActiveFeatureName('magic-connect', features)
-      ? () =>
-          asyncPipe(
-            withMiddleware,
-            withMagicConnect,
-            signInThroughMagicConnect
-          )()
-      : ({ email = '' } = {}) =>
-          asyncPipe(withMiddleware, withMagic, signIn)({ email }),
+    signIn: () =>
+      asyncPipe(withMiddleware, withMagicConnect, signInThroughMagicConnect)(),
     signInErrors,
     handleSignInErrors,
-    signUp: isActiveFeatureName('magic-connect', features)
-      ? ({ username = '', displayName = username } = {}) =>
-          asyncPipe(
-            withMiddleware,
-            withMagicConnect,
-            signUpThroughMagicConnect
-          )({ username, displayName })
-      : ({ email = '', username = '', displayName = username } = {}) =>
-          asyncPipe(
-            withMiddleware,
-            withMagic,
-            signUp
-          )({ email, username, displayName }),
+    signUp: ({ username = '', displayName = username } = {}) =>
+      asyncPipe(
+        withMiddleware,
+        withMagicConnect,
+        signUpThroughMagicConnect
+      )({ username, displayName }),
     signUpErrors,
     handleSignUpErrors,
-    signOut: isActiveFeatureName('magic-connect', features)
-      ? () =>
-          asyncPipe(
-            withMiddleware,
-            withMagicConnect,
-            signOutThroughMagicConnect
-          )()
-      : () => asyncPipe(withMiddleware, withMagic, signOut)(),
+    signOut: () =>
+      asyncPipe(withMiddleware, withMagicConnect, signOutThroughMagicConnect)(),
     createDrop: ({ title = '', description = '', editionLimit = 0 } = {}) =>
       asyncPipe(
         withMiddleware,

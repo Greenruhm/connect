@@ -1,14 +1,10 @@
 import '../index-test';
 import '../features/drop/add-media-test.js';
 import '../features/user/reducer-test.js';
-import '../features/user/sign-up-test.js';
-import '../features/user/sign-in-test.js';
 import '../features/user/sign-in-status-changed-test.js';
 import '../components/shared/error-modal/error-modal-component-test.js';
 import '../components/shared/success-view/success-view-component-test.js';
 import '../components/sign-in/sign-in-view-component-test.js';
-import '../components/sign-in-link/sign-in-view-component-test.js';
 import '../components/sign-up/sign-up-view-component-test.js';
-import '../components/sign-up-link/sign-up-view-component-test.js';
 import '../utils/index-test.js';
 import '../reducer/store-test.js';
