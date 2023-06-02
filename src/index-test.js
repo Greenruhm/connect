@@ -3,10 +3,10 @@ import match from 'riteway/match';
 
 import connect from './index';
 
-describe('connect()', async assert => {
+describe('connect()', async (assert) => {
   const requirement = {
     given: 'no API key',
-    should: 'throw'
+    should: 'throw',
   };
 
   try {
@@ -15,7 +15,7 @@ describe('connect()', async assert => {
     assert({
       ...requirement,
       actual: 'no error',
-      expected: 'error'
+      expected: 'error',
     });
   } catch (e) {
     const message = 'Missing API key';
@@ -24,7 +24,7 @@ describe('connect()', async assert => {
     assert({
       ...requirement,
       actual: contains(message),
-      expected: message
+      expected: message,
     });
   }
 });

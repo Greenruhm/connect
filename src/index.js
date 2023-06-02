@@ -17,6 +17,8 @@ const { updateApiKeyAction } = require('./features/api-key/reducer');
 const createStore = require('./reducer/store');
 const signInStatusChanged = require('./features/user/sign-in-status-changed');
 
+let initializedConnectInstance;
+
 const defaultOnChangedSignIn = () => {
   console.log(
     'The signed-in status of the user has changed. To handle this change, consider passing a function to the connect creator as `onChangedSignIn`. This function will be called whenever the signed-in status updates, allowing you to react accordingly in your application.'
@@ -27,6 +29,10 @@ const connect = ({
   apiKey = '',
   onChangedSignIn = defaultOnChangedSignIn,
 } = {}) => {
+  if (initializedConnectInstance) {
+    return initializedConnectInstance;
+  }
+
   const brand = 'Greenruhm Connect';
   if (!apiKey) throw new Error(`${brand}: Missing API key`);
 
@@ -38,7 +44,7 @@ const connect = ({
 
   const withMiddleware = asyncPipe(withStore(store));
 
-  return {
+  initializedConnectInstance = {
     signIn: () =>
       asyncPipe(withMiddleware, withMagicConnect, signInThroughMagicConnect)(),
     signInErrors,
@@ -61,6 +67,9 @@ const connect = ({
     addMedia: (dropId) => (params) =>
       asyncPipe(withMiddleware, addMedia(dropId))(params),
   };
+
+  return initializedConnectInstance;
 };
 
 module.exports = connect;
+module.exports.useConnect = connect;
