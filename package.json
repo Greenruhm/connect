@@ -16,7 +16,8 @@
     "watch": "watch 'npm run -s test && npm run -s lint' src",
     "update": "updtr",
     "release": "standard-version && git push --follow-tags && npm publish",
-    "prepare": "rm -rf ./ui && swc --config-file .swcrc-build -d ui src"
+    "prepare": "rm -rf ./ui && swc --config-file .swcrc-build -d ui src",
+    "local-dependency": "watch 'npm run prepare && yalc publish' src"
   },
   "pre-commit": [
     "lint",
