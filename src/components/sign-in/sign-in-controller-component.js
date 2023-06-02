@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import connect from '../..';
 import SignInView from './sign-in-view-component';
 
 export const AuthStatuses = {
@@ -11,6 +10,7 @@ export const AuthStatuses = {
 
 const SignInController = ({
   authStatus: initialAuthStatus = AuthStatuses.SignedOut,
+  connect,
 } = {}) => {
   const [state, setState] = useState({
     authStatus: initialAuthStatus,
@@ -20,10 +20,7 @@ const SignInController = ({
   });
   const { authStatus, email, errors, username } = state;
 
-  const { signIn, handleSignInErrors, signOut } = connect({
-    apiKey: '<your-api-key>',
-    features: ['magic-connect'],
-  });
+  const { signIn, handleSignInErrors, signOut } = connect;
 
   const setAuthStatus = (authStatus) => () =>
     setState((state) => ({
