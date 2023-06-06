@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.6.1](https://github.com/Greenruhm/connect/compare/v2.6.0...v2.6.1) (2023-06-06)
+
+
+### Bug Fixes
+
+* **addMediaExport:** fixes exporting of addMedia and createDrop ([5ebbf61](https://github.com/Greenruhm/connect/commit/5ebbf61bd92daa3bc0eb5e19ecc8afaa5a26c875))
+
 ## [2.6.0](https://github.com/Greenruhm/connect/compare/v2.5.1...v2.6.0) (2023-05-26)
 
 
