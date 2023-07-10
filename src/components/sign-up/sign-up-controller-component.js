@@ -153,24 +153,25 @@ const SignUpController = ({
 
   const disabled = !username;
 
-  return (
-    <ViewComponent
-      authStatus={authStatus}
-      clearErrors={clearErrors}
-      disabled={disabled}
-      email={email}
-      errors={errors}
-      ErrorComponent={ErrorComponent}
-      FormComponent={FormComponent}
-      handleUsername={handleUsername}
-      handleSignUp={handleSignUp}
-      handleSignOut={handleSignOut}
-      LoadingComponent={LoadingComponent}
-      SuccessComponent={SuccessComponent}
-      username={username}
-      usernamePlaceholder={usernamePlaceholder}
-    />
-  );
+  const props = {
+    authStatus,
+    AuthStatuses,
+    clearErrors,
+    disabled,
+    email,
+    errors,
+    ErrorComponent,
+    FormComponent,
+    handleUsername,
+    handleSignUp,
+    handleSignOut,
+    LoadingComponent,
+    SuccessComponent,
+    username,
+    usernamePlaceholder,
+  };
+
+  return <ViewComponent {...props} />;
 };
 
 export default SignUpController;
