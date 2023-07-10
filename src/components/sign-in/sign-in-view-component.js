@@ -3,6 +3,8 @@ import React from 'react';
 import SignInButton from '../shared/submit-button-component';
 import SuccessView from '../shared/success-view';
 import ErrorModal from '../shared/error-modal';
+import withStyleWrapper from '../shared/style-wrapper';
+import Loading from '../shared/loading';
 import { AuthStatuses } from './sign-in-controller-component';
 
 const styles = {
@@ -14,22 +16,9 @@ const styles = {
     fontWeight: 'normal',
     lineHeight: '35.2px',
   },
-  page: {
-    color: '#fff',
-    fontFamily: 'Work Sans, sans-serif',
-    margin: '24px auto 0',
-    maxWidth: '800px',
-    padding: '10px 40px 64px',
-    position: 'relative',
-  },
   signUp: {
     marginTop: '2rem',
     opacity: '0.8',
-  },
-  wrapper: {
-    margin: '0 auto',
-    maxWidth: '650px',
-    position: 'relative',
   },
 };
 
@@ -45,42 +34,29 @@ const SignUpLink = ({ href, label }) => {
   );
 };
 
-const SignInFormView = ({ authStatus, disabled, handleSignIn } = {}) => {
+const SignInFormView = ({
+  clearErrors,
+  errors,
+  ErrorComponent,
+  disabled,
+  handleSignIn,
+} = {}) => {
   return (
     <>
       <h2 style={styles.h2}>Sign In (connect)</h2>
       <SignInButton
         disabled={disabled}
         label="Sign In"
-        loading={authStatus === AuthStatuses.SigningIn}
         name="sign-in"
         onClick={handleSignIn}
       />
       <SignUpLink href="/sign-up" label="Or Sign Up" />
+      {errors.length ? (
+        <ErrorComponent errorMessage={errors[0]} onClose={clearErrors} />
+      ) : null}
     </>
   );
 };
-
-const renderView = ({
-  authStatus,
-  disabled,
-  email,
-  handleSignIn,
-  handleSignOut,
-  username,
-} = {}) =>
-  authStatus === AuthStatuses.SignedOut || authStatus === AuthStatuses.SigningIn
-    ? SignInFormView({
-        authStatus,
-        disabled,
-        handleSignIn,
-      })
-    : SuccessView({
-        email,
-        handleSignOut,
-        successMessage: `Welcome ${username}. You are signed in! 🎉`,
-        username,
-      });
 
 const SignInView = ({
   authStatus = AuthStatuses.SignedOut,
@@ -88,26 +64,32 @@ const SignInView = ({
   disabled = false,
   email = '',
   errors = [],
+  ErrorComponent = ErrorModal,
+  FormComponent = withStyleWrapper(SignInFormView),
   handleSignIn = noop,
   handleSignOut = noop,
+  LoadingComponent = Loading,
+  SuccessComponent = withStyleWrapper(SuccessView),
   username = '',
 } = {}) => {
-  return (
-    <div className="box-format font-format" style={styles.page}>
-      <div className="sign-in-wrapper" style={styles.wrapper}>
-        {renderView({
-          authStatus,
-          disabled,
-          email,
-          handleSignIn,
-          handleSignOut,
-          username,
-        })}
-        {errors.length ? (
-          <ErrorModal errorMessage={errors[0]} onClose={clearErrors} />
-        ) : null}
-      </div>
-    </div>
+  const formProps = {
+    clearErrors,
+    disabled,
+    errors,
+    ErrorComponent,
+    handleSignIn,
+  };
+  const successProps = {
+    email,
+    handleSignOut,
+    username,
+  };
+  return authStatus === AuthStatuses.SignedOut ? (
+    <FormComponent {...formProps} />
+  ) : authStatus === AuthStatuses.SigningIn ? (
+    <LoadingComponent />
+  ) : (
+    <SuccessComponent {...successProps} />
   );
 };
 

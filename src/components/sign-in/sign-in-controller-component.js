@@ -8,9 +8,22 @@ export const AuthStatuses = {
   SignedIn: 'Signed In',
 };
 
+const onSuccessDefault = (props) => {
+  console.log(
+    'SignIn success! Replace this onSuccess function with a custom implementation.'
+  );
+  console.log(JSON.stringify(props));
+};
+
 const SignInController = ({
   authStatus: initialAuthStatus = AuthStatuses.SignedOut,
   connect,
+  ErrorComponent,
+  FormComponent,
+  LoadingComponent,
+  onSuccess = onSuccessDefault,
+  SuccessComponent,
+  ViewComponent = SignInView,
 } = {}) => {
   const [state, setState] = useState({
     authStatus: initialAuthStatus,
@@ -49,13 +62,18 @@ const SignInController = ({
     }));
   };
 
-  const handleSignInSuccess = (userData) =>
+  const handleSignInSuccess = (userData) => {
+    const props = {
+      authStatus: AuthStatuses.SignedIn,
+      email: userData?.email,
+      username: userData?.username,
+    };
     setState((state) => ({
       ...state,
-      authStatus: AuthStatuses.SignedIn,
-      email: userData.email,
-      username: userData.username,
+      ...props,
     }));
+    onSuccess(props);
+  };
 
   const handleSignIn = async () => {
     try {
@@ -112,17 +130,23 @@ const SignInController = ({
     setSignedOut();
   };
 
-  return (
-    <SignInView
-      authStatus={authStatus}
-      clearErrors={clearErrors}
-      email={email}
-      errors={errors}
-      handleSignIn={handleSignIn}
-      handleSignOut={handleSignOut}
-      username={username}
-    />
-  );
+  const props = {
+    authStatus,
+    AuthStatuses,
+    clearErrors,
+    disabled: AuthStatuses.SigningIn === authStatus,
+    email,
+    errors,
+    ErrorComponent,
+    FormComponent,
+    handleSignIn,
+    handleSignOut,
+    LoadingComponent,
+    SuccessComponent,
+    username,
+  };
+
+  return <ViewComponent {...props} />;
 };
 
 export default SignInController;
