@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { bool, object } from 'prop-types';
-import withLayout from '../with-layout';
+import withStyleWrapper from '../style-wrapper';
 
 function Loading({ small, ...props }) {
   const wrapperRef = useRef();
@@ -69,4 +69,4 @@ Loading.propTypes = {
   style: object,
 };
 
-export default withLayout(Loading);
+export default withStyleWrapper(Loading);

@@ -2,7 +2,7 @@
 import React from 'react';
 import Theme from '../../theme';
 import TryAgainButton from '../submit-button-component';
-import withLayout from '../with-layout';
+import withStyleWrapper from '../style-wrapper';
 
 const centered = {
   position: 'absolute',
@@ -121,4 +121,4 @@ const ErrorModal = ({
   );
 };
 
-export default withLayout(ErrorModal);
+export default withStyleWrapper(ErrorModal);
