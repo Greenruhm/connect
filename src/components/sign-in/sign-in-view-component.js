@@ -69,7 +69,7 @@ const SignInView = ({
   handleSignIn = noop,
   handleSignOut = noop,
   LoadingComponent = Loading,
-  SuccessComponent = withStyleWrapper(SuccessView),
+  SuccessComponent = SuccessView,
   username = '',
 } = {}) => {
   const formProps = {
