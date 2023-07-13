@@ -64,7 +64,7 @@ const SignUpController = ({
     }));
   };
 
-  const handleUsername = (event) => {
+  const onChangeUsername = (event) => {
     setState((state) => ({
       ...state,
       username: event.target.value,
@@ -162,7 +162,7 @@ const SignUpController = ({
     errors,
     ErrorComponent,
     FormComponent,
-    handleUsername,
+    onChangeUsername,
     handleSignUp,
     handleSignOut,
     LoadingComponent,

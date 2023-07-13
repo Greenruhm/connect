@@ -58,7 +58,7 @@ const SignUpFormView = ({
   errors,
   ErrorComponent,
   handleSignUp,
-  handleUsername,
+  onChangeUsername,
   usernamePlaceholder,
 } = {}) => {
   return (
@@ -70,7 +70,7 @@ const SignUpFormView = ({
         inputPlaceholder={usernamePlaceholder}
         label="Username"
         name="username"
-        onChange={handleUsername}
+        onChange={onChangeUsername}
         style={styles.username}
         type="text"
       />
@@ -97,10 +97,10 @@ const SignUpView = ({
   errors = [],
   ErrorComponent = ErrorModal,
   FormComponent = SignUpFormComponent,
-  handleUsername = noop,
   handleSignUp = noop,
   handleSignOut = noop,
   LoadingComponent = Loading,
+  onChangeUsername = noop,
   SuccessComponent = SuccessView,
   username = '',
   usernamePlaceholder = 'kendrick-lamar-fan-2001',
@@ -112,7 +112,7 @@ const SignUpView = ({
     errors,
     ErrorComponent,
     handleSignUp,
-    handleUsername,
+    onChangeUsername,
     usernamePlaceholder,
   };
   const successProps = {

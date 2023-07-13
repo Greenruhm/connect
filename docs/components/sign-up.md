@@ -6,17 +6,39 @@
 
 ## Props
 
-| Prop                | Type      | Default Value             | Description                                                                                                                                                                                                                                                                                                                                                           |
-| ------------------- | --------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| authStatus          | string    | 'Signed Out'              | The initial authentication status.                                                                                                                                                                                                                                                                                                                                    |
-| connect             | object    | -                         | The Greenruhm Connect SDK. In order for this component to work, it is necessary that the SDK is initialized and provided.                                                                                                                                                                                                                                             |
-| ErrorComponent      | component | -                         | A component to display in case of an error. This prop will not be used in case `ViewComponent` is passed as well.                                                                                                                                                                                                                                                     |
-| FormComponent       | component | -                         | A component that renders the sign-up form. This prop will not be used in case `ViewComponent` is passed as well.                                                                                                                                                                                                                                                      |
-| LoadingComponent    | component | -                         | A component to display while the sign-up process is in progress. This prop will not be used in case `ViewComponent` is passed as well.                                                                                                                                                                                                                                |
-| onSuccess           | function  | onSuccessDefault          | A function that will be called upon successful sign-up. The default function logs the user data to the console. The `onSuccess` signature is as follows:<br>`const onSuccess = ({ authStatus, email, username }) => {}`.<br>Where:<br>- `authStatus` is `'Signed In'`<br>- `email` is the email the user provided<br> \- `username` is the username the user provided |
-| SuccessComponent    | component | -                         | A component to display when the sign-up is successful. This prop will not be used in case `ViewComponent` is passed as well.                                                                                                                                                                                                                                          |
-| usernamePlaceholder | string    | 'kendrick-lamar-fan-2001' | A placeholder text for the username input field.                                                                                                                                                                                                                                                                                                                      |
-| ViewComponent       | component | Greenruhm view            | A component that renders the view. By default, it uses a Greenruhm provided view.                                                                                                                                                                                                                                                                                     |
+| Prop                | Type      | Default Value             | Description                                                                                                                                                                         |
+| ------------------- | --------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| authStatus          | string    | 'Signed Out'              | The initial authentication status.                                                                                                                                                  |
+| connect             | object    | -                         | The Greenruhm Connect SDK. In order for this component to work, it is necessary that the SDK is initialized and provided.                                                           |
+| ErrorComponent      | component | -                         | A component to display in case of an error. If `ViewComponent` is passed, this component is ignored because the ViewComponent should handle this.                                   |
+| FormComponent       | component | -                         | A component that renders the sign-up form. If `ViewComponent` is passed, this component is ignored because the ViewComponent should handle this.                                    |
+| LoadingComponent    | component | -                         | A component to display while the sign-up process is in progress. If `ViewComponent` is passed, this component is ignored because the ViewComponent should handle this.              |
+| onSuccess           | function  | onSuccessDefault          | A function that will be called upon successful sign-up. The default function logs the user data to the console. [Click here to see the documentation for this function](#onsuccess) |
+| SuccessComponent    | component | -                         | A component to display when the sign-up is successful. If `ViewComponent` is passed, this component is ignored because the ViewComponent should handle this.                        |
+| usernamePlaceholder | string    | 'kendrick-lamar-fan-2001' | A placeholder text for the username input field.                                                                                                                                    |
+| ViewComponent       | component | Greenruhm view            | A component that renders the view. By default it uses a Greenruhm provided view.                                                                                                    |
+
+### AuthStatuses
+
+The Sign Up Auth Statuses are the following:
+
+- `SignedOut`: `'Signed Out'`
+- `SigningUp`: `'Signing Up'`
+- `SignedIn`: `'Signed In'`
+
+### onSuccess
+
+The `onSuccess` signature is as follows:
+
+```
+const onSuccess = ({ authStatus, email, username }) => {};
+```
+
+Where:
+
+- `authStatus` is `'Signed In'`
+- `email` is the email the user provided
+- `username` is the username the user provided
 
 ## Example Usage
 
@@ -41,7 +63,7 @@ The `SignUp` component also accepts the `onSuccess` function as a prop, which wi
 
 ### ViewComponent
 
-`ViewComponent` overrides the whole implementation of the Greenruhm view. By providing this prop, the client must take care of all the interations of the user with the application and calling the functions passed as props at the right time.
+`ViewComponent` overrides the whole implementation of the Greenruhm view. By providing this prop, the client must take care of all the interactions of the user with the application and calling the functions passed as props at the right time.
 
 #### Props
 
@@ -52,7 +74,7 @@ The `SignUp` component also accepts the `onSuccess` function as a prop, which wi
 | disabled            | boolean  | If `true`, the form should be disabled.        |
 | email               | string   | Email of the user.                             |
 | errors              | array    | Array of errors, if any.                       |
-| handleUsername      | function | Function to handle the username input.         |
+| onChangeUsername    | function | Function to handle the username input.         |
 | handleSignUp        | function | Function to handle the sign-up action.         |
 | handleSignOut       | function | Function to handle the sign-out action.        |
 | username            | string   | Username of the user.                          |
@@ -74,7 +96,7 @@ const CustomView = ({
   disabled,
   email,
   errors,
-  handleUsername,
+  onChangeUsername,
   handleSignUp,
   handleSignOut,
   username,
@@ -93,7 +115,7 @@ export default withConnect({ apiKey: '<your-api-key' })(CustomSignUp);
 
 ### FormComponent
 
-`FormComponent` overrides the default, Greenruhm provided form. By providing this prop, the client must take care of the interaction of the user with the form as well as rendering the errors (either by using the component passed as a prop - which might be the Greenruhm provided error modal or a custom component - or by implementing a way to render errors, ignoring the `ErrorComponent` prop).
+`FormComponent` overrides the default Greenruhm provided form. By providing this prop, the client must take care of the interaction of the user with the form as well as rendering the errors (either by using the component passed as a prop - which might be the Greenruhm provided error modal or a custom component - or by implementing a way to render errors, ignoring the `ErrorComponent` prop).
 
 #### Props
 
@@ -106,7 +128,7 @@ export default withConnect({ apiKey: '<your-api-key' })(CustomSignUp);
 | errors              | array     | Array of error messages, if any.                                                                 |
 | ErrorComponent      | component | Component to display in case of an error.                                                        |
 | handleSignUp        | function  | Function to handle the sign-up action.                                                           |
-| handleUsername      | function  | Function to handle changes to the username input field.                                          |
+| onChangeUsername    | function  | Function to handle changes to the username input field.                                          |
 | usernamePlaceholder | string    | Placeholder text for the username input field.                                                   |
 
 #### Example Usage
@@ -115,7 +137,6 @@ Below is an example of how to use the `FormComponent` prop in a React applicatio
 
 ```jsx
 import React from 'react';
-import ReactDOM from 'react-dom';
 import withConnect from '@greenruhm/connect/ui/components/with-connect';
 import SignUp, { AuthStatuses } from '@greenruhm/connect/ui/components/sign-up';
 
@@ -126,7 +147,7 @@ const CustomForm = ({
   disabled,
   ErrorComponent,
   handleSignUp,
-  handleUsername,
+  onChangeUsername,
   usernamePlaceholder,
 }) => {
   // Your form implementation
@@ -142,15 +163,15 @@ export default withConnect({ apiKey: '<your-api-key>' })(CustomSignUp);
 
 ### ErrorComponent
 
-`ErrorComponent` overrides the default, Greenruhm provided error component, which is a modal rendered by the provided `FormComponent`. By providing this prop, the user is responsible for displaying errors and handling clearing them.
+`ErrorComponent` overrides the default Greenruhm provided error component, which is a modal rendered by the provided `FormComponent`. By providing this prop, the user is responsible for displaying errors and handling clearing them.
 
 #### Props
 
-| Prop name    | Type     | Description                                                                                                            |
-| ------------ | -------- | ---------------------------------------------------------------------------------------------------------------------- |
-| errorMessage | string   | The message that is displayed to inform the user of the error.                                                         |
+| Prop name    | Type     | Description                                                                                                        |
+| ------------ | -------- | ------------------------------------------------------------------------------------------------------------------ |
+| errorMessage | string   | The message that is displayed to inform the user of the error.                                                     |
 | title        | string   | A title to be displayed to the user. If the default `FormComponent` is used, this value will always be `'Error!'`. |
-| onClose      | function | A function that clears the errors.                                                                                     |
+| onClose      | function | A function that clears the errors.                                                                                 |
 
 #### Example Usage
 
@@ -158,7 +179,6 @@ Below is an example of how to use the `ErrorComponent` prop in a React applicati
 
 ```jsx
 import React from 'react';
-import ReactDOM from 'react-dom';
 import withConnect from '@greenruhm/connect/ui/components/with-connect';
 import SignUp, { AuthStatuses } from '@greenruhm/connect/ui/components/sign-up';
 
@@ -175,7 +195,7 @@ export default withConnect({ apiKey: '<your-api-key>' })(CustomSignUp);
 
 ### LoadingComponent
 
-`LoadingComponent` overrides the default, Greenruhm provided loading component. This component receives no props.
+`LoadingComponent` overrides the default Greenruhm provided loading component. This component receives no props.
 
 #### Example Usage
 
@@ -183,7 +203,6 @@ Below is an example of how to use the `LoadingComponent` prop in a React applica
 
 ```jsx
 import React from 'react';
-import ReactDOM from 'react-dom';
 import withConnect from '@greenruhm/connect/ui/components/with-connect';
 import SignUp, { AuthStatuses } from '@greenruhm/connect/ui/components/sign-up';
 
@@ -200,7 +219,7 @@ export default withConnect({ apiKey: '<your-api-key>' })(CustomSignUp);
 
 ### SuccessComponent
 
-`SuccessComponent` overrides the default, Greenruhm provided success component. When building your application using the default Greenruhm view, it might be important to override this view to be able to add navigation to the rest of your application or to dispatch actions or HTTP calls to save the user information in your application, if you need to.
+`SuccessComponent` overrides the default Greenruhm provided success component. When building your application using the default Greenruhm view, it might be important to override this view to be able to add navigation to the rest of your application or to dispatch actions or HTTP calls to save the user information in your application, if you need to.
 
 #### Props
 
@@ -216,14 +235,13 @@ Below is an example of how to use the `SuccessComponent` component in a React ap
 
 ```javascript
 import React from 'react';
-import ReactDOM from 'react-dom';
 import withConnect from '@greenruhm/connect/ui/components/with-connect';
 import SignUp, { AuthStatuses } from '@greenruhm/connect/ui/components/sign-up';
 
 const CustomSuccess = ({ email, handleSignOut, username }) => {
   // Your implementation
   // In here, you can handle saving the user's information
-  // and navigating somewhere else in your application, for examplle.
+  // and navigating somewhere else in your application, for example.
 };
 
 const CustomSignUp = (props) => {
