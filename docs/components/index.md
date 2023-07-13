@@ -1,10 +1,27 @@
 # Index
 
-Greenruhm provides these components as a way to simplify the integration with it. These components can be used with close to none modifications.
+Greenruhm provides these components as a way to simplify the integration with the project. These components can be used with close to no modifications.
 
-## Configuration
+## App Configuration
 
-To use Greenruhm components, the components should be provided with the Greenruhm SDK as a prop. The easiest way to do it is by using our provided HOC:
+If you want to use the Greenruhm React components, you need to import the Greenruhm Connect SDK from `@greenruhm/connect/ui` instead of `@greenruhm/connect.`
+
+```jsx
+import connect from '@greenruhm/connect/ui';
+
+// Initialize connect to be used in your application
+connect({ apiKey: '<your-api-key>' });
+
+// Your application code
+```
+
+## Components configuration
+
+To use Greenruhm components, the components should be provided with the Greenruhm SDK as a prop. Below we list different methods you can use.
+
+### withConnect HOC
+
+The easiest way to do it is by using our provided HOC:
 
 ```jsx
 import withConnect from '@greenruhm/connect/ui/components/with-connect';
@@ -28,33 +45,24 @@ const withRedux = (Component) => (props) => {
   );
 };
 
-const pageHOC = (Component) =>
+const withProviders = (Component) =>
   compose(withRedux, withConnect({ apiKey: '<your-api-key>' }))(Component);
 
-export default pageHOC;
+export default withProviders;
 ```
 
-And `pageHOC` can be used like this:
+And `withProviders` can be used like this:
 
 ```jsx
-import pageHOC from 'page-hoc';
+import withProviders from 'with-providers';
 import SignUp from '@greenruhm/connect/ui/components/sign-up';
 
-export default pageHOC(SignUp);
+export default withProviders(SignUp);
 ```
 
-It is important to note that, if you want to manually configure the Greenruhm Connect SDK, you can. In order to use the Greenruhm provided components, you need to import the Greenruhm Connect SDK from `@greenruhm/connect/ui` instead of `@greenruhm/connect`.
+## useConnect hook
 
-```jsx
-import connect from '@greenruhm/connect/ui';
-
-// Initialize connect to be used in your application
-connect({ apiKey: '<your-api-key>' });
-
-// Your application code
-```
-
-And to use it in your components and pass it down to Greenruhm provided components:
+You can also use our provided hook to get the Greenruhm Connect SDK and pass it down:
 
 ```jsx
 import useConnect from '@greenruhm/connect/ui';
@@ -68,8 +76,6 @@ const CustomSignUp = (props) => {
 
 export default CustomSignUp;
 ```
-
-And, finally, you might want to create your own components and deal with calling the Greenruhm Connect SDK methods yourself. In that case, just configure the SDK as showed above and use `useConnect`.
 
 ## Components
 
