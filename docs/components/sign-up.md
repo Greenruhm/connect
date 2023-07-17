@@ -165,11 +165,11 @@ export default withConnect({ apiKey: '<your-api-key>' })(CustomSignUp);
 
 #### Props
 
-| Prop name    | Type     | Description                                                                                                        |
-| ------------ | -------- | ------------------------------------------------------------------------------------------------------------------ |
-| errorMessage | string   | The message that is displayed to inform the user of the error.                                                     |
-| title        | string   | A title to be displayed to the user. If the default `FormComponent` is used, this value will always be `'Error!'`. |
-| onClose      | function | A function that clears the errors.                                                                                 |
+| Prop name    | Type     | Description                                                                                                       |
+| ------------ | -------- | ----------------------------------------------------------------------------------------------------------------- |
+| errorMessage | string   | The message that is displayed to inform the user of the error.                                                    |
+| title        | string   | A title to be displayed to the user. If the default `FormComponent` is used, this value will always be `'Error'`. |
+| onClose      | function | A function that clears the errors.                                                                                |
 
 #### Example Usage
 

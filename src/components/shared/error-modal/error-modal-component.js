@@ -90,7 +90,7 @@ const noop = () => {};
 
 const ErrorModal = ({
   errorMessage = 'An error has occurred.',
-  title = 'Error!',
+  title = 'Error',
   onClose = noop,
 } = {}) => {
   return (
