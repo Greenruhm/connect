@@ -150,7 +150,7 @@ export default withConnect({ apiKey: '<your-api-key>' })(CustomSignIn);
 
 ### ErrorComponent
 
-`ErrorComponent` overrides the default Greenruhm provided error component, which is a modal rendered by the provided `FormComponent`. By providing this prop, the user is responsible for displaying errors and handling clearing them.
+`ErrorComponent` overrides the default Greenruhm provided error component, which is a modal rendered by the provided `FormComponent`. By providing this prop, the user is responsible for displaying and clearing errors.
 
 #### Props
 
