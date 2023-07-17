@@ -45,8 +45,10 @@ const withRedux = (Component) => (props) => {
   );
 };
 
-const withProviders = (Component) =>
-  compose(withRedux, withConnect({ apiKey: '<your-api-key>' }))(Component);
+const withProviders = compose(
+  withRedux,
+  withConnect({ apiKey: '<your-api-key>' })
+);
 
 export default withProviders;
 ```
