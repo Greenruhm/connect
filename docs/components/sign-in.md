@@ -49,7 +49,6 @@ Below is an example of how to use the `SignIn` component in a React application.
 
 ```jsx
 import React from 'react';
-import ReactDOM from 'react-dom';
 import withConnect from '@greenruhm/connect/ui/components/with-connect';
 import SignIn from '@greenruhm/connect/ui/components/sign-in';
 
@@ -85,7 +84,6 @@ Below is an example of how to use a custom `ViewComponent` as a prop for `SignIn
 
 ```jsx
 import React from 'react';
-import ReactDOM from 'react-dom';
 import withConnect from '@greenruhm/connect/ui/components/with-connect';
 import SignIn, { AuthStatuses } from '@greenruhm/connect/ui/components/sign-in';
 

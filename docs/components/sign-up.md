@@ -48,7 +48,6 @@ Below is an example of how to use the `SignUp` component in a React application.
 
 ```jsx
 import React from 'react';
-import ReactDOM from 'react-dom';
 import withConnect from '@greenruhm/connect/ui/components/with-connect';
 import SignUp from '@greenruhm/connect/ui/components/sign-up';
 
@@ -86,7 +85,6 @@ Below is an example of how to use a custom `ViewComponent` as a prop for `SignUp
 
 ```jsx
 import React from 'react';
-import ReactDOM from 'react-dom';
 import withConnect from '@greenruhm/connect/ui/components/with-connect';
 import SignUp, { AuthStatuses } from '@greenruhm/connect/ui/components/sign-up';
 
