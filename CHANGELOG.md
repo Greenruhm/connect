@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.7.0](https://github.com/Greenruhm/connect/compare/v2.6.1...v2.7.0) (2023-07-18)
+
+
+### Features
+
+* add default parameters to set anon user action ([7188e24](https://github.com/Greenruhm/connect/commit/7188e242056b1c2153cce344c0823220491f5c98))
+* add on changed sign in listener param and connect sign in status changed middleware ([9785dec](https://github.com/Greenruhm/connect/commit/9785dec16b748e1b4ab4abf610d1a5d7cb1d2a40))
+* add style wrapper component ([d2a296b](https://github.com/Greenruhm/connect/commit/d2a296bac49d363e71630f963b3badfa2658731d))
+* create with connect hoc ([58c96fa](https://github.com/Greenruhm/connect/commit/58c96fa6e5233747b79874fcdc1ab2ee0f9a12b0))
+* deprecate with layout in favor of with style wrapper and update message ([2c9ebf3](https://github.com/Greenruhm/connect/commit/2c9ebf3076b6a68dbac927ea4d4f8788f413e933))
+* improve local dependency script ([a990d4d](https://github.com/Greenruhm/connect/commit/a990d4dbf11d48536aeadba9daa800f3f36942be))
+* initialize the connect sdk and wrap the pages components with the with connect hoc ([848423a](https://github.com/Greenruhm/connect/commit/848423ab53edfa51ca0af312f48a4184479bb35f))
+* introduce GPT-4 prompts ([13f0de1](https://github.com/Greenruhm/connect/commit/13f0de18e511e1f62fdec29a8bb193ac56caf3df))
+* make components receive the connect sdk through props ([8b2eb7f](https://github.com/Greenruhm/connect/commit/8b2eb7f04eece1726c0cd013ae660ec965b7b290))
+* remove deprecated magic usage ([6d37dc2](https://github.com/Greenruhm/connect/commit/6d37dc2cbaa394d404c8829e2ccea2092b0a28ec))
+* remove deprecated with layout component ([866d0b2](https://github.com/Greenruhm/connect/commit/866d0b249626bb3a55dc64878e386e62f74735d3))
+* turn connect into a singleton ([f45302a](https://github.com/Greenruhm/connect/commit/f45302a3c907479526f9ff58a89083a77a961d00))
+* update sign in component ([4553cff](https://github.com/Greenruhm/connect/commit/4553cfff3ee8d2588e318a4f57bd6b086f5c60a7))
+* update sign up component ([7f46307](https://github.com/Greenruhm/connect/commit/7f46307e729b4cd4a39bf5546a7ea51ebb5572ee))
+
+
+### Bug Fixes
+
+* adjust for suggestions in PR ([b09c124](https://github.com/Greenruhm/connect/commit/b09c1242d32ec6e5c139ef9c4428abef7972cbe2))
+* error component description ([1dab485](https://github.com/Greenruhm/connect/commit/1dab485c28ae5b16317847653c64348d53ac8316))
+* error modal title should not have an ! ([602a668](https://github.com/Greenruhm/connect/commit/602a668dae09d1a6a9661e30f31fe86c31ae02dd))
+* improve as suggested in the pull request ([96b5edb](https://github.com/Greenruhm/connect/commit/96b5edb72ac98de993ca7b6936a077559450e20c))
+* improve as suggested in the pull request ([8256c98](https://github.com/Greenruhm/connect/commit/8256c98f8da4ba9c1408dd63092aaecec52f6f7c))
+* remove duplicate with style wrapper ([34e6f10](https://github.com/Greenruhm/connect/commit/34e6f1029aa8cfea3e988248e3a5bbf79ca270fc))
+* remove imports for react-dom ([666abae](https://github.com/Greenruhm/connect/commit/666abaeaa12888b93aaabeb3d504c4251fcc0b08))
+* style for loaded component ([287b823](https://github.com/Greenruhm/connect/commit/287b82384fca26108f53a9111677416a728249dd))
+* update links ([1ca3c88](https://github.com/Greenruhm/connect/commit/1ca3c88c145fc0a56e5de169280e3f45e036f165))
+
 ### [2.6.1](https://github.com/Greenruhm/connect/compare/v2.6.0...v2.6.1) (2023-06-06)
 
 
