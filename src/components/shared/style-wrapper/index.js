@@ -16,11 +16,11 @@ const styles = {
   },
 };
 
-const withLayout = (Component) => {
-  return function WithLayout(props) {
+const withStyleWrapper = (Component) => {
+  return function StyleWrapper(props) {
     return (
       <div className="box-format font-format" style={styles.page}>
-        <div className="sign-up-wrapper" style={styles.wrapper}>
+        <div className="wrapper" style={styles.wrapper}>
           <Component {...props} />
         </div>
       </div>
@@ -28,4 +28,4 @@ const withLayout = (Component) => {
   };
 };
 
-export default withLayout;
+export default withStyleWrapper;

@@ -31,7 +31,7 @@ const setUser = (user) => ({
 });
 setUser.type = `${slice}/setUser`;
 
-const setAnonUser = (user) => ({
+const setAnonUser = (user = initialState) => ({
   payload: user,
   type: setAnonUser.type,
 });

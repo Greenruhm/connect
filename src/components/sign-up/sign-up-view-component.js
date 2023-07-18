@@ -6,7 +6,7 @@ import SuccessView from '../shared/success-view';
 import ErrorModal from '../shared/error-modal';
 import { AuthStatuses } from './sign-up-controller-component';
 import Loading from '../shared/loading';
-import withLayout from '../shared/with-layout';
+import withStyleWrapper from '../shared/style-wrapper';
 
 const styles = {
   a: {
@@ -52,11 +52,13 @@ const SignInLink = ({ href, label } = {}) => {
 };
 
 const SignUpFormView = ({
-  authStatus,
+  clearErrors,
   defaultUsername,
   disabled,
+  errors,
+  ErrorComponent,
   handleSignUp,
-  handleUsername,
+  onChangeUsername,
   usernamePlaceholder,
 } = {}) => {
   return (
@@ -68,22 +70,24 @@ const SignUpFormView = ({
         inputPlaceholder={usernamePlaceholder}
         label="Username"
         name="username"
-        onChange={handleUsername}
+        onChange={onChangeUsername}
         style={styles.username}
         type="text"
       />
       <SignUpButton
         disabled={disabled}
         label="Sign Up"
-        loading={authStatus === AuthStatuses.SigningUp}
         name="sign-up"
         onClick={handleSignUp}
       />
-      <SignInLink href="/sign-in-connect" label="Or Sign In" />
+      <SignInLink href="/sign-in" label="Or Sign In" />
+      {errors.length > 0 ? (
+        <ErrorComponent errorMessage={errors[0]} onClose={clearErrors} />
+      ) : null}
     </>
   );
 };
-const SignUpFormComponent = withLayout(SignUpFormView);
+const SignUpFormComponent = withStyleWrapper(SignUpFormView);
 
 const SignUpView = ({
   authStatus = AuthStatuses.SignedOut,
@@ -93,34 +97,35 @@ const SignUpView = ({
   errors = [],
   ErrorComponent = ErrorModal,
   FormComponent = SignUpFormComponent,
-  handleUsername = noop,
   handleSignUp = noop,
   handleSignOut = noop,
   LoadingComponent = Loading,
+  onChangeUsername = noop,
   SuccessComponent = SuccessView,
   username = '',
   usernamePlaceholder = 'kendrick-lamar-fan-2001',
 } = {}) => {
-  return errors.length > 0 ? (
-    <ErrorComponent errorMessage={errors[0]} onClose={clearErrors} />
-  ) : authStatus === AuthStatuses.SignedOut ? (
-    FormComponent({
-      authStatus,
-      disabled,
-      defaultUsername: username,
-      handleSignUp,
-      handleUsername,
-      usernamePlaceholder,
-    })
+  const formProps = {
+    clearErrors,
+    disabled,
+    defaultUsername: username,
+    errors,
+    ErrorComponent,
+    handleSignUp,
+    onChangeUsername,
+    usernamePlaceholder,
+  };
+  const successProps = {
+    email,
+    handleSignOut,
+    username,
+  };
+  return authStatus === AuthStatuses.SignedOut ? (
+    <FormComponent {...formProps} />
   ) : authStatus === AuthStatuses.SigningUp ? (
     <LoadingComponent />
   ) : (
-    SuccessComponent({
-      email,
-      handleSignOut,
-      successMessage: 'Your Greenruhm account has been created! 🎉',
-      username,
-    })
+    <SuccessComponent {...successProps} />
   );
 };
 

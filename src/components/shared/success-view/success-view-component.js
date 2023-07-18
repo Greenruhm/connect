@@ -2,7 +2,7 @@
 import React from 'react';
 import Theme from '../../theme';
 import SignOutButton from '../submit-button-component';
-import withLayout from '../with-layout';
+import withStyleWrapper from '../style-wrapper';
 
 const styles = {
   divider: {
@@ -49,14 +49,15 @@ const Field = ({ className = '', label = '', value = '' } = {}) => {
 const SuccessView = ({
   email = '',
   handleSignOut = noop,
-  successMessage = '',
   username = '',
 } = {}) => {
   return (
     <div className="success-view">
       <h2 style={styles.h2}>Success</h2>
       <div className="title-divider" style={styles.divider}></div>
-      <div style={styles.successMessage}>{successMessage}</div>
+      <div
+        style={styles.successMessage}
+      >{`Your Greenruhm account has been created! 🎉`}</div>
       <div style={styles.fieldsContainer}>
         <Field className="email" label="Email" value={email} />
         <Field className="username" label="Username" value={username} />
@@ -66,4 +67,4 @@ const SuccessView = ({
   );
 };
 
-export default withLayout(SuccessView);
+export default withStyleWrapper(SuccessView);

@@ -51,19 +51,6 @@ const configureMagicErrorCauses = (errorCauses) => (error) => {
   return actions[error.code]();
 };
 
-const withMagic = (params) => {
-  const options = {
-    ...(process?.env?.NODE_ENV === 'test' && { testMode: true }),
-  };
-
-  const magic = new Magic('pk_live_8395118919D97400', options);
-
-  return {
-    ...params,
-    magic,
-  };
-};
-
 const withMagicConnect = (params) => {
   const magic = new Magic('pk_live_BDB8311A26CF3651', {
     extensions: [new ConnectExtension()],
@@ -79,7 +66,6 @@ const withMagicConnect = (params) => {
   };
 };
 
-module.exports.withMagic = withMagic;
 module.exports.withMagicConnect = withMagicConnect;
 module.exports.magicErrorCauses = magicErrorCauses;
 module.exports.configureMagicErrorCauses = configureMagicErrorCauses;

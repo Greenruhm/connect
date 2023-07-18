@@ -1,77 +1,64 @@
-const { isActiveFeatureName } = require('@paralleldrive/feature-toggles');
-const {
-  signIn,
-  signInThroughMagicConnect,
-} = require('./features/user/sign-in');
+const { signInThroughMagicConnect } = require('./features/user/sign-in');
 const {
   signInErrors,
   handleSignInErrors,
 } = require('./features/user/sign-in-error-causes');
-const {
-  signUp,
-  signUpThroughMagicConnect,
-} = require('./features/user/sign-up');
+const { signUpThroughMagicConnect } = require('./features/user/sign-up');
 const {
   signUpErrors,
   handleSignUpErrors,
 } = require('./features/user/sign-up-error-causes');
-const {
-  signOut,
-  signOutThroughMagicConnect,
-} = require('./features/user/sign-out');
 const { addMedia } = require('./features/drop/create');
 const { createDrop } = require('./features/drop/add-media');
-const { withMagic, withMagicConnect } = require('./features/user/with-magic');
+const { signOutThroughMagicConnect } = require('./features/user/sign-out');
+const { withMagicConnect } = require('./features/user/with-magic');
 const { asyncPipe, withStore } = require('./utils');
 const { updateApiKeyAction } = require('./features/api-key/reducer');
 const createStore = require('./reducer/store');
+const signInStatusChanged = require('./features/user/sign-in-status-changed');
 
-const connect = ({ apiKey = '', features = [] } = {}) => {
+let initializedConnectInstance;
+
+const defaultOnChangedSignIn = () => {
+  console.log(
+    'The signed-in status of the user has changed. To handle this change, consider passing a function to the connect creator as `onChangedSignIn`. This function will be called whenever the signed-in status updates, allowing you to react accordingly in your application.'
+  );
+};
+
+const connect = ({
+  apiKey = '',
+  onChangedSignIn = defaultOnChangedSignIn,
+} = {}) => {
+  if (initializedConnectInstance) {
+    return initializedConnectInstance;
+  }
+
   const brand = 'Greenruhm Connect';
   if (!apiKey) throw new Error(`${brand}: Missing API key`);
 
-  const store = createStore();
+  const middleware = [signInStatusChanged(onChangedSignIn)];
+  const store = createStore({ middleware });
 
   // Set API key in store:
   store.dispatch(updateApiKeyAction(apiKey));
 
   const withMiddleware = asyncPipe(withStore(store));
 
-  return {
-    signIn: isActiveFeatureName('magic-connect', features)
-      ? () =>
-          asyncPipe(
-            withMiddleware,
-            withMagicConnect,
-            signInThroughMagicConnect
-          )()
-      : ({ email = '' } = {}) =>
-          asyncPipe(withMiddleware, withMagic, signIn)({ email }),
+  initializedConnectInstance = {
+    signIn: () =>
+      asyncPipe(withMiddleware, withMagicConnect, signInThroughMagicConnect)(),
     signInErrors,
     handleSignInErrors,
-    signUp: isActiveFeatureName('magic-connect', features)
-      ? ({ username = '', displayName = username } = {}) =>
-          asyncPipe(
-            withMiddleware,
-            withMagicConnect,
-            signUpThroughMagicConnect
-          )({ username, displayName })
-      : ({ email = '', username = '', displayName = username } = {}) =>
-          asyncPipe(
-            withMiddleware,
-            withMagic,
-            signUp
-          )({ email, username, displayName }),
+    signUp: ({ username = '', displayName = username } = {}) =>
+      asyncPipe(
+        withMiddleware,
+        withMagicConnect,
+        signUpThroughMagicConnect
+      )({ username, displayName }),
     signUpErrors,
     handleSignUpErrors,
-    signOut: isActiveFeatureName('magic-connect', features)
-      ? () =>
-          asyncPipe(
-            withMiddleware,
-            withMagicConnect,
-            signOutThroughMagicConnect
-          )()
-      : () => asyncPipe(withMiddleware, withMagic, signOut)(),
+    signOut: () =>
+      asyncPipe(withMiddleware, withMagicConnect, signOutThroughMagicConnect)(),
     createDrop: ({ title = '', description = '', editionLimit = 0 } = {}) =>
       asyncPipe(
         withMiddleware,
@@ -80,6 +67,9 @@ const connect = ({ apiKey = '', features = [] } = {}) => {
     addMedia: (dropId) => (params) =>
       asyncPipe(withMiddleware, addMedia(dropId))(params),
   };
+
+  return initializedConnectInstance;
 };
 
 module.exports = connect;
+module.exports.useConnect = connect;

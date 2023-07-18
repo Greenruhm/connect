@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import connect from '../..';
 import SignUpView from './sign-up-view-component';
 
 export const AuthStatuses = {
@@ -17,8 +16,8 @@ const onSuccessDefault = (props) => {
 };
 
 const SignUpController = ({
-  apiKey = '<your-api-key>',
   authStatus: initialAuthStatus = AuthStatuses.SignedOut,
+  connect,
   ErrorComponent,
   FormComponent,
   LoadingComponent,
@@ -35,10 +34,7 @@ const SignUpController = ({
   });
   const { authStatus, email, errors, username } = state;
 
-  const { signUp, handleSignUpErrors, signOut } = connect({
-    apiKey,
-    features: ['magic-connect'],
-  });
+  const { signUp, handleSignUpErrors, signOut } = connect;
 
   const setAuthStatus = (authStatus) => () =>
     setState((state) => ({
@@ -68,7 +64,7 @@ const SignUpController = ({
     }));
   };
 
-  const handleUsername = (event) => {
+  const onChangeUsername = (event) => {
     setState((state) => ({
       ...state,
       username: event.target.value,
@@ -157,24 +153,25 @@ const SignUpController = ({
 
   const disabled = !username;
 
-  return (
-    <ViewComponent
-      authStatus={authStatus}
-      clearErrors={clearErrors}
-      disabled={disabled}
-      email={email}
-      errors={errors}
-      ErrorComponent={ErrorComponent}
-      FormComponent={FormComponent}
-      handleUsername={handleUsername}
-      handleSignUp={handleSignUp}
-      handleSignOut={handleSignOut}
-      LoadingComponent={LoadingComponent}
-      SuccessComponent={SuccessComponent}
-      username={username}
-      usernamePlaceholder={usernamePlaceholder}
-    />
-  );
+  const props = {
+    authStatus,
+    AuthStatuses,
+    clearErrors,
+    disabled,
+    email,
+    errors,
+    ErrorComponent,
+    FormComponent,
+    onChangeUsername,
+    handleSignUp,
+    handleSignOut,
+    LoadingComponent,
+    SuccessComponent,
+    username,
+    usernamePlaceholder,
+  };
+
+  return <ViewComponent {...props} />;
 };
 
 export default SignUpController;

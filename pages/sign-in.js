@@ -1,2 +1,3 @@
+import withConnect from '../src/components/with-connect';
 import SignIn from '../src/example-components/sign-in';
-export default SignIn;
+export default withConnect()(SignIn);
