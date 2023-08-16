@@ -64,9 +64,11 @@
     "@paralleldrive/feature-toggles": "1.0.4",
     "error-causes": "3.0.2",
     "ethers": "5.7.2",
+    "grommet": "2.33.1",
     "isomorphic-fetch": "3.0.0",
     "magic-sdk": "10.1.0",
-    "prop-types": "15.8.1"
+    "prop-types": "15.8.1",
+    "styled-components": "6.0.7"
   },
   "files": [
     "ui",
