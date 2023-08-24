@@ -10,14 +10,7 @@ const createUser = ({
   isSignedIn,
 });
 
-const isServer = typeof window === 'undefined';
-
-const getUserData = () => {
-  const userData = !isServer ? localStorage.getItem('userData') : null;
-  return userData ? JSON.parse(userData) : null;
-};
-
-const initialState = getUserData() || createUser();
+const initialState = createUser();
 
 const slice = 'user';
 
@@ -51,6 +44,8 @@ const getUserIsSignedIn = (state) => state[slice].isSignedIn;
 
 const getUserName = (state) => state[slice].username;
 
+const getUser = (state) => state[slice];
+
 module.exports.createUser = createUser;
 module.exports.initialState = initialState;
 module.exports.slice = slice;
@@ -59,3 +54,4 @@ module.exports.setUser = setUser;
 module.exports.setAnonUser = setAnonUser;
 module.exports.getUserIsSignedIn = getUserIsSignedIn;
 module.exports.getUserName = getUserName;
+module.exports.getUser = getUser;

@@ -7,8 +7,6 @@ const {
 const { signInErrors } = require('./sign-in-error-causes');
 const { configureMagicErrorCauses } = require('./with-magic');
 
-const isServer = typeof window === 'undefined';
-
 const handleMagicSignInError = configureMagicErrorCauses(signInErrors);
 
 const signInThroughMagicConnect = async ({ dispatch, magic, web3Provider }) => {
@@ -65,8 +63,6 @@ const signInThroughMagicConnect = async ({ dispatch, magic, web3Provider }) => {
   // make sure that's reflected in our
   // state.
   dispatch(setUser(userData));
-
-  !isServer && localStorage.setItem('userData', JSON.stringify(userData));
 
   return userData;
 };

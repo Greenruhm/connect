@@ -16,6 +16,7 @@ const { asyncPipe, withStore } = require('./utils');
 const { updateApiKeyAction } = require('./features/api-key/reducer');
 const createStore = require('./reducer/store');
 const signInStatusChanged = require('./features/user/sign-in-status-changed');
+const { setAnonUser, getUser } = require('./features/user/reducer');
 
 let initializedConnectInstance;
 
@@ -66,10 +67,46 @@ const connect = ({
       )({ title, description, editionLimit }),
     addMedia: (dropId) => (params) =>
       asyncPipe(withMiddleware, addMedia(dropId))(params),
+    // TODO
+    checkSignInStatus: () =>
+      asyncPipe(withMiddleware, withMagicConnect, checkSignInStatus)(),
   };
+
+  if (typeof window !== 'undefined') {
+    initializedConnectInstance
+      .checkSignInStatus()
+      .then(async ({ isSignedIn, dispatch, magic }) => {
+        // if the user is not signed in with magic connect, we need to make sure they're
+        // signed out in our state. (set anon)
+        if (!isSignedIn) return dispatch(setAnonUser());
+
+        // if they don't match, sign them out of magic, and set anon in our state.
+        const currentUserInStore = getUser();
+
+        const { email } = await magic.user.getMetadata();
+
+        if (currentUserInStore.email !== email) {
+          dispatch(setAnonUser());
+          await magic.user.logout();
+        }
+      });
+  }
 
   return initializedConnectInstance;
 };
+
+/**
+ *
+ *
+ * Checks the sign-in status of a user using Magic SDK.
+ * @param {import('magic-sdk')} magic - The Magic SDK instance. Imported from 'magic-sdk'.
+ * @returns {Promise<boolean>} A promise that resolves with the sign-in status.
+ */
+
+async function checkSignInStatus({ magic, dispatch }) {
+  const isSignedIn = await magic.user.isLoggedIn();
+  return { isSignedIn, dispatch, magic };
+}
 
 module.exports = connect;
 module.exports.useConnect = connect;

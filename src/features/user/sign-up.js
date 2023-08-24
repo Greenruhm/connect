@@ -6,8 +6,6 @@ const {
 const { signUpErrors } = require('./sign-up-error-causes');
 const { configureMagicErrorCauses } = require('./with-magic');
 
-const isServer = typeof window === 'undefined';
-
 const handleMagicSignUpError = configureMagicErrorCauses(signUpErrors);
 
 const signUpThroughMagicConnect = async ({
@@ -67,7 +65,6 @@ const signUpThroughMagicConnect = async ({
         // sessionToken,
       };
       dispatch(setUser(userData));
-      !isServer && localStorage.setItem('userData', JSON.stringify(userData));
       return userData;
     })
     .catch(async (e) => {

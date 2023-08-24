@@ -7,6 +7,7 @@ const {
   slice: apiKeySlice,
 } = require('../features/api-key/reducer');
 const { toComposableReducer, pipe } = require('../utils');
+const { persistStore, getStore } = require('./local-storage');
 
 const combineReducers = (reducers) => {
   return (state = {}, action) => {
@@ -24,20 +25,17 @@ const createStore = ({
     [apiKeySlice]: apiKeyReducer,
   }),
 } = {}) => {
-  let state;
+  let state = getStore() || undefined;
 
   const getState = () => state;
 
   const dispatch = (action) => {
-    if (middleware.length > 0) {
-      const { state: newState } = pipe(
-        ...middleware.map(toComposableReducer),
-        toComposableReducer(reducer)
-      )({ state, action });
-      state = newState;
-    } else {
-      state = reducer(state, action);
-    }
+    const { state: newState } = pipe(
+      ...middleware.map(toComposableReducer),
+      toComposableReducer(reducer),
+      toComposableReducer(persistStore)
+    )({ state, action });
+    state = newState;
   };
 
   const addDispatch = (params) => (actionCreator) =>
