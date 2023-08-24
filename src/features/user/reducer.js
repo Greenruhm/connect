@@ -10,19 +10,16 @@ const createUser = ({
   isSignedIn,
 });
 
-const initialState = createUser();
+const isServer = typeof window === 'undefined';
+
+const getUserData = () => {
+  const userData = !isServer ? localStorage.getItem('userData') : null;
+  return userData ? JSON.parse(userData) : null;
+};
+
+const initialState = getUserData() || createUser();
 
 const slice = 'user';
-const reducer = (state = initialState, { type, payload } = {}) => {
-  switch (type) {
-    case setUser.type:
-      return payload;
-    case setAnonUser.type:
-      return initialState;
-    default:
-      return state;
-  }
-};
 
 // Action Creators
 const setUser = (user) => ({
@@ -37,8 +34,21 @@ const setAnonUser = (user = initialState) => ({
 });
 setAnonUser.type = `${slice}/setAnonUser`;
 
+const reducer = (state = initialState, { type, payload } = {}) => {
+  switch (type) {
+    case setUser.type:
+      return payload;
+    case setAnonUser.type:
+      return initialState;
+    default:
+      return state;
+  }
+};
+
 // Selectors
+
 const getUserIsSignedIn = (state) => state[slice].isSignedIn;
+
 const getUserName = (state) => state[slice].username;
 
 module.exports.createUser = createUser;
