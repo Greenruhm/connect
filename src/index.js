@@ -83,7 +83,7 @@ const connect = ({
         // if they don't match, sign them out of magic, and set anon in our state.
         const currentUserInStore = getUser();
 
-        if (!currentUserInStore) return dispatch(setAnonUser());
+        if (!currentUserInStore) return;
 
         const { email } = await magic.user.getMetadata();
 
