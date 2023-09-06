@@ -40,11 +40,11 @@ const reducer = (state = initialState, { type, payload } = {}) => {
 
 // Selectors
 
-const getUserIsSignedIn = (state) => state[slice].isSignedIn;
+const getUserIsSignedIn = (state) => state && state[slice].isSignedIn;
 
-const getUserName = (state) => state[slice].username;
+const getUserName = (state) => state && state[slice].username;
 
-const getUser = (state) => state[slice];
+const getUser = (state) => state && state[slice];
 
 module.exports.createUser = createUser;
 module.exports.initialState = initialState;
