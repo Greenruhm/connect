@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SignInView from './sign-in-view-component';
 
 export const AuthStatuses = {
@@ -32,6 +32,21 @@ const SignInController = ({
     username: '',
   });
   const { authStatus, email, errors, username } = state;
+
+  useEffect(() => {
+    async function checkSignInStatus() {
+      const user = await connect.getUser();
+      if (user.isSignedIn) {
+        setState((state) => ({
+          ...state,
+          authStatus: AuthStatuses.SignedIn,
+          email: user.email,
+          username: user.username,
+        }));
+      }
+    }
+    checkSignInStatus();
+  }, [connect]);
 
   const { signIn, handleSignInErrors, signOut } = connect;
 
