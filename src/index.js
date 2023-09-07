@@ -70,6 +70,12 @@ const connect = ({
     // TODO
     checkSignInStatus: () =>
       asyncPipe(withMiddleware, withMagicConnect, checkSignInStatus)(),
+    getUser: () =>
+      asyncPipe(
+        withMiddleware,
+        withMagicConnect,
+        ({ getState }) => getState().user
+      )(),
   };
 
   if (typeof window !== 'undefined') {
@@ -80,13 +86,13 @@ const connect = ({
         // signed out in our state. (set anon)
         if (!isSignedIn) return dispatch(setAnonUser());
 
-        // if they don't match, sign them out of magic, and set anon in our state.
         const currentUserInStore = getUser();
 
         if (!currentUserInStore) return;
 
         const { email } = await magic.user.getMetadata();
 
+        // if they don't match, sign them out of magic, and set anon in our state.
         if (currentUserInStore.email !== email) {
           dispatch(setAnonUser());
           await magic.user.logout();
@@ -98,13 +104,22 @@ const connect = ({
 };
 
 /**
- *
- *
- * Checks the sign-in status of a user using Magic SDK.
- * @param {import('magic-sdk')} magic - The Magic SDK instance. Imported from 'magic-sdk'.
- * @returns {Promise<boolean>} A promise that resolves with the sign-in status.
+ * @typedef {import('@magic-sdk/provider').SDKBase} Magic
+ * @typedef {import('@magic-sdk/provider').MagicSDKExtensionsOption} MagicSDKExtensionsOption
+ * @typedef {import('@magic-sdk/provider').InstanceWithExtensions<SDKBase, T>} InstanceWithExtensions
  */
 
+/**
+ * @typedef {Object} CheckSignInStatusArgs
+ * @property {Magic} magic
+ * @property {Function} dispatch
+ */
+
+/**
+ * Check the sign-in status of the user.
+ * @param {CheckSignInStatusArgs} args
+ * @returns {Promise<{isSignedIn: boolean, dispatch: Function, magic: Magic}>}
+ */
 async function checkSignInStatus({ magic, dispatch }) {
   const isSignedIn = await magic.user.isLoggedIn();
   return { isSignedIn, dispatch, magic };

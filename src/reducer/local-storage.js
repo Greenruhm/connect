@@ -1,10 +1,10 @@
 const isServer = typeof window === 'undefined';
 
 const getStore = () => {
-  if (isServer) return null;
+  if (isServer) return undefined;
 
   const userData = localStorage.getItem('store');
-  return userData ? JSON.parse(userData) : null;
+  return userData ? JSON.parse(userData) : undefined;
 };
 
 const setStore = (state) => {
