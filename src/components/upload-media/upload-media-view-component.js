@@ -200,83 +200,88 @@ const styles = {
   },
 };
 
-export const inputs = [
-  {
+export const defaultInputs = {
+  posterImage: {
     Logo: PosterIcon,
     name: 'Poster Image',
     type: 'image',
     description:
       'Required. Image used to display the drop in the timeline. Preferred Format: 1080px by 1920px, 9:16',
   },
-  {
+  embedImage: {
     Logo: EmbedIcon,
     name: 'Embed Image',
     type: 'image',
     description:
       'Recommended. Image used to represent the drops on social networks. Preferred Format: 800px by 418px, 1.91:1',
   },
-  {
+  tallVideo: {
     Logo: TallVideoPosterIcon,
     name: 'Tall Video',
     type: 'video',
     description: 'Optional. Preferred Format: 9:16, 1080 x 1920 pixels',
   },
-  {
+  wideVideo: {
     Logo: WideVideoPosterIcon,
     name: 'Wide Video',
     type: 'video',
     description: 'Optional. Preferred Format: 16:9, 1920 x 1080',
   },
-  {
-    Logo: FilePosterIcon,
-    name: 'Custom File',
-    type: 'file',
-    description: 'Optional. e.g. HTML, JavaScript',
+  customFiles: {
+    default: {
+      id: 'default',
+      Logo: FilePosterIcon,
+      name: 'Custom File',
+      type: 'file',
+      description: 'Optional. e.g. HTML, JavaScript',
+    },
   },
-];
+};
 
 export const ButtonAndDescription = ({
   files,
   name,
   description,
   handleFileChange,
+  id,
 }) => {
   const descriptionStyle = {
     ...styles.description,
-    ...(files[name]
+    ...(files[id]
       ? { width: '100%', alignSelf: 'center' }
       : { width: '260px' }),
   };
   const inputLabelStyle = {
     ...styles.inputLabel,
-    ...(files[name] ? { width: '100%' } : { width: '260px' }),
-    ...(files[name] ? { minHeight: '42px' } : { height: '42px' }),
+    ...(files[id] ? { width: '100%' } : { width: '260px' }),
+    ...(files[id] ? { minHeight: '42px' } : { height: '42px' }),
   };
   return (
     <div id="description" style={styles.buttonAndDescriptionContainer}>
-      {files[name] && <p style={descriptionStyle}>{description}</p>}
-      <label id="input-label" htmlFor={name} style={inputLabelStyle}>
-        {files[name] ? 'Replace' : 'Upload'} {name}
+      {files[id] && <p style={descriptionStyle}>{description}</p>}
+      <label id="input-label" htmlFor={id} style={inputLabelStyle}>
+        {files[id] ? 'Replace' : 'Upload'} {name}
       </label>
       <input
-        id={name}
-        onChange={(e) => handleFileChange(e, name)}
+        id={id}
+        onChange={(e) => handleFileChange(e)}
         style={styles.uploadInput}
         type="file"
       />
-      {!files[name] && <p style={descriptionStyle}>{description}</p>}
+      {!files[id] && <p style={descriptionStyle}>{description}</p>}
     </div>
   );
 };
 
 export const MediaPreview = ({
   name,
+  id,
   handleFileChange,
   handleDelete,
   files,
   description,
 }) => (
-  <div key={name} style={styles.uploadPreviewWrapper}>
+  <div key={id} style={styles.uploadPreviewWrapper}>
     <ProgressBar
       aria-label="upload progress bar"
       style={{ alignSelf: 'center', marginBottom: '1rem', width: '100%' }}
@@ -287,7 +292,7 @@ export const MediaPreview = ({
       <Image
         id="thumbnail"
         style={styles.thumbnail}
-        src={files[name].thumbnail}
+        src={files[id].thumbnail}
         width={48}
         height={48}
         alt="Preview"
@@ -298,15 +303,16 @@ export const MediaPreview = ({
         </p>
         <div style={styles.fileNameContainer}>
           <CheckIcon color={colors.primary} size={16} />
-          <p style={styles.fileName}>{files[name].name}</p>
+          <p style={styles.fileName}>{files[id].name}</p>
         </div>
       </div>
-      <button style={styles.deleteButton} onClick={() => handleDelete(name)}>
+      <button style={styles.deleteButton} onClick={() => handleDelete(id)}>
         <TrashIcon size={'20px'} color={colors.primary} />
       </button>
     </div>
     <ButtonAndDescription
       name={name}
+      id={id}
       files={files}
       description={description}
       handleFileChange={handleFileChange}
@@ -318,17 +324,19 @@ export const MediaPreview = ({
 const UploadInput = ({
   files,
   name,
+  id,
   description,
   Logo,
   handleDelete,
   handleFileChange,
 }) => {
   return (
-    <div key={name} id="upload-input-wrapper" style={styles.uploadInputWrapper}>
+    <div key={id} id="upload-input-wrapper" style={styles.uploadInputWrapper}>
       <Logo color={colors.primary} aria-label={`Upload ${name}`} />
       <ButtonAndDescription
         files={files}
         name={name}
+        id={id}
         handleDelete={handleDelete}
         handleFileChange={handleFileChange}
         description={description}
@@ -342,21 +350,37 @@ const UploadMedia = ({
   onFileChange = () => {},
   onFileDelete = () => {},
   onSubmit = () => {},
+  inputs: {
+    posterImage,
+    embedImage,
+    wideVideo,
+    tallVideo,
+    customFiles,
+    ...restPropInputs
+  } = defaultInputs,
 }) => {
   const [files, setFiles] = useState(propFiles);
   const [mql, setMQL] = useState(true);
+  const inputs = {
+    posterImage: { ...defaultInputs.posterImage, ...posterImage },
+    embedImage: { ...defaultInputs.embedImage, ...embedImage },
+    wideVideo: { ...defaultInputs.wideVideo, ...wideVideo },
+    tallVideo: { ...defaultInputs.tallVideo, ...tallVideo },
+    customFiles: { ...defaultInputs.customFiles, ...customFiles },
+    ...restPropInputs,
+  };
 
-  const handleFileChange = (e, inputName) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
+    const id = e.target.id;
     const reader = new FileReader();
-
     if (file.type.includes('image')) {
       // Handling images
       reader.readAsDataURL(file);
       reader.onloadend = () => {
         setFiles((prev) => ({
           ...prev,
-          [inputName]: {
+          [id]: {
             file: reader.result,
             name: file.name,
             thumbnail: reader.result,
@@ -391,7 +415,7 @@ const UploadMedia = ({
           const thumbnail = canvas.toDataURL();
           setFiles((prev) => ({
             ...prev,
-            [inputName]: {
+            [id]: {
               file: reader.result,
               name: file.name,
               url,
@@ -406,7 +430,7 @@ const UploadMedia = ({
       reader.onloadend = () => {
         setFiles((prev) => ({
           ...prev,
-          [inputName]: {
+          [id]: {
             file: reader.result,
             name: file.name,
             thumbnail: '/images/file-uploaded.png',
@@ -417,7 +441,8 @@ const UploadMedia = ({
 
     onFileChange({
       file,
-      name: inputName,
+      name: inputs[id]?.name || id,
+      id: id,
     });
   };
 
@@ -451,28 +476,61 @@ const UploadMedia = ({
       >
         Upload Media
       </h1>
-      {inputs.map(({ name, type, description, Logo }) => {
-        return files[name] ? (
-          <MediaPreview
-            key={name}
-            type={type}
-            description={description}
-            handleFileChange={handleFileChange}
-            name={name}
-            files={files}
-            handleDelete={handleDelete}
-          />
-        ) : (
-          <UploadInput
-            key={name}
-            name={name}
-            description={description}
-            Logo={Logo}
-            files={files}
-            handleDelete={handleDelete}
-            handleFileChange={handleFileChange}
-          />
-        );
+      {Object.keys(inputs).map((key) => {
+        if (key == 'customFiles') {
+          return Object.keys(inputs[key]).map((customFileKey) => {
+            const { name, type, description, Logo } =
+              inputs[key][customFileKey];
+            return files[key] ? (
+              <MediaPreview
+                id={key}
+                key={key}
+                type={type}
+                description={description}
+                handleFileChange={handleFileChange}
+                name={name}
+                files={files}
+                handleDelete={handleDelete}
+              />
+            ) : (
+              <UploadInput
+                id={key}
+                key={key}
+                name={name}
+                description={description}
+                Logo={Logo}
+                files={files}
+                handleDelete={handleDelete}
+                handleFileChange={handleFileChange}
+              />
+            );
+          });
+        } else {
+          const { name, type, description, Logo } = inputs[key];
+          return files[key] ? (
+            <MediaPreview
+              id={key}
+              key={key}
+              type={type}
+              description={description}
+              handleFileChange={handleFileChange}
+              name={name}
+              files={files}
+              handleDelete={handleDelete}
+            />
+          ) : (
+            <UploadInput
+              id={key}
+              key={key}
+              name={name}
+              description={description}
+              Logo={Logo}
+              files={files}
+              handleDelete={handleDelete}
+              handleFileChange={handleFileChange}
+            />
+          );
+        }
       })}
       <button onClick={handleSubmit} id="save" style={styles.save}>
         Save And Continue

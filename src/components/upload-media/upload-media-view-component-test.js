@@ -4,7 +4,7 @@ import render from 'riteway/render-component';
 import UploadMedia, {
   ButtonAndDescription,
   MediaPreview,
-  inputs,
+  defaultInputs,
 } from './upload-media-view-component';
 
 describe('Upload Media Component', async (assert) => {
@@ -23,13 +23,26 @@ describe('Upload Media Component', async (assert) => {
     expected: 1,
   });
 
-  inputs.forEach(({ name }) => {
-    assert({
-      given: `initial render and input name ${name}`,
-      should: `render the UploadInput for ${name}`,
-      actual: $(`#upload-input-wrapper:contains(Upload ${name})`).length,
-      expected: 1,
-    });
+  Object.keys(defaultInputs).forEach((key) => {
+    if (key == 'customFiles') {
+      Object.keys(defaultInputs[key]).forEach((customFileKey) => {
+        const { name } = defaultInputs[key][customFileKey];
+        assert({
+          given: `initial render and input name ${name}`,
+          should: `render the UploadInput for ${name}`,
+          actual: $(`#upload-input-wrapper:contains(Upload ${name})`).length,
+          expected: 1,
+        });
+      });
+    } else {
+      const { name } = defaultInputs[key];
+      assert({
+        given: `initial render and input name ${name}`,
+        should: `render the UploadInput for ${name}`,
+        actual: $(`#upload-input-wrapper:contains(Upload ${name})`).length,
+        expected: 1,
+      });
+    }
   });
 });
 
@@ -37,8 +50,13 @@ describe('MediaPreview Component', async (assert) => {
   const mockProps = {
     name: 'Poster Image',
     files: {
-      'Poster Image': { file: 'mockFileUrl', name: 'mockFileName', thumbnail: '/mockFileUrl' },
+      posterImage: {
+        file: 'mockFileUrl',
+        name: 'mockFileName',
+        thumbnail: '/mockFileUrl',
+      },
     },
+    id: 'posterImage',
     handleDelete: () => {},
     handleFileChange: () => {},
     description: 'Some mock description',
@@ -63,12 +81,13 @@ describe('MediaPreview Component', async (assert) => {
 describe('ButtonAndDescription Component', async (assert) => {
   const mockPropsWithImage = {
     files: {
-      'Poster Image': {
+      posterImage: {
         file: 'mockFileUrl',
         name: 'mockFileName',
         thumbnail: 'mockFileUrl',
       },
     },
+    id: 'posterImage',
     name: 'Poster Image',
     description: 'Some mock description with image',
     handleFileChange: () => {},
@@ -87,9 +106,8 @@ describe('ButtonAndDescription Component', async (assert) => {
     assert({
       given: 'an image',
       should: 'render the description',
-      actual: $(
-        `#description:contains(${mockPropsWithImage.description})`
-      ).length,
+      actual: $(`#description:contains(${mockPropsWithImage.description})`)
+        .length,
       expected: 1,
     });
 
@@ -109,9 +127,8 @@ describe('ButtonAndDescription Component', async (assert) => {
     assert({
       given: 'no image',
       should: 'render the description',
-      actual: $(
-        `#description:contains(${mockPropsWithoutImage.description})`
-      ).length,
+      actual: $(`#description:contains(${mockPropsWithoutImage.description})`)
+        .length,
       expected: 1,
     });
 
