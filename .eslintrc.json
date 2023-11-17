@@ -15,5 +15,7 @@
     },
     "sourceType": "module"
   },
-  "rules": {}
+  "rules": {
+    "linebreak-style": ["error", "unix"]
+  }
 }
