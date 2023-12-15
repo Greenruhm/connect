@@ -2,11 +2,11 @@ import React from 'react';
 import { describe } from 'riteway';
 import match from 'riteway/match';
 import render from 'riteway/render-component';
-import CardDescriptionEditable from './card-description-editable-controller-component.js';
+import CardDescriptionEditableComponent from './card-description-editable-component.js';
 
 describe('Card Description Editable Component', async (assert) => {
   {
-    const $ = render(<CardDescriptionEditable />);
+    const $ = render(<CardDescriptionEditableComponent />);
     const contains = match($.html());
     const sampleCopy =
       'This is sample drop description copy. Tap the pencil icon above to add your own description here.';
@@ -31,7 +31,9 @@ describe('Card Description Editable Component', async (assert) => {
   }
   {
     const description = 'My awesome description';
-    const $ = render(<CardDescriptionEditable description={description} />);
+    const $ = render(
+      <CardDescriptionEditableComponent description={description} />
+    );
     const contains = match($.html());
     assert({
       given: 'a description',
@@ -41,7 +43,7 @@ describe('Card Description Editable Component', async (assert) => {
     });
   }
   {
-    const $ = render(<CardDescriptionEditable defaultEditMode={true} />);
+    const $ = render(<CardDescriptionEditableComponent editMode={true} />);
     assert({
       given: 'edit mode',
       should: 'display the component in edit mode',
@@ -56,7 +58,9 @@ describe('Card Description Editable Component', async (assert) => {
     });
   }
   {
-    const $ = render(<CardDescriptionEditable defaultEditMode isSaving />);
+    const $ = render(
+      <CardDescriptionEditableComponent editMode={true} isSaving />
+    );
     assert({
       given: 'edit mode and saving state',
       should: 'display the loading spinner icon',

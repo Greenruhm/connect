@@ -13,7 +13,7 @@ const placeholder =
 
 const CardDescriptionEditableComponent = ({
   description = placeholder,
-  editMode,
+  editMode = false,
   toggleEditMode,
   localDescription,
   setLocalDescription,
