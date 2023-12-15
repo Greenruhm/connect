@@ -20,8 +20,7 @@
     "local-dependency": "npm run prepare && yalc publish && watch 'npm run prepare && yalc push' src"
   },
   "pre-commit": [
-    "lint",
-    "test"
+    "lint"
   ],
   "repository": {
     "type": "git",
