@@ -1,6 +1,16 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React from 'react';
 import Theme from '../theme';
+
+import Loading from '../loading/index.js';
+
+const wrapperLoadingStyle = {
+  position: 'absolute',
+  height: 'inherit',
+  width: 'inherit',
+  top: 0,
+  left: '-8px', //Half the size of the logo in small
+};
 
 const button = {
   backgroundColor: `${Theme.button}`,
@@ -28,18 +38,25 @@ const SubmitButton = ({
   loading = false,
   name,
   onClick,
+  className,
+  loadingStyle = {},
 } = {}) => {
   return (
     <button
+      className={className}
       disabled={disabled || loading}
       name={name}
       onClick={onClick}
       style={disabled || loading ? styles.buttonDisabled : styles.button}
       type="submit"
     >
-      <span className="button-label" style={styles.buttonLabel}>
-        {label}
-      </span>
+      {loading ? (
+        <Loading small style={{ ...wrapperLoadingStyle, ...loadingStyle }} />
+      ) : (
+        <span className="button-label" style={styles.buttonLabel}>
+          {label}
+        </span>
+      )}
     </button>
   );
 };
