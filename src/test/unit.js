@@ -1,4 +1,4 @@
-import '../components/card/card-description/card-description-editable-test.js';
+import '../components/card/card-description/card-description-view-component-test.js';
 import '../components/shared/error-modal/error-modal-component-test.js';
 import '../components/shared/success-view/success-view-component-test.js';
 import '../components/sign-in/sign-in-view-component-test.js';
