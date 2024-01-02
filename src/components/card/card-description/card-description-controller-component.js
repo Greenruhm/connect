@@ -3,9 +3,9 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { noop } from '../../../lib/react-tools';
-import CardDescriptionEditableComponent from './card-description-editable-component';
+import CardDescriptionView from './card-description-view-component';
 
-const CardDescriptionEditable = ({
+const CardDescriptionController = ({
   description,
   defaultEditMode = false,
   isSaving = false,
@@ -20,7 +20,7 @@ const CardDescriptionEditable = ({
   };
 
   return (
-    <CardDescriptionEditableComponent
+    <CardDescriptionView
       description={description}
       editMode={editMode}
       toggleEditMode={toggleEditMode}
@@ -32,11 +32,11 @@ const CardDescriptionEditable = ({
   );
 };
 
-CardDescriptionEditable.propTypes = {
+CardDescriptionController.propTypes = {
   description: PropTypes.string,
   defaultEditMode: PropTypes.bool,
   isSaving: PropTypes.bool,
   onSaveDescription: PropTypes.func,
 };
 
-export default CardDescriptionEditable;
+export default CardDescriptionController;

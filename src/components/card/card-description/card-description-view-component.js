@@ -11,7 +11,7 @@ import Theme from '../../theme';
 const placeholder =
   'This is sample drop description copy. Tap the pencil icon above to add your own description here.';
 
-const CardDescriptionEditableComponent = ({
+const CardDescriptionView = ({
   description = placeholder,
   editMode = false,
   toggleEditMode,
@@ -98,7 +98,7 @@ const CardDescriptionEditableComponent = ({
   );
 };
 
-CardDescriptionEditableComponent.propTypes = {
+CardDescriptionView.propTypes = {
   description: string,
   editMode: bool,
   toggleEditMode: func,
@@ -108,4 +108,4 @@ CardDescriptionEditableComponent.propTypes = {
   onSave: func,
 };
 
-export default CardDescriptionEditableComponent;
+export default CardDescriptionView;
